@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorTransparent">
+
+    <ImageView
+        android:id="@+id/image_view_choice_language_list_view"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="30dp"
+        android:contentDescription="@drawable/ic_united_kingdom_flag"
+        android:src="@drawable/ic_united_kingdom_flag" />
+
+    <TextView
+        android:id="@+id/text_view_choice_language_list_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/view_rounded"
+        android:padding="5dp"
+        android:text=""
+        android:textColor="@color/colorText"
+        android:textSize="16sp" />
+
+</RelativeLayout>
