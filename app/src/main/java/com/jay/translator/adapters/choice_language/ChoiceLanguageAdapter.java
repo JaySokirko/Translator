@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -61,13 +63,18 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
             viewHolder.icon = convertView.findViewById(R.id.image_view_choice_language_list_view);
 
             convertView.setTag(viewHolder);
-        }else {
+        } else {
 
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         viewHolder.txtName.setText(values[position]);
         viewHolder.icon.setImageResource(images[position]);
+
+        Animation anim = AnimationUtils.loadAnimation(context,R.anim.grid_item_animation_on_start);
+        anim.setStartOffset(position * 100);
+        convertView.setAnimation(anim);
+        anim.start();
 
         return convertView;
     }
@@ -77,6 +84,5 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
 
         TextView txtName;
         ImageView icon;
-        RadioButton radioButton;
     }
 }

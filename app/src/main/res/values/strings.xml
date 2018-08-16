@@ -3,6 +3,7 @@
 
     <string name="app_name">Translator</string>
 
-    <string name="select_your_language">>Choice yor language</string>
+    <string name="select_your_language">Choice yor language</string>
+    <string name="please_wait">Please wait</string>
 
 </resources>

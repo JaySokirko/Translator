@@ -1,33 +1,36 @@
 package com.jay.translator.acticities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
+import com.jay.translator.ViewSettings;
 import com.jay.translator.adapters.choice_language.ChoiceLanguageAdapter;
 
-import java.util.Locale;
+import de.mateware.snacky.Snacky;
 
 public class ChoiceLanguageActivity extends AppCompatActivity {
 
     private static final String TAG = "TAG";
-    private String[] languages = {"English",
+    private String[] languages = {
+            "English",
             "Русский",
             "Deutsch",
             "Français",
             "Español",
             "Italiano"};
 
-    private int[] images = {R.drawable.ic_united_kingdom_flag,
+    private int[] images = {
+            R.drawable.ic_united_kingdom_flag,
             R.drawable.ic_russian_flag,
             R.drawable.ic_germany_flag,
             R.drawable.ic_french_flag,
@@ -36,19 +39,21 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
     private ListView listView;
     private ImageView backgroundImage;
+    private Button next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choice_language);
+        //set app language
+        LanguageSettings.loadLocale(this);
 
-        loadLocale();
+        setContentView(R.layout.activity_choice_language);
 
         listView = findViewById(R.id.list_view_choice_language);
         backgroundImage = findViewById(R.id.image_view_choice_language);
+        next = findViewById(R.id.button_choice_language_next);
 
-        String language = loadLocale();
-        setBackgroundImage(language);
+        setBackgroundImage(LanguageSettings.LANGUAGE);
 
         ChoiceLanguageAdapter adapter = new ChoiceLanguageAdapter(ChoiceLanguageActivity.this, languages, images);
 
@@ -57,7 +62,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
         //on list view click listener
         onListClickListener();
 
-
+//        ViewSettings.startArrowAnimation(this, next);
     }
 
 
@@ -68,68 +73,66 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
-                        setLocale("en");
-                        startActivity(new Intent(ChoiceLanguageActivity.this,
-                                ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        LanguageSettings.setLocale("en", ChoiceLanguageActivity.this);
+                        applyBackground();
                         break;
+
                     case 1:
-                        setLocale("ru");
-                        startActivity(new Intent(ChoiceLanguageActivity.this,
-                                ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        LanguageSettings.setLocale("ru", ChoiceLanguageActivity.this);
+                        applyBackground();
                         break;
+
                     case 2:
-                         setLocale("de");
-                        startActivity(new Intent(ChoiceLanguageActivity.this,
-                                ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        LanguageSettings.setLocale("de", ChoiceLanguageActivity.this);
+                        applyBackground();
                         break;
+
                     case 3:
-                         setLocale("fr");
-                        startActivity(new Intent(ChoiceLanguageActivity.this,
-                                ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        LanguageSettings.setLocale("fr", ChoiceLanguageActivity.this);
+                        applyBackground();
                         break;
+
                     case 4:
-                         setLocale("es");
-                        startActivity(new Intent(ChoiceLanguageActivity.this,
-                                ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        LanguageSettings.setLocale("es", ChoiceLanguageActivity.this);
+                        applyBackground();
                         break;
+
                     case 5:
-                         setLocale("it");
-                        startActivity(new Intent(ChoiceLanguageActivity.this,
-                                ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+                        LanguageSettings.setLocale("it", ChoiceLanguageActivity.this);
+                        applyBackground();
                         break;
                 }
             }
         });
     }
 
-    private void setLocale(String language) {
-        Locale locale = new Locale(language);
-        Locale.setDefault(locale);
 
-        Configuration configuration = new Configuration();
-        configuration.locale = locale;
+    private void applyBackground() {
 
-        getBaseContext().getResources().updateConfiguration(configuration,getBaseContext().getResources().getDisplayMetrics());
+        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(getApplicationContext(),
+                backgroundImage.getDrawable()));
 
-        SharedPreferences.Editor editor = getSharedPreferences("Settings",MODE_PRIVATE).edit();
+        Snacky.builder()
+                .setActivity(ChoiceLanguageActivity.this)
+                .setText(R.string.please_wait)
+                .setTextColor(getResources().getColor(R.color.colorText))
+                .centerText()
+                .setBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                .setDuration(Snacky.LENGTH_SHORT)
+                .build()
+                .show();
 
-        editor.putString("language",language);
-
-        editor.apply();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                startActivity(new Intent(ChoiceLanguageActivity.this,
+                        ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        }, 1000);
     }
 
-    public String loadLocale(){
 
-        SharedPreferences sharedPreferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
-        String language = sharedPreferences.getString("language","en");
-        setLocale(language);
-
-        return language;
-
-    }
-
-
-    public void setBackgroundImage(String language){
+    private void setBackgroundImage(String language) {
 
         switch (language) {
             case "en":

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Translator</string>
-    <string name="select_your_language">"Выберите ваш язык!!!"</string>
+    <string name="select_your_language">"Выберите ваш язык"</string>
+    <string name="please_wait">"Пожалуйста, подождите "</string>
 </resources>
