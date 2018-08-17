@@ -55,7 +55,7 @@
                     android:layout_marginTop="30dp"
                     android:text="Next"
                     android:textAllCaps="false"
-                    android:background="@drawable/view_rounded_gradient"/>
+                    android:background="@drawable/animation_list"/>
 
 
 
