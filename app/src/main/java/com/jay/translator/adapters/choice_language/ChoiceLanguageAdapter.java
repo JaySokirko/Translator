@@ -1,6 +1,7 @@
 package com.jay.translator.adapters.choice_language;
 
 import android.content.Context;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jay.translator.R;
+import com.jay.translator.ViewSettings;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
     private String[] values;
     private int[] images;
 
+    private AnimationDrawable animationDrawable;
 
     public ChoiceLanguageAdapter(Context context, String[] values, int[] images) {
         this.context = context;

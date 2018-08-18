@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/choice_language_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".acticities.ChoiceLanguageActivity">
+    tools:context=".activities.ChoiceLanguageActivity">
 
 
     <ImageView
@@ -16,53 +15,67 @@
         android:scaleType="centerCrop"
         android:src="@drawable/london" />
 
-    <android.support.v4.widget.NestedScrollView
+
+    <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="50dp"
+        android:background="@drawable/animation_list"
+        android:id="@+id/toolbar_choice_language">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_your_language"
+                android:textColor="@color/colorPrimary"
+                android:layout_gravity="center" />
+        </FrameLayout>
+
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.9"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/text_view_choice_language_list_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="30dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/view_rounded_dark_semitransparent"
-                android:padding="5dp"
-                android:text="@string/select_your_language"
-                android:textColor="@color/colorText"
-                android:textSize="18sp" />
 
             <ListView
                 android:id="@+id/list_view_choice_language"
-                android:layout_width="wrap_content"
-                android:layout_height="400dp"
-                android:layout_marginTop="20dp" />
-
-
-
-                <Button
-                    android:id="@+id/button_choice_language_next"
-                    android:layout_width="80dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="end"
-                    android:layout_marginBottom="15dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginTop="30dp"
-                    android:text="Next"
-                    android:textAllCaps="false"
-                    android:background="@drawable/animation_list"/>
-
-
-
-
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:dividerHeight="5dp" />
         </LinearLayout>
 
-    </android.support.v4.widget.NestedScrollView>
 
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.16">
 
+            <Button
+                android:id="@+id/button_choice_language_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginBottom="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/animation_list_rounded"
+                android:onClick="startTranslatorActivity"
+                android:text="@string/next"
+                android:textAllCaps="false" />
+        </FrameLayout>
+    </LinearLayout>
 </FrameLayout>

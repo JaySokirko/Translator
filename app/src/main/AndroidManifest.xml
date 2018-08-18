@@ -9,12 +9,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.jay.translator.acticities.ChoiceLanguageActivity">
+
+        <activity android:name=".activities.ChoiceLanguageActivity"
+            android:theme="@style/AppTheme"
+            android:label="hello">
+        </activity>
+
+        <activity
+            android:name=".activities.LauncherActivity"
+            android:theme="@style/AppTheme.Launcher">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".activities.TranslatorActivity"
+            android:label="@string/title_activity_translator"
+            android:theme="@style/AppTheme">
+        </activity>
+
     </application>
 
 </manifest>

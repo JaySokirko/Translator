@@ -3,4 +3,5 @@
     <string name="app_name">English</string>
     <string name="select_your_language">"Elige tu idioma "</string>
     <string name="please_wait">"Por favor espera "</string>
+    <string name="next">"Adelante"</string>
 </resources>

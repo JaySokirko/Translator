@@ -1,24 +1,20 @@
-package com.jay.translator.acticities;
+package com.jay.translator.activities;
 
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toolbar;
 
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
 import com.jay.translator.ViewSettings;
 import com.jay.translator.adapters.choice_language.ChoiceLanguageAdapter;
-
-import java.util.Objects;
 
 import de.mateware.snacky.Snacky;
 
@@ -43,7 +39,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
     private ListView listView;
     private ImageView backgroundImage;
-    AnimationDrawable anim;
+    private AnimationDrawable toolBarAnimation;
+    private AnimationDrawable buttonBarAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +53,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
         listView = findViewById(R.id.list_view_choice_language);
         backgroundImage = findViewById(R.id.image_view_choice_language);
         Button next = findViewById(R.id.button_choice_language_next);
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_choice_language);
 
         setBackgroundImage(LanguageSettings.LANGUAGE);
 
@@ -63,28 +61,41 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
+        buttonBarAnimation = (AnimationDrawable) next.getBackground();
+        buttonBarAnimation.setExitFadeDuration(4000);
+
+        toolBarAnimation = (AnimationDrawable) toolbar.getBackground();
+        toolBarAnimation.setExitFadeDuration(4000);
+
         //on list view click listener
         onListClickListener();
 
-        anim = (AnimationDrawable) next.getBackground();
-        anim.setEnterFadeDuration(6000);
-        anim.setExitFadeDuration(2000);
     }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (anim != null && !anim.isRunning())
-            anim.start();
+
+        if (buttonBarAnimation != null && !buttonBarAnimation.isRunning())
+            buttonBarAnimation.start();
+
+        if (toolBarAnimation != null && !toolBarAnimation.isRunning())
+            toolBarAnimation.start();
     }
+
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (anim != null && anim.isRunning())
-            anim.stop();
+
+        if (buttonBarAnimation != null && buttonBarAnimation.isRunning())
+            buttonBarAnimation.stop();
+
+        if (toolBarAnimation != null && toolBarAnimation.isRunning())
+            toolBarAnimation.stop();
     }
+
 
     private void onListClickListener() {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -174,5 +185,10 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
                 backgroundImage.setImageResource(R.drawable.italy);
                 break;
         }
+    }
+
+    public void startTranslatorActivity(View view){
+        startActivity(new Intent(this,TranslatorActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }
