@@ -4,4 +4,6 @@
     <string name="select_your_language">"Выберите ваш язык"</string>
     <string name="please_wait">"Пожалуйста, подождите "</string>
     <string name="next">Дальше</string>
+    <string name="change_language">"Изменить язык "</string>
+    <string name="change_views_background">Настройки фона</string>
 </resources>

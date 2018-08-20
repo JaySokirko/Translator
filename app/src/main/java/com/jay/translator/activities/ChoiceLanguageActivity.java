@@ -55,7 +55,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
         Button next = findViewById(R.id.button_choice_language_next);
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_choice_language);
 
-        setBackgroundImage(LanguageSettings.LANGUAGE);
+        ViewSettings.setBackgroundImage(LanguageSettings.getLanguage(),backgroundImage);
 
         ChoiceLanguageAdapter adapter = new ChoiceLanguageAdapter(ChoiceLanguageActivity.this, languages, images);
 
@@ -162,30 +162,6 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
         }, 1000);
     }
 
-
-    private void setBackgroundImage(String language) {
-
-        switch (language) {
-            case "en":
-                backgroundImage.setImageResource(R.drawable.london);
-                break;
-            case "ru":
-                backgroundImage.setImageResource(R.drawable.moscow);
-                break;
-            case "de":
-                backgroundImage.setImageResource(R.drawable.germany);
-                break;
-            case "fr":
-                backgroundImage.setImageResource(R.drawable.paris);
-                break;
-            case "es":
-                backgroundImage.setImageResource(R.drawable.madrid);
-                break;
-            case "it":
-                backgroundImage.setImageResource(R.drawable.italy);
-                break;
-        }
-    }
 
     public void startTranslatorActivity(View view){
         startActivity(new Intent(this,TranslatorActivity.class)

@@ -4,4 +4,6 @@
     <string name="select_your_language">"Elige tu idioma "</string>
     <string name="please_wait">"Por favor espera "</string>
     <string name="next">"Adelante"</string>
+    <string name="change_language">"Сambiar idioma "</string>
+    <string name="change_views_background">Configuración de fondo</string>
 </resources>
