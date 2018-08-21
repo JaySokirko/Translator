@@ -7,23 +7,17 @@ import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
 import com.jay.translator.ViewSettings;
-import com.jay.translator.fragments.EmptyFragment;
-import com.jay.translator.fragments.SettingsTranslatorFragment;
 
 public class TranslatorActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -34,11 +28,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private ImageView backgroundImage;
     private Context context;
 
-    private FragmentManager fragmentManager;
-    private FragmentTransaction fragmentTransaction;
-    private Fragment settingsFragment;
-    private Fragment emptyFragment;
-    private Animation animation;
+    private Animation openSettingsAnimation;
+    private Animation closeSettingsAnimation;
+    private TableLayout settingsMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +47,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         AppBarLayout barLayout = findViewById(R.id.app_bar);
         barLayout.addOnOffsetChangedListener(this);
 
+        settingsMenu = findViewById(R.id.settings_layout);
+
         fab = findViewById(R.id.fab_settings);
 
         backgroundImage = findViewById(R.id.image_view_translator_background);
@@ -69,13 +63,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         //settings menu is collapsed by default
         isSettingsOpen = false;
 
-        settingsFragment = new SettingsTranslatorFragment();
-        emptyFragment = new EmptyFragment();
-        fragmentManager = getSupportFragmentManager();
-
-        animation = AnimationUtils.loadAnimation(context, R.anim.anim_from_x0_to_right);
+        openSettingsAnimation = AnimationUtils.loadAnimation(context, R.anim.anim_from_right_to_x0);
+        openSettingsAnimation.setFillAfter(true);
+        closeSettingsAnimation = AnimationUtils.loadAnimation(context, R.anim.anim_from_x0_to_right);
+        closeSettingsAnimation.setFillAfter(true);
 
         onSettingsClickListener();
+
+        settingsMenu.setVisibility(View.INVISIBLE);
 
     }
 
@@ -104,19 +99,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             @Override
             public void onClick(View v) {
 
-                fragmentTransaction = fragmentManager.beginTransaction();
-
                 if (!isSettingsOpen) {
-//                    if (fragmentManager.findFragmentByTag(SettingsTranslatorFragment.FRAGMENT_SETTINGS) == null) {
-                    showSettings();
-//                    }
-                } else {
-//                    if (fragmentManager.findFragmentByTag(SettingsTranslatorFragment.FRAGMENT_SETTINGS) != null) {
-                    closeSettings();
-//                    }
-                }
 
-                fragmentTransaction.commit();
+                    showSettings();
+
+                } else {
+
+                    closeSettings();
+                }
             }
         });
     }
@@ -132,13 +122,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                 fab.animate().rotation(360).setDuration(1500).start();
 
-                fragmentTransaction.setCustomAnimations(R.anim.anim_from_right_to_x0,
-                        R.anim.anim_from_x0_to_right,
-                        R.anim.anim_from_x0_to_right,
-                        R.anim.anim_from_right_to_x0);
+                settingsMenu.setVisibility(View.VISIBLE);
 
-                fragmentTransaction.replace(R.id.fragment_сonteiner_settings, settingsFragment);
-                fragmentTransaction.addToBackStack(null);
+                settingsMenu.setAnimation(openSettingsAnimation);
+                openSettingsAnimation.start();
             }
         });
     }
@@ -154,8 +141,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                 fab.animate().rotation(0).setDuration(1500).start();
 
-                fragmentTransaction.replace(R.id.fragment_сonteiner_settings, emptyFragment);
+                settingsMenu.setVisibility(View.INVISIBLE);
 
+                settingsMenu.setAnimation(closeSettingsAnimation);
+                closeSettingsAnimation.start();
             }
         });
     }
@@ -166,9 +155,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0) {
             //if app bar is collapsed hide settings view
-            if (fragmentManager.findFragmentByTag(SettingsTranslatorFragment.FRAGMENT_SETTINGS) != null) {
-//                closeSettings();
-            }
+            closeSettings();
         }
     }
 
