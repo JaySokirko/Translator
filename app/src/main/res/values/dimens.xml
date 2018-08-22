@@ -2,4 +2,7 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="standard_55">75dp</dimen>
+    <dimen name="standard_105">145dp</dimen>
+    <dimen name="standard_155">175dp</dimen>
 </resources>

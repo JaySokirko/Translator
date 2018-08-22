@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -17,119 +18,22 @@
         android:src="@drawable/london" />
 
 
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-
-    </android.support.constraint.ConstraintLayout>
-
-
-    <HorizontalScrollView
+    <android.support.design.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activities.TranslatorActivity"
-        tools:showIn="@layout/activity_translator">
+        android:layout_height="match_parent">
 
 
-        <android.support.design.widget.CoordinatorLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="50dp"
-            android:fitsSystemWindows="true">
+        <include layout="@layout/output_text"/>
 
-            <LinearLayout
-                android:id="@+id/input_text_layout"
-                android:layout_marginTop="30dp"
-                android:layout_marginStart="30dp"
-                android:layout_width="300dp"
-                android:layout_height="300dp"
-                android:background="@drawable/view_rounded"
-                android:orientation="horizontal">
-
-            </LinearLayout>
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_speech"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                app:layout_anchor="@id/input_text_layout"
-                app:layout_anchorGravity="bottom|end"
-                app:srcCompat="@drawable/ic_action_speech" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab_translation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/fab_margin"
-                app:layout_anchor="@id/input_text_layout"
-                app:layout_anchorGravity="bottom|center"
-                app:srcCompat="@drawable/ic_action_translation" />
-
-        </android.support.design.widget.CoordinatorLayout>
-
-    </HorizontalScrollView>
+        <include layout="@layout/input_text"/>
 
 
-    <TableLayout
-        android:id="@+id/settings_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end">
 
-        <TableRow
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="40dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/view_rounded"
-                android:padding="5dp"
-                android:text="@string/change_language"
-                android:textColor="@color/colorText"
-                android:textSize="16sp" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_global" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="31dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/view_rounded"
-                android:padding="5dp"
-                android:text="@string/change_views_background"
-                android:textColor="@color/colorText"
-                android:textSize="16sp" />
-
-            <android.support.design.widget.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_image_settings" />
-
-        </TableRow>
-
-    </TableLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
 
 </FrameLayout>
