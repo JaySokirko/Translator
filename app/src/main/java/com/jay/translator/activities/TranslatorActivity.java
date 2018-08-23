@@ -26,7 +26,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private FloatingActionButton fabChoiceLanguage;
     private FloatingActionButton fabBackgroundSettings;
     private FloatingActionButton fabStartTranslate;
-    private FloatingActionButton fabShareTranslatedText;
     private ImageView backgroundImage;
     private CoordinatorLayout inputTextLayout;
     private CoordinatorLayout outputTextLayout;
@@ -56,8 +55,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         fabChoiceLanguage = findViewById(R.id.fab_language_settings);
         fabBackgroundSettings = findViewById(R.id.fab_view_settings);
         fabStartTranslate = findViewById(R.id.fab_translation);
-        fabShareTranslatedText = findViewById(R.id.fab_share);
-//        fabCancel = findViewById(R.id.fab_cancel);
 
         inputTextLayout = findViewById(R.id.input_text_layout);
 
@@ -131,11 +128,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                     @Override
                     public void onAnimationUpdate(ValueAnimator animation) {
                         inputTextLayout.setAlpha(1f);
-                        fabStartTranslate.setAlpha(1f);
-                        fabShareTranslatedText.setAlpha(1f);
                         inputTextLayout.setTranslationX((float) animation.getAnimatedValue());
                         fabStartTranslate.setTranslationX((Float) animation.getAnimatedValue());
-                        fabShareTranslatedText.setTranslationX((Float) animation.getAnimatedValue());
                     }
                 });
                 valueAnimator.start();

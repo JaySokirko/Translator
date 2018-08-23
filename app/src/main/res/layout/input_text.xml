@@ -27,10 +27,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:paddingBottom="30dp"
                 android:text="@string/long_text"
                 android:textColor="@color/colorText"
                 android:textSize="16sp" />
@@ -39,14 +39,6 @@
 
     </FrameLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_share"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/attached_anchor2"
-        app:layout_anchorGravity="bottom|center"
-        app:srcCompat="@drawable/ic_action_share" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_translation"
@@ -57,5 +49,15 @@
         app:layout_anchor="@id/attached_anchor2"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_action_translation" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_clear_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:onClick="onTranslateClickListener"
+        app:layout_anchor="@id/attached_anchor2"
+        app:layout_anchorGravity="bottom|center"
+        app:srcCompat="@drawable/ic_action_clear_text" />
 
 </android.support.design.widget.CoordinatorLayout>
