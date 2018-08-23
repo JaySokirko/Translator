@@ -1,6 +1,7 @@
 package com.jay.translator.activities;
 
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.jay.translator.LanguageSettings;
+import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
 import com.jay.translator.ViewSettings;
 
@@ -26,16 +28,23 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private FloatingActionButton fabChoiceLanguage;
     private FloatingActionButton fabBackgroundSettings;
     private FloatingActionButton fabStartTranslate;
+    private FloatingActionButton fabSpeechSettings;
+    private FloatingActionButton fabSpeechFeed;
+    private FloatingActionButton fabSpeechSpeed;
     private ImageView backgroundImage;
     private CoordinatorLayout inputTextLayout;
     private CoordinatorLayout outputTextLayout;
+    private CoordinatorLayout onTouchEventField;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSettingsOpen;
+    private boolean isShowTranslatedTextFrame;
+    private boolean isShowInputTextFrame;
     private Context context;
     private ValueAnimator valueAnimator;
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,10 +64,15 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         fabChoiceLanguage = findViewById(R.id.fab_language_settings);
         fabBackgroundSettings = findViewById(R.id.fab_view_settings);
         fabStartTranslate = findViewById(R.id.fab_translation);
+        fabSpeechSettings = findViewById(R.id.fab_speech_settings);
+        fabSpeechFeed = findViewById(R.id.fab_speech_feed);
+        fabSpeechSpeed = findViewById(R.id.fab_speech_speed);
 
         inputTextLayout = findViewById(R.id.input_text_layout);
 
         outputTextLayout = findViewById(R.id.output_text_layout);
+
+        onTouchEventField = findViewById(R.id.container);
 
         backgroundImage = findViewById(R.id.image_view_translator_background);
 
@@ -72,8 +86,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         //settings menu is collapsed by default
         isSettingsOpen = false;
 
+        isShowTranslatedTextFrame = false;
+
+        isShowInputTextFrame = true;
+
         outputTextLayout.setVisibility(View.GONE);
-//        fabCancel.setVisibility(View.GONE);
+        fabSpeechSpeed.setVisibility(View.GONE);
+
+        onSwipeTouchListener();
 
     }
 
@@ -100,41 +120,32 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
             case R.id.fab_translation:
 
-                //input text field is going
-                inputTextLayout.animate().alpha(0f).setDuration(700).x(-1000).start();
-
-                outputTextLayout.setVisibility(View.VISIBLE);
-
-                valueAnimator = ValueAnimator.ofFloat(1000f,0f);
-                valueAnimator.setDuration(800);
-                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        outputTextLayout.setAlpha(1f);
-                        outputTextLayout.setTranslationX((float)animation.getAnimatedValue());
-                    }
-                });
-                valueAnimator.start();
+                showTranslatedTextFrame();
                 break;
 
             case R.id.fab_cancel:
 
-                // output text field is going
-                outputTextLayout.animate().alpha(0).x(1000).setDuration(700).start();
-
-                valueAnimator = ValueAnimator.ofFloat(-1000f,0f);
-                valueAnimator.setDuration(800);
-                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        inputTextLayout.setAlpha(1f);
-                        inputTextLayout.setTranslationX((float) animation.getAnimatedValue());
-                        fabStartTranslate.setTranslationX((Float) animation.getAnimatedValue());
-                    }
-                });
-                valueAnimator.start();
+                showInputTextFrame();
                 break;
         }
+    }
+
+
+    public void onSpeechSettingsClickListener(View view){
+
+        fabSpeechSpeed.setVisibility(View.VISIBLE);
+
+        valueAnimator = ValueAnimator.ofFloat(fabSpeechSettings.getX(),0f);
+        valueAnimator.setDuration(800);
+
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fabSpeechSpeed.setTranslationX((float) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator.start();
+
     }
 
     public void onSettingsClickListener(View view) {
@@ -142,7 +153,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         if (!isSettingsOpen) {
 
             showSettings();
-
         } else {
 
             closeSettings();
@@ -205,4 +215,77 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             }
         });
     }
+
+
+    private void showTranslatedTextFrame() {
+
+        //input text field is going
+        inputTextLayout.animate().alpha(0f).setDuration(700).x(-1000).start();
+
+        outputTextLayout.setVisibility(View.VISIBLE);
+
+        valueAnimator = ValueAnimator.ofFloat(1000f, 0f);
+        valueAnimator.setDuration(800);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                outputTextLayout.setAlpha(1f);
+                outputTextLayout.setTranslationX((float) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator.start();
+
+        isShowTranslatedTextFrame = true;
+        isShowInputTextFrame = false;
+    }
+
+
+    private void showInputTextFrame() {
+
+        // output text field is going
+        outputTextLayout.animate().alpha(0).x(1000).setDuration(700).start();
+
+        valueAnimator = ValueAnimator.ofFloat(-1000f, 0f);
+        valueAnimator.setDuration(800);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                inputTextLayout.setAlpha(1f);
+                inputTextLayout.setTranslationX((float) animation.getAnimatedValue());
+                fabStartTranslate.setTranslationX((Float) animation.getAnimatedValue());
+            }
+        });
+        valueAnimator.start();
+
+        isShowTranslatedTextFrame = false;
+        isShowInputTextFrame = true;
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void onSwipeTouchListener() {
+
+        onTouchEventField.setOnTouchListener(new OnSwipeTouchListener(context) {
+
+            @Override
+            public void onSwipeLeft() {
+                super.onSwipeLeft();
+
+               if (!isShowTranslatedTextFrame) {
+                   showTranslatedTextFrame();
+               }
+            }
+
+            @Override
+            public void onSwipeRight() {
+                super.onSwipeRight();
+
+                if (!isShowInputTextFrame) {
+                    showInputTextFrame();
+                }
+            }
+        });
+    }
+
+
 }

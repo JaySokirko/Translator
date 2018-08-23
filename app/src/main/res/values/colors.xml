@@ -8,4 +8,5 @@
     <color name="colorSemiTransparent">#8b000000</color>
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
+    <color name="colorButtons">#656c65</color>
 </resources>

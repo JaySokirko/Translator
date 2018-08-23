@@ -49,13 +49,34 @@
         app:srcCompat="@drawable/ic_action_cancel" />
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_speech_speed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/attached_anchor"
+        app:layout_anchorGravity="start|center"
+        app:srcCompat="@drawable/ic_action_speech_speed"
+        app:fabSize="mini"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_speech_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/attached_anchor"
+        app:layout_anchorGravity="top"
+        app:srcCompat="@drawable/ic_action_speech_feed"
+        app:fabSize="mini"/>
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_speech_settings"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|center"
-        app:srcCompat="@drawable/ic_action_speech_settings" />
+        app:srcCompat="@drawable/ic_action_speech_settings"
+        android:onClick="onSpeechSettingsClickListener"/>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -67,6 +88,8 @@
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_action_speech" />
+
+
 
 </android.support.design.widget.CoordinatorLayout>
 
