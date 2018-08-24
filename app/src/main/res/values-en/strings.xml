@@ -6,5 +6,7 @@
     <string name="next">Forward</string>
     <string name="change_language">Change language</string>
     <string name="change_views_background">Background settings</string>
+    <string name="change_speech_speed">change speech speed</string>
+    <string name="change_speech_feed">change speech frequency</string>
 
 </resources>

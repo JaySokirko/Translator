@@ -6,4 +6,6 @@
     <string name="next">"En avant"</string>
     <string name="change_language">"Сhanger de langue "</string>
     <string name="change_views_background">Paramètres d\'arrière-plan</string>
+    <string name="change_speech_speed">changer la vitesse de la parole</string>
+    <string name="change_speech_feed">changement de fréquence de la parole</string>
 </resources>

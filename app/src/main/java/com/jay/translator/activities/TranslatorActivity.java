@@ -1,5 +1,6 @@
 package com.jay.translator.activities;
 
+import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,6 +14,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 
@@ -20,6 +24,8 @@ import com.jay.translator.LanguageSettings;
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
 import com.jay.translator.ViewSettings;
+
+import de.mateware.snacky.Snacky;
 
 
 public class TranslatorActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -33,17 +39,21 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private FloatingActionButton fabSpeechFeed;
     private FloatingActionButton fabSpeechSpeed;
     private FloatingActionButton fabShare;
+    private FloatingActionButton fabSave;
+    private FloatingActionButton fabSend;
     private ImageView backgroundImage;
     private CoordinatorLayout inputTextLayout;
     private CoordinatorLayout outputTextLayout;
     private CoordinatorLayout onTouchEventField;
     private SeekBar seekBarSpeechSpeed;
+    private SeekBar seekBarSpeechFeed;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSettingsOpen;
     private boolean isSpeechSettingsOpen;
     private boolean isShowTranslatedTextFrame;
     private boolean isShowInputTextFrame;
+    private boolean isShowShareSettings;
     private Context context;
     private ValueAnimator valueAnimator;
 
@@ -72,6 +82,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         fabSpeechFeed = findViewById(R.id.fab_speech_feed);
         fabSpeechSpeed = findViewById(R.id.fab_speech_speed);
         fabShare = findViewById(R.id.fab_share);
+        fabSave = findViewById(R.id.fab_save);
+        fabSend = findViewById(R.id.fab_send);
 
         inputTextLayout = findViewById(R.id.input_text_layout);
 
@@ -82,6 +94,12 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         backgroundImage = findViewById(R.id.image_view_translator_background);
 
         seekBarSpeechSpeed = findViewById(R.id.seek_bar_speech_speed);
+        seekBarSpeechSpeed.setMax(100);
+        seekBarSpeechSpeed.setProgress(50);
+
+        seekBarSpeechFeed = findViewById(R.id.seek_bar_speech_feed);
+        seekBarSpeechFeed.setMax(100);
+        seekBarSpeechFeed.setProgress(50);
 
         toolBarAnimation = (AnimationDrawable) toolbarLayout.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
@@ -99,14 +117,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         isShowInputTextFrame = true;
 
+        isShowShareSettings = false;
+
         outputTextLayout.setVisibility(View.GONE);
-        fabSpeechSpeed.setVisibility(View.GONE);
-        fabSpeechFeed.setVisibility(View.GONE);
-        seekBarSpeechSpeed.setVisibility(View.GONE);
-        seekBarSpeechSpeed.animate().translationX(1000f).setDuration(0).start();
 
         onSwipeTouchListener();
-
     }
 
 
@@ -138,6 +153,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+
     public void onSpeechSettingsClickListener(View view) {
 
         if (!isSpeechSettingsOpen){
@@ -148,6 +164,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             closeSpeechSettings();
         }
     }
+
 
 
     public void onSettingsClickListener(View view) {
@@ -163,6 +180,70 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
 
 
+    public void onSpeechSpeedClickListener(View view){
+
+        Snacky.builder()
+                .setActivity(TranslatorActivity.this)
+                .setText(R.string.change_speech_speed)
+                .setTextColor(getResources().getColor(R.color.colorText))
+                .centerText()
+                .setBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                .setDuration(Snacky.LENGTH_SHORT)
+                .build()
+                .show();
+    }
+
+
+
+    public void onSpeechFeedClickListener(View view){
+
+        Snacky.builder()
+                .setActivity(TranslatorActivity.this)
+                .setText(R.string.change_speech_feed)
+                .setTextColor(getResources().getColor(R.color.colorText))
+                .centerText()
+                .setBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                .setDuration(Snacky.LENGTH_SHORT)
+                .build()
+                .show();
+    }
+
+
+
+    public void onShareClickListener(View view){
+
+        if (!isShowShareSettings){
+
+            showShareSettings();
+        }else {
+            closeShareSettings();
+        }
+    }
+
+
+    private void showShareSettings(){
+
+        float x = getResources().getDimension(R.dimen.standard_55);
+        float y = fabSpeechSettings.getHeight() + 10;
+
+        fabSave.animate().translationY(y).translationX(x).start();
+        fabSend.animate().translationY(y).start();
+
+        isShowShareSettings = true;
+
+        closeSpeechSettings();
+    }
+
+
+    private void closeShareSettings(){
+
+        fabSave.animate().translationY(0).translationX(0).start();
+        fabSend.animate().translationY(0).start();
+
+        isShowShareSettings = false;
+    }
+
+
     private void showSpeechSettings(){
 
         fabSpeechSpeed.setVisibility(View.VISIBLE);
@@ -170,28 +251,37 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         seekBarSpeechSpeed.setVisibility(View.VISIBLE);
 
         //set speech speed button under share button
-        float x = fabSpeechSettings.getX() - fabShare.getX();
-        float y = fabShare.getHeight() + 10;
+        final float x = fabSpeechSettings.getX() - fabShare.getX();
+        final float y = fabShare.getHeight() + 10;
 
         //set speech feed button under speech speed
         float y1 = y + fabShare.getHeight();
 
         fabSpeechSpeed.animate().translationX(-x).translationY(y).start();
 
-        fabSpeechFeed.animate().translationX(-x).translationY(y1);
+        fabSpeechFeed.animate().translationX(-x).translationY(y1).start();
+
+        seekBarSpeechSpeed.animate().translationY(y).start();
+        seekBarSpeechFeed.animate().translationY(y1).start();
+
+        final int seekBarWidth = onTouchEventField.getWidth() - fabShare.getWidth() * 2;
+        Animation animation = new Animation() {
+
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                ViewGroup.LayoutParams seekBarParams = seekBarSpeechSpeed.getLayoutParams();
+                seekBarParams.width = (int)(seekBarWidth * interpolatedTime);
+                seekBarSpeechSpeed.setLayoutParams(seekBarParams);
+                seekBarSpeechFeed.setLayoutParams(seekBarParams);
+            }
+        };
+        animation.setDuration(500); // in ms
+        seekBarSpeechSpeed.startAnimation(animation);
+        seekBarSpeechFeed.startAnimation(animation);
 
         isSpeechSettingsOpen = true;
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                seekBarSpeechSpeed.animate().translationX(0).translationY(-fabSpeechSpeed.getY())
-                        .setDuration(700).start();
-            }
-        },500);
-
-
-
+        closeShareSettings();
     }
 
 
@@ -199,6 +289,24 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         fabSpeechSpeed.animate().translationX(0).translationY(0).start();
         fabSpeechFeed.animate().translationX(0).translationY(0).start();
+
+        seekBarSpeechSpeed.animate().translationY(0).start();
+        seekBarSpeechFeed.animate().translationY(0).start();
+
+        final int seekBarWidth = 30;
+        Animation animation = new Animation() {
+
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                ViewGroup.LayoutParams seekBarParams = seekBarSpeechSpeed.getLayoutParams();
+                seekBarParams.width = seekBarWidth;
+                seekBarSpeechSpeed.setLayoutParams(seekBarParams);
+                seekBarSpeechFeed.setLayoutParams(seekBarParams);
+            }
+        };
+        animation.setDuration(500); // in ms
+        seekBarSpeechSpeed.startAnimation(animation);
+        seekBarSpeechFeed.startAnimation(animation);
 
         isSpeechSettingsOpen = false;
     }

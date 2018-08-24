@@ -6,4 +6,6 @@
     <string name="next">Дальше</string>
     <string name="change_language">"Изменить язык "</string>
     <string name="change_views_background">Настройки фона</string>
+    <string name="change_speech_speed">изменение скорости речи</string>
+    <string name="change_speech_feed">изменение частоты речи</string>
 </resources>

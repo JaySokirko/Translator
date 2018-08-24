@@ -40,13 +40,34 @@
     </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/attached_anchor"
+        app:layout_anchorGravity="bottom"
+        app:srcCompat="@drawable/ic_action_save"
+        app:fabSize="mini"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchor="@id/attached_anchor"
+        app:layout_anchorGravity="bottom"
+        app:srcCompat="@drawable/ic_action_send"
+        app:fabSize="mini"/>
+
+    <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_share"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom"
-        app:srcCompat="@drawable/ic_action_share" />
+        app:srcCompat="@drawable/ic_action_share"
+        android:onClick="onShareClickListener"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_speech_speed"
@@ -55,6 +76,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|center"
+        android:onClick="onSpeechSpeedClickListener"
         app:srcCompat="@drawable/ic_action_speech_speed"
         app:fabSize="mini"/>
 
@@ -66,6 +88,7 @@
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|center"
         app:srcCompat="@drawable/ic_action_speech_feed"
+        android:onClick="onSpeechFeedClickListener"
         app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -88,6 +111,25 @@
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_action_speech" />
+
+    <SeekBar
+        android:id="@+id/seek_bar_speech_speed"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_anchor="@id/attached_anchor"
+        app:layout_anchorGravity="bottom|center"
+        android:animateLayoutChanges="true"/>
+
+    <SeekBar
+        android:id="@+id/seek_bar_speech_feed"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_anchor="@id/attached_anchor"
+        app:layout_anchorGravity="bottom|center"
+        android:animateLayoutChanges="true"/>
+
+
+
 
 </android.support.design.widget.CoordinatorLayout>
 
