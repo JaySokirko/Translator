@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.OnSwipeTouchListener;
@@ -31,13 +32,16 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private FloatingActionButton fabSpeechSettings;
     private FloatingActionButton fabSpeechFeed;
     private FloatingActionButton fabSpeechSpeed;
+    private FloatingActionButton fabShare;
     private ImageView backgroundImage;
     private CoordinatorLayout inputTextLayout;
     private CoordinatorLayout outputTextLayout;
     private CoordinatorLayout onTouchEventField;
+    private SeekBar seekBarSpeechSpeed;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSettingsOpen;
+    private boolean isSpeechSettingsOpen;
     private boolean isShowTranslatedTextFrame;
     private boolean isShowInputTextFrame;
     private Context context;
@@ -67,6 +71,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         fabSpeechSettings = findViewById(R.id.fab_speech_settings);
         fabSpeechFeed = findViewById(R.id.fab_speech_feed);
         fabSpeechSpeed = findViewById(R.id.fab_speech_speed);
+        fabShare = findViewById(R.id.fab_share);
 
         inputTextLayout = findViewById(R.id.input_text_layout);
 
@@ -75,6 +80,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         onTouchEventField = findViewById(R.id.container);
 
         backgroundImage = findViewById(R.id.image_view_translator_background);
+
+        seekBarSpeechSpeed = findViewById(R.id.seek_bar_speech_speed);
 
         toolBarAnimation = (AnimationDrawable) toolbarLayout.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
@@ -86,12 +93,17 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         //settings menu is collapsed by default
         isSettingsOpen = false;
 
+        isSpeechSettingsOpen = false;
+
         isShowTranslatedTextFrame = false;
 
         isShowInputTextFrame = true;
 
         outputTextLayout.setVisibility(View.GONE);
         fabSpeechSpeed.setVisibility(View.GONE);
+        fabSpeechFeed.setVisibility(View.GONE);
+        seekBarSpeechSpeed.setVisibility(View.GONE);
+        seekBarSpeechSpeed.animate().translationX(1000f).setDuration(0).start();
 
         onSwipeTouchListener();
 
@@ -114,39 +126,29 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+    //on translate button click
     public void onTranslateClickListener(View view) {
+        showTranslatedTextFrame();
+    }
 
-        switch (view.getId()) {
 
-            case R.id.fab_translation:
+    //on clear text button click
+    public void onClearTextClickListener(View view) {
 
-                showTranslatedTextFrame();
-                break;
+    }
 
-            case R.id.fab_cancel:
 
-                showInputTextFrame();
-                break;
+    public void onSpeechSettingsClickListener(View view) {
+
+        if (!isSpeechSettingsOpen){
+
+            showSpeechSettings();
+        } else {
+
+            closeSpeechSettings();
         }
     }
 
-
-    public void onSpeechSettingsClickListener(View view){
-
-        fabSpeechSpeed.setVisibility(View.VISIBLE);
-
-        valueAnimator = ValueAnimator.ofFloat(fabSpeechSettings.getX(),0f);
-        valueAnimator.setDuration(800);
-
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                fabSpeechSpeed.setTranslationX((float) animation.getAnimatedValue());
-            }
-        });
-        valueAnimator.start();
-
-    }
 
     public void onSettingsClickListener(View view) {
 
@@ -157,6 +159,48 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
             closeSettings();
         }
+    }
+
+
+
+    private void showSpeechSettings(){
+
+        fabSpeechSpeed.setVisibility(View.VISIBLE);
+        fabSpeechFeed.setVisibility(View.VISIBLE);
+        seekBarSpeechSpeed.setVisibility(View.VISIBLE);
+
+        //set speech speed button under share button
+        float x = fabSpeechSettings.getX() - fabShare.getX();
+        float y = fabShare.getHeight() + 10;
+
+        //set speech feed button under speech speed
+        float y1 = y + fabShare.getHeight();
+
+        fabSpeechSpeed.animate().translationX(-x).translationY(y).start();
+
+        fabSpeechFeed.animate().translationX(-x).translationY(y1);
+
+        isSpeechSettingsOpen = true;
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                seekBarSpeechSpeed.animate().translationX(0).translationY(-fabSpeechSpeed.getY())
+                        .setDuration(700).start();
+            }
+        },500);
+
+
+
+    }
+
+
+    private void closeSpeechSettings(){
+
+        fabSpeechSpeed.animate().translationX(0).translationY(0).start();
+        fabSpeechFeed.animate().translationX(0).translationY(0).start();
+
+        isSpeechSettingsOpen = false;
     }
 
 
@@ -271,9 +315,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             public void onSwipeLeft() {
                 super.onSwipeLeft();
 
-               if (!isShowTranslatedTextFrame) {
-                   showTranslatedTextFrame();
-               }
+                if (!isShowTranslatedTextFrame) {
+                    showTranslatedTextFrame();
+                }
             }
 
             @Override
@@ -286,6 +330,4 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             }
         });
     }
-
-
 }

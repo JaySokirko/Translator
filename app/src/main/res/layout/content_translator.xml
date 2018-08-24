@@ -8,6 +8,7 @@
     tools:context=".activities.TranslatorActivity"
     tools:showIn="@layout/activity_translator">
 
+
     <ImageView
         android:id="@+id/image_view_translator_background"
         android:layout_width="match_parent"
@@ -18,23 +19,26 @@
 
 
     <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/container"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
 
-        <include layout="@layout/output_text"/>
+        <include layout="@layout/output_text" />
 
-        <include layout="@layout/input_text"/>
-
-
-
-
+        <include layout="@layout/input_text" />
 
     </android.support.design.widget.CoordinatorLayout>
 
+    <SeekBar
+        android:id="@+id/seek_bar_speech_speed"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="100dp"
+        android:background="@drawable/view_rounded"/>
 
 </FrameLayout>
