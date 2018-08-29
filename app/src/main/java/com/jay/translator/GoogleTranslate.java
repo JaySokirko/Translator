@@ -1,6 +1,7 @@
 package com.jay.translator;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -22,6 +23,7 @@ public class GoogleTranslate {
     public static final String SPANISH = "es";
     public static final String GERMAN = "de";
     public static final String FRENCH = "fr";
+    private static final String TAG = "TAG";
 
     public GoogleTranslate() {
     }
@@ -72,6 +74,7 @@ public class GoogleTranslate {
                         return obj.get("data").getAsJsonObject().
                                 get("translations").getAsJsonArray().get(0).getAsJsonObject().
                                 get("translatedText").getAsString();
+
                     }
                 }
             } catch (IOException e) {

@@ -9,4 +9,6 @@
     <string name="change_speech_speed">cambiare la velocità del discorso</string>
     <string name="change_speech_feed">cambiamento nella frequenza del discorso</string>
     <string name="enter_text">Inserisci del testo</string>
+    <string name="first_enter_the_text">Innanzitutto inserisci il testo</string>
+    <string name="the_language_of_translation_coincides_with_the_original">La lingua della traduzione coincide con l\'originale</string>
 </resources>

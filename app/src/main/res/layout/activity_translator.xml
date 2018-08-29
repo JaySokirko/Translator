@@ -14,7 +14,7 @@
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:expanded="true">
+        app:expanded="false">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -36,26 +36,24 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_collapseMode="none"
-                android:paddingTop="30dp">
+                android:layout_height="wrap_content">
 
                 <NumberPicker
                     android:id="@+id/spinner_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
                     android:layout_centerVertical="true"
-                    android:orientation="vertical"/>
+                    android:layout_marginBottom="21dp"
+                    android:layout_marginStart="@dimen/standard_55" />
 
-                <Spinner
+                <NumberPicker
                     android:id="@+id/spinner_to"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
-                    android:popupBackground="@color/colorTransparent"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/standard_55"
+                    android:layout_marginBottom="21dp"/>
 
             </RelativeLayout>
 
@@ -93,7 +91,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|center"
+        app:layout_anchorGravity="bottom"
         app:srcCompat="@drawable/ic_action_microphone" />
 
     <android.support.design.widget.FloatingActionButton

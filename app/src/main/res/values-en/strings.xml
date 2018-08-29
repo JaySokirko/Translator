@@ -9,5 +9,7 @@
     <string name="change_speech_speed">change speech speed</string>
     <string name="change_speech_feed">change speech frequency</string>
     <string name="enter_text">Enter some text</string>
+    <string name="first_enter_the_text">First enter the text</string>
+    <string name="the_language_of_translation_coincides_with_the_original">The language of translation coincides with the original</string>
 
 </resources>
