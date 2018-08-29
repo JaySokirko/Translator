@@ -1,12 +1,17 @@
 package com.jay.translator.activities;
 
-import android.animation.LayoutTransition;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.tts.TextToSpeech;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,13 +22,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.jay.translator.GoogleTranslate;
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
 import com.jay.translator.ViewSettings;
+import com.jay.translator.adapters.languages_spenner.Language;
+import com.jay.translator.adapters.languages_spenner.LanguagesSpinner;
+
+import java.util.ArrayList;
+import java.util.Locale;
 
 import de.mateware.snacky.Snacky;
 
@@ -47,6 +63,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private CoordinatorLayout onTouchEventField;
     private SeekBar seekBarSpeechSpeed;
     private SeekBar seekBarSpeechFeed;
+    private EditText editedText;
+    private TextView translatedText;
+    private Spinner spinnerFrom;
+    private Spinner spinnerTo;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSettingsOpen;
@@ -56,9 +76,16 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private boolean isShowShareSettings;
     private Context context;
     private ValueAnimator valueAnimator;
+    private String languageFrom;
+    private String languageTo;
+    private TextToSpeech textToSpeech;
+    private String locale;
+    private SharedPreferences.Editor editor;
+
+    private float pitchValue;
 
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +111,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         fabShare = findViewById(R.id.fab_share);
         fabSave = findViewById(R.id.fab_save);
         fabSend = findViewById(R.id.fab_send);
+        editedText = findViewById(R.id.edited_text);
+        translatedText = findViewById(R.id.translated_text);
 
         inputTextLayout = findViewById(R.id.input_text_layout);
 
@@ -100,6 +129,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         seekBarSpeechFeed = findViewById(R.id.seek_bar_speech_feed);
         seekBarSpeechFeed.setMax(100);
         seekBarSpeechFeed.setProgress(50);
+
+        spinnerFrom = findViewById(R.id.spinner_from);
+        spinnerTo = findViewById(R.id.spinner_to);
 
         toolBarAnimation = (AnimationDrawable) toolbarLayout.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
@@ -122,6 +154,22 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         outputTextLayout.setVisibility(View.GONE);
 
         onSwipeTouchListener();
+
+        initLanguagesList();
+
+        onSelectLanguageFromListener();
+        onSelectLanguageToListener();
+
+        SharedPreferences preferences = context.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        editor = preferences.edit();
+        locale = preferences.getString("language", "en");
+
+        spinnerFrom.setSelection(preferences.getInt("selectionFrom", 0));
+        spinnerTo.setSelection(preferences.getInt("selectionTo", 1));
+
+        editedText.setText(preferences.getString("editedText",""));
+
+        onPitchChangeListener();
     }
 
 
@@ -141,22 +189,45 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        editor.putString("editedText",editedText.getText().toString());
+        editor.apply();
+    }
+
+
+
+    private void startTranslate() {
+
+        if (isOnline()) {
+
+            new TranslateTask(context).execute();
+        } else {
+
+            alertDialogNoInternetConnection();
+        }
+    }
+
+
     //on translate button click
-    public void onTranslateClickListener(View view) {
+    public void onTranslateClick(View view) {
         showTranslatedTextFrame();
+
+        startTranslate();
     }
 
 
     //on clear text button click
-    public void onClearTextClickListener(View view) {
-
+    public void onClearTextClick(View view) {
+        editedText.setText("");
     }
 
 
 
-    public void onSpeechSettingsClickListener(View view) {
+    public void onSpeechSettingsClick(View view) {
 
-        if (!isSpeechSettingsOpen){
+        if (!isSpeechSettingsOpen) {
 
             showSpeechSettings();
         } else {
@@ -167,7 +238,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
 
 
-    public void onSettingsClickListener(View view) {
+    public void onSettingsClick(View view) {
 
         if (!isSettingsOpen) {
 
@@ -180,7 +251,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
 
 
-    public void onSpeechSpeedClickListener(View view){
+    public void onSpeechSpeedClick(View view) {
 
         Snacky.builder()
                 .setActivity(TranslatorActivity.this)
@@ -194,8 +265,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-
-    public void onSpeechFeedClickListener(View view){
+    public void onSpeechFeedClick(View view) {
 
         Snacky.builder()
                 .setActivity(TranslatorActivity.this)
@@ -210,18 +280,19 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
 
 
-    public void onShareClickListener(View view){
+    public void onShareClick(View view) {
 
-        if (!isShowShareSettings){
+        if (!isShowShareSettings) {
 
             showShareSettings();
-        }else {
+        } else {
             closeShareSettings();
         }
     }
 
 
-    private void showShareSettings(){
+
+    private void showShareSettings() {
 
         float x = getResources().getDimension(R.dimen.standard_55);
         float y = fabSpeechSettings.getHeight() + 10;
@@ -235,7 +306,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    private void closeShareSettings(){
+
+    private void closeShareSettings() {
 
         fabSave.animate().translationY(0).translationX(0).start();
         fabSend.animate().translationY(0).start();
@@ -244,7 +316,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    private void showSpeechSettings(){
+    private void showSpeechSettings() {
 
         fabSpeechSpeed.setVisibility(View.VISIBLE);
         fabSpeechFeed.setVisibility(View.VISIBLE);
@@ -270,7 +342,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 ViewGroup.LayoutParams seekBarParams = seekBarSpeechSpeed.getLayoutParams();
-                seekBarParams.width = (int)(seekBarWidth * interpolatedTime);
+                seekBarParams.width = (int) (seekBarWidth * interpolatedTime);
                 seekBarSpeechSpeed.setLayoutParams(seekBarParams);
                 seekBarSpeechFeed.setLayoutParams(seekBarParams);
             }
@@ -285,7 +357,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    private void closeSpeechSettings(){
+
+    private void closeSpeechSettings() {
 
         fabSpeechSpeed.animate().translationX(0).translationY(0).start();
         fabSpeechFeed.animate().translationX(0).translationY(0).start();
@@ -312,6 +385,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+
     private void showSettings() {
 
         new Handler().post(new Runnable() {
@@ -327,6 +401,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             }
         });
     }
+
 
 
     private void closeSettings() {
@@ -352,8 +427,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0) {
             //if app bar is collapsed hide settings view
             closeSettings();
+
         }
+
+        float a = (float) (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange()) * -1;
+
+        float b = (a / (appBarLayout.getTotalScrollRange() / 2)) / 2;
     }
+
 
 
     private void setBackground() {
@@ -367,6 +448,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             }
         });
     }
+
 
 
     private void showTranslatedTextFrame() {
@@ -390,6 +472,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         isShowTranslatedTextFrame = true;
         isShowInputTextFrame = false;
     }
+
 
 
     private void showInputTextFrame() {
@@ -437,5 +520,271 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                 }
             }
         });
+    }
+
+
+
+    private void onSelectLanguageFromListener() {
+
+        spinnerFrom.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position) {
+
+                    case 0:
+                        languageFrom = GoogleTranslate.ENGLISH;
+                        break;
+
+                    case 1:
+                        languageFrom = GoogleTranslate.RUSSIAN;
+                        break;
+
+                    case 2:
+                        languageFrom = GoogleTranslate.FRENCH;
+                        break;
+
+                    case 3:
+                        languageFrom = GoogleTranslate.GERMAN;
+                        break;
+
+                    case 4:
+                        languageFrom = GoogleTranslate.ITALIAN;
+                        break;
+
+                    case 5:
+                        languageFrom = GoogleTranslate.SPANISH;
+                        break;
+                }
+
+                editor.putInt("selectionFrom", position);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+
+
+    public void onSelectLanguageToListener() {
+
+        spinnerTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position) {
+
+                    case 0:
+                        languageTo = GoogleTranslate.ENGLISH;
+                        locale = "en";
+                        break;
+
+                    case 1:
+                        languageTo = GoogleTranslate.RUSSIAN;
+                        locale = "ru";
+                        break;
+
+                    case 2:
+                        languageTo = GoogleTranslate.FRENCH;
+                        locale = "fr";
+                        break;
+
+                    case 3:
+                        languageTo = GoogleTranslate.GERMAN;
+                        locale = "de";
+                        break;
+
+                    case 4:
+                        languageTo = GoogleTranslate.ITALIAN;
+                        locale = "it";
+                        break;
+
+                    case 5:
+                        languageTo = GoogleTranslate.SPANISH;
+                        locale = "es";
+                        break;
+                }
+
+                editor.putString("language", locale);
+                editor.putInt("selectionTo", position);
+                editor.apply();
+
+                initializeTextToSpeech(locale);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+
+
+    public void onSpeechText(View view) {
+        String text;
+        text = translatedText.getText().toString();
+        textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+    }
+
+
+
+    public void initializeTextToSpeech(final String locale) {
+
+        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+
+                int result;
+
+                if (status == TextToSpeech.SUCCESS) {
+
+                    if (locale != null) {
+                        result = textToSpeech.setLanguage(new Locale(locale));
+                    } else {
+                        result = textToSpeech.setLanguage(Locale.ENGLISH);
+                    }
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+
+                        Toast.makeText(context, "Язык не поддерживается",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+
+
+
+    private void onPitchChangeListener() {
+
+        seekBarSpeechFeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                pitchValue = (float) seekBar.getProgress() / 50;
+
+                if (pitchValue < 0.1)
+                    pitchValue = 0.1f;
+
+                textToSpeech.setPitch(pitchValue);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+
+        seekBarSpeechSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                pitchValue = (float) seekBarSpeechSpeed.getProgress() / 50;
+
+                if (pitchValue < 0.1)
+                    pitchValue = 0.1f;
+
+                textToSpeech.setSpeechRate(pitchValue);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+    }
+
+
+    //check an internet connection
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return (cm != null ? cm.getActiveNetworkInfo() : null) != null;
+    }
+
+    //If there is no internet connection then show the dialog
+    public void alertDialogNoInternetConnection() {
+        Toast.makeText(context, "no internet connection", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void initLanguagesList() {
+
+        ArrayList<Language> languageList = new ArrayList<>();
+        languageList.add(new Language("English"));
+        languageList.add(new Language("Русский"));
+        languageList.add(new Language("Français"));
+        languageList.add(new Language("Deutsch"));
+        languageList.add(new Language("Italiano"));
+        languageList.add(new Language("Español"));
+
+        LanguagesSpinner adapter = new LanguagesSpinner(context, languageList);
+        spinnerFrom.setAdapter(adapter);
+        spinnerTo.setAdapter(adapter);
+    }
+
+
+    private class TranslateTask extends AsyncTask<Void, Void, String> {
+
+        private Context context;
+        private ProgressDialog progressBar;
+
+
+        TranslateTask(Context context) {
+            this.context = context;
+            progressBar = new ProgressDialog(context);
+            progressBar.setTitle("идет перевод");
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            String text = null;
+            try {
+
+                GoogleTranslate googleTranslate = new GoogleTranslate();
+
+                String textToTranslate = editedText.getText().toString();
+
+                text = googleTranslate.translate(textToTranslate, languageTo, languageFrom, getApplicationContext());
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return text;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+                result = result.replace("&#39;", "'");
+                result = result.replace("&quot;", "`");
+            }
+
+            translatedText.setText(result);
+
+            progressBar.dismiss();
+
+        }
     }
 }

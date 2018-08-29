@@ -8,4 +8,5 @@
     <string name="change_views_background">Impostazioni di sfondo</string>
     <string name="change_speech_speed">cambiare la velocità del discorso</string>
     <string name="change_speech_feed">cambiamento nella frequenza del discorso</string>
+    <string name="enter_text">Inserisci del testo</string>
 </resources>

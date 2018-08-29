@@ -24,14 +24,14 @@
             android:layout_height="match_parent"
             tools:ignore="UselessParent">
 
-            <TextView
+            <EditText
+                android:id="@+id/edited_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:paddingBottom="30dp"
-                android:text="@string/long_text"
+                android:hint="@string/enter_text"
                 android:textColor="@color/colorText"
                 android:textSize="16sp" />
 
@@ -45,7 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="onTranslateClickListener"
+        android:onClick="onTranslateClick"
         app:layout_anchor="@id/attached_anchor2"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_action_translation" />
@@ -55,7 +55,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="onClearTextClickListener"
+        android:onClick="onClearTextClick"
         app:layout_anchor="@id/attached_anchor2"
         app:layout_anchorGravity="bottom|center"
         app:srcCompat="@drawable/ic_action_clear_text" />

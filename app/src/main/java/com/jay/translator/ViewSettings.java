@@ -61,7 +61,6 @@ public class ViewSettings {
                backgroundImage.setImageResource(R.drawable.italy);
                break;
        }
-
    }
 
 

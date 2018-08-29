@@ -25,13 +25,14 @@
             tools:ignore="UselessParent">
 
             <TextView
+                android:id="@+id/translated_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:text="@string/long_text"
+                android:paddingBottom="30dp"
                 android:textColor="@color/colorText"
                 android:textSize="16sp" />
 
@@ -67,7 +68,7 @@
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom"
         app:srcCompat="@drawable/ic_action_share"
-        android:onClick="onShareClickListener"/>
+        android:onClick="onShareClick"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_speech_speed"
@@ -76,7 +77,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|center"
-        android:onClick="onSpeechSpeedClickListener"
+        android:onClick="onSpeechSpeedClick"
         app:srcCompat="@drawable/ic_action_speech_speed"
         app:fabSize="mini"/>
 
@@ -88,7 +89,7 @@
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|center"
         app:srcCompat="@drawable/ic_action_speech_feed"
-        android:onClick="onSpeechFeedClickListener"
+        android:onClick="onSpeechFeedClick"
         app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -99,7 +100,7 @@
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|center"
         app:srcCompat="@drawable/ic_action_speech_settings"
-        android:onClick="onSpeechSettingsClickListener"/>
+        android:onClick="onSpeechSettingsClick"/>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -107,7 +108,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:onClick="onTranslateClickListener"
+        android:onClick="onSpeechText"
         app:layout_anchor="@id/attached_anchor"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_action_speech" />

@@ -8,4 +8,5 @@
     <string name="change_views_background">Hintergrundeinstellungen</string>
     <string name="change_speech_speed">sprachgeschwindigkeit ändern</string>
     <string name="change_speech_feed">Änderung der sprachfrequenz</string>
+    <string name="enter_text">Gib einen text ein</string>
 </resources>

@@ -8,4 +8,5 @@
     <string name="change_views_background">Настройки фона</string>
     <string name="change_speech_speed">изменение скорости речи</string>
     <string name="change_speech_feed">изменение частоты речи</string>
+    <string name="enter_text">"Введите какой-то текст "</string>
 </resources>

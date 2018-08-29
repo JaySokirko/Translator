@@ -40,7 +40,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     private ListView listView;
     private ImageView backgroundImage;
     private AnimationDrawable toolBarAnimation;
-    private AnimationDrawable buttonBarAnimation;
+    private AnimationDrawable buttonNextAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +61,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
         listView.setAdapter(adapter);
 
-        buttonBarAnimation = (AnimationDrawable) next.getBackground();
-        buttonBarAnimation.setExitFadeDuration(4000);
+        buttonNextAnimation = (AnimationDrawable) next.getBackground();
+        buttonNextAnimation.setExitFadeDuration(4000);
 
         toolBarAnimation = (AnimationDrawable) toolbar.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
@@ -77,8 +77,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (buttonBarAnimation != null && !buttonBarAnimation.isRunning())
-            buttonBarAnimation.start();
+        if (buttonNextAnimation != null && !buttonNextAnimation.isRunning())
+            buttonNextAnimation.start();
 
         if (toolBarAnimation != null && !toolBarAnimation.isRunning())
             toolBarAnimation.start();
@@ -89,8 +89,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (buttonBarAnimation != null && buttonBarAnimation.isRunning())
-            buttonBarAnimation.stop();
+        if (buttonNextAnimation != null && buttonNextAnimation.isRunning())
+            buttonNextAnimation.stop();
 
         if (toolBarAnimation != null && toolBarAnimation.isRunning())
             toolBarAnimation.stop();
@@ -163,8 +163,19 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     }
 
 
-    public void startTranslatorActivity(View view){
-        startActivity(new Intent(this,TranslatorActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+    public void startTranslatorActivity(final View view){
+
+       view.setBackground(getDrawable(R.drawable.view_rounded));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                startActivity(new Intent(ChoiceLanguageActivity.this,TranslatorActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        },0);
+
+
     }
 }
