@@ -25,7 +25,6 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
@@ -36,7 +35,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
                 <NumberPicker
                     android:id="@+id/spinner_from"
@@ -57,6 +56,27 @@
 
             </RelativeLayout>
 
+            <TextView
+                android:id="@+id/language_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:text="English"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="80dp"/>
+
+            <TextView
+                android:id="@+id/language_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:textColor="@color/colorWhite"
+                android:text="English"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="80dp"/>
+
+
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
@@ -72,7 +92,8 @@
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
         app:fabSize="mini"
-        app:srcCompat="@drawable/ic_action_global" />
+        app:srcCompat="@drawable/ic_action_global"
+        android:onClick="setLanguage"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_view_settings"

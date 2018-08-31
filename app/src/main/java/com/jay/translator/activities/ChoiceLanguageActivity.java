@@ -173,6 +173,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
                 startActivity(new Intent(ChoiceLanguageActivity.this,TranslatorActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+
+                ChoiceLanguageActivity.this.finish();
             }
         },0);
 

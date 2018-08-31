@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">English</string>
+    <string name="app_name">Translator</string>
     <string name="select_your_language">Scegli la tua lingua</string>
     <string name="please_wait">"Attendere prego"</string>
     <string name="next">"In avanti"</string>

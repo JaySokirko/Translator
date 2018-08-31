@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
@@ -12,17 +13,22 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.FloatRange;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
@@ -64,6 +70,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private TextView translatedText;
     private NumberPicker spinnerFrom;
     private NumberPicker spinnerTo;
+    private TextView languageFromHint;
+    private TextView languageToHint;
+    private FrameLayout attachedAnchor;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSettingsOpen;
@@ -72,7 +81,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private boolean isShowInputTextFrame;
     private boolean isShowShareSettings;
     private boolean isLanguageSupported;
-    private boolean isAppbarExpanded;
     private Context context;
     private ValueAnimator valueAnimator;
     private String languageFrom;
@@ -82,6 +90,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     private float speechSpeed;
     private float speechFeed;
+    private String[] languages;
 
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
@@ -112,13 +121,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         fabSend = findViewById(R.id.fab_send);
         editedText = findViewById(R.id.edited_text);
         translatedText = findViewById(R.id.translated_text);
-
+        languageFromHint = findViewById(R.id.language_from);
+        languageToHint = findViewById(R.id.language_to);
         inputTextLayout = findViewById(R.id.input_text_layout);
-
         outputTextLayout = findViewById(R.id.output_text_layout);
-
         onTouchEventField = findViewById(R.id.container);
-
         backgroundImage = findViewById(R.id.image_view_translator_background);
 
         seekBarSpeechSpeed = findViewById(R.id.seek_bar_speech_speed);
@@ -128,6 +135,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         seekBarSpeechFeed = findViewById(R.id.seek_bar_speech_feed);
         seekBarSpeechFeed.setMax(100);
         seekBarSpeechFeed.setProgress(50);
+
+        attachedAnchor = findViewById(R.id.attached_anchor2);
 
         spinnerFrom = findViewById(R.id.spinner_from);
         spinnerTo = findViewById(R.id.spinner_to);
@@ -174,6 +183,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         initializeTextToSpeech(languageTo);
         onPitchChangeListener();
+
+        setLayoutParamsToTextViews();
+
+        languageFromHint.setText(languages[preferences.getInt("selectionFrom", 0)]);
+        languageToHint.setText(languages[preferences.getInt("selectionTo", 1)]);
+
+//        editedText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+//        editedText.setRawInputType(InputType.TYPE_CLASS_TEXT);
     }
 
 
@@ -202,6 +219,49 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+    private void setLayoutParamsToTextViews() {
+
+        //get app bar height
+        TypedValue typedValue = new TypedValue();
+
+        int actionBarHeight = 0;
+
+        if (getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
+        }
+
+        //set views to center
+        CollapsingToolbarLayout.LayoutParams p1 = (CollapsingToolbarLayout.LayoutParams) languageFromHint.getLayoutParams();
+        p1.setMargins(0, 0, 0, actionBarHeight / 2);
+        languageFromHint.setLayoutParams(p1);
+
+        CollapsingToolbarLayout.LayoutParams p2 = (CollapsingToolbarLayout.LayoutParams) languageToHint.getLayoutParams();
+        p2.setMargins(0, 0, 0, actionBarHeight / 2);
+        languageToHint.setLayoutParams(p2);
+    }
+
+
+    private void resizeLayout() {
+
+        Log.d(TAG, "resizeLayout: " + attachedAnchor.getHeight());
+
+        final float height = onTouchEventField.getHeight();
+        final float toHeight = onTouchEventField.getHeight() / 2;
+
+        Animation animation = new Animation() {
+
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                FrameLayout.LayoutParams seekBarParams = (FrameLayout.LayoutParams) onTouchEventField.getLayoutParams();
+                seekBarParams.height = (int) (height + (toHeight - height) * interpolatedTime);
+                onTouchEventField.setLayoutParams(seekBarParams);
+            }
+        };
+        animation.setDuration(500); // in ms
+        onTouchEventField.startAnimation(animation);
+    }
+
+
     private void startTranslate() {
 
         if (isOnline()) {
@@ -214,6 +274,13 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
             alertDialogNoInternetConnection();
         }
+    }
+
+
+    public void setLanguage(View view) {
+
+        startActivity(new Intent(context, ChoiceLanguageActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 
 
@@ -241,7 +308,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     //on clear text button click
     public void onClearTextClick(View view) {
-        editedText.setText("");
+//        editedText.setText("");
+
+        resizeLayout();
     }
 
 
@@ -311,7 +380,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0) {
             //if app bar is collapsed hide settings view
             closeSettings();
-
         }
 
         //turning the maximum value of the verticalOffset in the number = 1.0f,
@@ -319,21 +387,27 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         float a = (float) (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange()) * -1;
         float b = (a / (appBarLayout.getTotalScrollRange() / 2)) / 2;
 
+        float x = -1 * verticalOffset;
+        float z = x / appBarLayout.getTotalScrollRange();
+
         spinnerFrom.animate().alpha(b).start();
         spinnerTo.animate().alpha(b).start();
+        languageFromHint.animate().alpha(z).start();
+        languageToHint.animate().alpha(z).start();
 
-        if (b < 0.7) {
-
+        if (b < 0.3) {
             spinnerFrom.setVisibility(View.GONE);
             spinnerTo.setVisibility(View.GONE);
-
-        } else if (b > 0.7) {
-
+            languageFromHint.setVisibility(View.VISIBLE);
+            languageToHint.setVisibility(View.VISIBLE);
+        }
+        if (b >= 0.3) {
             spinnerFrom.setVisibility(View.VISIBLE);
             spinnerTo.setVisibility(View.VISIBLE);
+            languageFromHint.setVisibility(View.GONE);
+            languageToHint.setVisibility(View.GONE);
         }
     }
-
 
 
     private void showShareSettings() {
@@ -548,6 +622,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private void onSelectLanguageFromListener() {
 
         spinnerFrom.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
@@ -555,26 +630,32 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                     case 0:
                         languageFrom = GoogleTranslate.ENGLISH;
+                        languageFromHint.setText("English");
                         break;
 
                     case 1:
                         languageFrom = GoogleTranslate.RUSSIAN;
+                        languageFromHint.setText("Русский");
                         break;
 
                     case 2:
                         languageFrom = GoogleTranslate.FRENCH;
+                        languageFromHint.setText("Français");
                         break;
 
                     case 3:
                         languageFrom = GoogleTranslate.GERMAN;
+                        languageFromHint.setText("Deutsch");
                         break;
 
                     case 4:
                         languageFrom = GoogleTranslate.ITALIAN;
+                        languageFromHint.setText("Italiano");
                         break;
 
                     case 5:
                         languageFrom = GoogleTranslate.SPANISH;
+                        languageFromHint.setText("Español");
                         break;
                 }
 
@@ -589,6 +670,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     public void onSelectLanguageToListener() {
 
         spinnerTo.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
@@ -596,29 +678,34 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                     case 0:
                         languageTo = GoogleTranslate.ENGLISH;
+                        languageToHint.setText("English");
                         break;
 
                     case 1:
                         languageTo = GoogleTranslate.RUSSIAN;
+                        languageToHint.setText("Русский");
                         break;
 
                     case 2:
                         languageTo = GoogleTranslate.FRENCH;
+                        languageToHint.setText("Français");
                         break;
 
                     case 3:
                         languageTo = GoogleTranslate.GERMAN;
+                        languageToHint.setText("Deutsch");
                         break;
 
                     case 4:
                         languageTo = GoogleTranslate.ITALIAN;
+                        languageToHint.setText("Italiano");
                         break;
 
                     case 5:
                         languageTo = GoogleTranslate.SPANISH;
+                        languageToHint.setText("Español");
                         break;
                 }
-
 
                 editor.putInt("selectionTo", newVal);
                 editor.putString("languageTo", languageTo);
@@ -722,7 +809,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     private void initLanguagesSpinners() {
 
-        String languages[] = {"English", "Русский", "Français", "Deutsch", "Italiano", "Español"};
+        languages = new String[]{"English", "Русский", "Français", "Deutsch", "Italiano", "Español"};
 
         spinnerFrom.setMinValue(0);
         spinnerFrom.setMaxValue(languages.length - 1);

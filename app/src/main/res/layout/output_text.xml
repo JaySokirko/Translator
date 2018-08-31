@@ -11,8 +11,8 @@
     <FrameLayout
         android:id="@+id/attached_anchor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="50dp"
@@ -21,7 +21,8 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp"
             tools:ignore="UselessParent">
 
             <TextView
@@ -34,7 +35,8 @@
                 android:layout_marginTop="10dp"
                 android:paddingBottom="30dp"
                 android:textColor="@color/colorText"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:textIsSelectable="true"/>
 
         </ScrollView>
 
