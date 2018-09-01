@@ -9,4 +9,10 @@
     <color name="colorBlack">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorButtons">#656c65</color>
+    <color name="deepPurple">#7e57c2</color>
+    <color name="indigo">#5c6bc0</color>
+    <color name="purple">#ab47bc</color>
+    <color name="blue">#42a5f5</color>
+
+
 </resources>

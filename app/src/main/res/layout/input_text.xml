@@ -9,7 +9,7 @@
 
 
     <FrameLayout
-        android:id="@+id/attached_anchor2"
+        android:id="@+id/input_text_frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
@@ -33,6 +33,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
+                android:paddingBottom="40dp"
                 android:hint="@string/enter_text"
                 android:textColor="@color/colorText"
                 android:textSize="16sp"
@@ -48,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:onClick="onTranslateClick"
-        app:layout_anchor="@id/attached_anchor2"
+        app:layout_anchor="@id/input_text_frame"
         app:layout_anchorGravity="bottom|end"
         app:srcCompat="@drawable/ic_action_translate" />
 
@@ -58,7 +59,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:onClick="onClearTextClick"
-        app:layout_anchor="@id/attached_anchor2"
+        app:layout_anchor="@id/input_text_frame"
         app:layout_anchorGravity="bottom|center"
         app:srcCompat="@drawable/ic_action_clear_text" />
 

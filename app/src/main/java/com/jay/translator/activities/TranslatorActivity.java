@@ -7,13 +7,16 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
-import android.support.annotation.FloatRange;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -22,8 +25,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 ;
@@ -39,6 +44,7 @@ import com.jay.translator.GoogleTranslate;
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
+import com.jay.translator.ResizeAnimation;
 import com.jay.translator.ViewSettings;
 
 
@@ -63,7 +69,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private ImageView backgroundImage;
     private CoordinatorLayout inputTextLayout;
     private CoordinatorLayout outputTextLayout;
-    private CoordinatorLayout onTouchEventField;
+    private FrameLayout onTouchEventField;
     private SeekBar seekBarSpeechSpeed;
     private SeekBar seekBarSpeechFeed;
     private EditText editedText;
@@ -72,7 +78,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private NumberPicker spinnerTo;
     private TextView languageFromHint;
     private TextView languageToHint;
-    private FrameLayout attachedAnchor;
+    private FrameLayout inputTextFrame;
+    private FrameLayout outputTextFrame;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSettingsOpen;
@@ -81,6 +88,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private boolean isShowInputTextFrame;
     private boolean isShowShareSettings;
     private boolean isLanguageSupported;
+    private boolean isLayoutNarrow;
+    private boolean isLayoutStretch;
     private Context context;
     private ValueAnimator valueAnimator;
     private String languageFrom;
@@ -91,7 +100,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private float speechSpeed;
     private float speechFeed;
     private String[] languages;
-
+    private int allowableFrameHeight;
+    private int actionBarHeight;
+    private int inputTextFrameHeight;
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -136,7 +147,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         seekBarSpeechFeed.setMax(100);
         seekBarSpeechFeed.setProgress(50);
 
-        attachedAnchor = findViewById(R.id.attached_anchor2);
+        inputTextFrame = findViewById(R.id.input_text_frame);
+        outputTextFrame = findViewById(R.id.output_text_frame);
 
         spinnerFrom = findViewById(R.id.spinner_from);
         spinnerTo = findViewById(R.id.spinner_to);
@@ -160,6 +172,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         isShowShareSettings = false;
 
         isLanguageSupported = true;
+
+        isLayoutNarrow = false;
+
+        isLayoutStretch = false;
 
         outputTextLayout.setVisibility(View.GONE);
 
@@ -189,8 +205,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         languageFromHint.setText(languages[preferences.getInt("selectionFrom", 0)]);
         languageToHint.setText(languages[preferences.getInt("selectionTo", 1)]);
 
-//        editedText.setImeOptions(EditorInfo.IME_ACTION_DONE);
-//        editedText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int height = size.y;
+        allowableFrameHeight = height - 400 - actionBarHeight;
     }
 
 
@@ -224,7 +243,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         //get app bar height
         TypedValue typedValue = new TypedValue();
 
-        int actionBarHeight = 0;
+        actionBarHeight = 0;
 
         if (getTheme().resolveAttribute(android.R.attr.actionBarSize, typedValue, true)) {
             actionBarHeight = TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics());
@@ -241,24 +260,33 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    private void resizeLayout() {
+    private void narrowLayout(final View view) {
 
-        Log.d(TAG, "resizeLayout: " + attachedAnchor.getHeight());
+        inputTextFrameHeight = view.getHeight();
 
-        final float height = onTouchEventField.getHeight();
-        final float toHeight = onTouchEventField.getHeight() / 2;
+        if (view.getHeight() >= allowableFrameHeight) {
 
-        Animation animation = new Animation() {
+            ResizeAnimation resizeAnimation = new ResizeAnimation(view, view.getHeight() / 2);
+            resizeAnimation.setDuration(600);
+            view.startAnimation(resizeAnimation);
+        }
+    }
 
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                FrameLayout.LayoutParams seekBarParams = (FrameLayout.LayoutParams) onTouchEventField.getLayoutParams();
-                seekBarParams.height = (int) (height + (toHeight - height) * interpolatedTime);
-                onTouchEventField.setLayoutParams(seekBarParams);
-            }
-        };
-        animation.setDuration(500); // in ms
-        onTouchEventField.startAnimation(animation);
+    private void stretchLayout(final View view) {
+
+        if (inputTextFrameHeight > view.getHeight()) {
+
+            ResizeAnimation resizeAnimation = new ResizeAnimation(view, view.getHeight() * 2);
+            resizeAnimation.setDuration(600);
+            view.startAnimation(resizeAnimation);
+        }
+    }
+
+    private void setDefaultSize(View view) {
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
+        params.height = FrameLayout.LayoutParams.WRAP_CONTENT;
+        view.setLayoutParams(params);
     }
 
 
@@ -295,8 +323,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
             } else {
 
-                showTranslatedTextFrame();
                 startTranslate();
+
+                new Handler().post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showTranslatedTextFrame();
+                    }
+                });
             }
         } else {
 
@@ -308,9 +342,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     //on clear text button click
     public void onClearTextClick(View view) {
-//        editedText.setText("");
-
-        resizeLayout();
+        editedText.setText("");
+        setDefaultSize(inputTextFrame);
     }
 
 
@@ -374,6 +407,12 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+    public void onViewSettings(View view){
+
+        startActivity(new Intent(context,SettingsActivity.class));
+    }
+
+
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
@@ -400,12 +439,30 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             spinnerTo.setVisibility(View.GONE);
             languageFromHint.setVisibility(View.VISIBLE);
             languageToHint.setVisibility(View.VISIBLE);
+
+            isLayoutNarrow = false;
+
+            if (isLayoutStretch) {
+                stretchLayout(inputTextFrame);
+                isLayoutStretch = false;
+            }
         }
+
         if (b >= 0.3) {
             spinnerFrom.setVisibility(View.VISIBLE);
             spinnerTo.setVisibility(View.VISIBLE);
             languageFromHint.setVisibility(View.GONE);
             languageToHint.setVisibility(View.GONE);
+        }
+
+        if (b > 0.9) {
+
+            isLayoutStretch = true;
+
+            if (!isLayoutNarrow) {
+                narrowLayout(inputTextFrame);
+                isLayoutNarrow = true;
+            }
         }
     }
 
@@ -511,8 +568,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                 fabSettings.animate().rotation(360).setDuration(1500).start();
 
-                fabChoiceLanguage.animate().translationY(getResources().getDimension(R.dimen.standard_55));
-                fabBackgroundSettings.animate().translationY(getResources().getDimension(R.dimen.standard_105));
+                fabChoiceLanguage.animate().translationY(getResources().getDimension(R.dimen.standard_55))
+                        .setDuration(500).start();
+                fabBackgroundSettings.animate().translationY(getResources().getDimension(R.dimen.standard_55))
+                        .translationX(-getResources().getDimension(R.dimen.standard_55))
+                        .setDuration(500).start();
             }
         });
     }
@@ -528,8 +588,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                 fabSettings.animate().rotation(0).setDuration(1500).start();
 
-                fabChoiceLanguage.animate().translationY(0);
-                fabBackgroundSettings.animate().translationY(0);
+                fabChoiceLanguage.animate().translationY(0).setDuration(500).start();
+                fabBackgroundSettings.animate().translationY(0).translationX(0)
+                        .setDuration(500).start();
             }
         });
     }
