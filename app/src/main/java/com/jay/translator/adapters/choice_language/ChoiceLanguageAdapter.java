@@ -25,13 +25,15 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
     private Context context;
     private String[] values;
     private int[] images;
+    private int[] flags;
 
     private AnimationDrawable animationDrawable;
 
-    public ChoiceLanguageAdapter(Context context, String[] values, int[] images) {
+    public ChoiceLanguageAdapter(Context context, String[] values, int[] images, int[] flags) {
         this.context = context;
         this.values = values;
         this.images = images;
+        this.flags = flags;
     }
 
 
@@ -64,6 +66,7 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
 
             viewHolder.txtName = convertView.findViewById(R.id.text_view_choice_language_list_view);
             viewHolder.icon = convertView.findViewById(R.id.image_view_choice_language_list_view);
+            viewHolder.icFlag = convertView.findViewById(R.id.flag_list_view);
 
             convertView.setTag(viewHolder);
         } else {
@@ -73,11 +76,12 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
 
         viewHolder.txtName.setText(values[position]);
         viewHolder.icon.setImageResource(images[position]);
+        viewHolder.icFlag.setImageResource(flags[position]);
 
-        Animation anim = AnimationUtils.loadAnimation(context,R.anim.grid_item_animation_on_start);
-        anim.setStartOffset(position * 100);
-        convertView.setAnimation(anim);
-        anim.start();
+//        Animation anim = AnimationUtils.loadAnimation(context,R.anim.grid_item_animation_on_start);
+//        anim.setStartOffset(position * 100);
+//        convertView.setAnimation(anim);
+//        anim.start();
 
         return convertView;
     }
@@ -87,5 +91,6 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
 
         TextView txtName;
         ImageView icon;
+        ImageView icFlag;
     }
 }

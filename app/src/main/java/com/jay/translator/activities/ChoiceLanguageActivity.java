@@ -4,16 +4,14 @@ import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
-import com.jay.translator.ViewSettings;
 import com.jay.translator.adapters.choice_language.ChoiceLanguageAdapter;
 
 import de.mateware.snacky.Snacky;
@@ -30,17 +28,26 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
             "Italiano"};
 
     private int[] images = {
+            R.drawable.london,
+            R.drawable.moscow,
+            R.drawable.berlin,
+            R.drawable.paris,
+            R.drawable.madrid,
+            R.drawable.venice};
+
+
+    private int[] flags = {
             R.drawable.ic_united_kingdom_flag,
             R.drawable.ic_russian_flag,
             R.drawable.ic_germany_flag,
             R.drawable.ic_french_flag,
             R.drawable.ic_spanish_flag,
-            R.drawable.ic_italian_flag};
+            R.drawable.ic_italian_flag
+    };
+
 
     private ListView listView;
-    private ImageView backgroundImage;
     private AnimationDrawable toolBarAnimation;
-    private AnimationDrawable buttonNextAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +58,13 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choice_language);
 
         listView = findViewById(R.id.list_view_choice_language);
-        backgroundImage = findViewById(R.id.image_view_choice_language);
-        Button next = findViewById(R.id.button_choice_language_next);
+        FloatingActionButton next = findViewById(R.id.button_choice_language_next);
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_choice_language);
 
-        ViewSettings.setBackgroundImage(LanguageSettings.getLanguage(),backgroundImage);
-
-        ChoiceLanguageAdapter adapter = new ChoiceLanguageAdapter(ChoiceLanguageActivity.this, languages, images);
+        ChoiceLanguageAdapter adapter = new ChoiceLanguageAdapter(ChoiceLanguageActivity.this,
+                languages, images, flags);
 
         listView.setAdapter(adapter);
-
-        buttonNextAnimation = (AnimationDrawable) next.getBackground();
-        buttonNextAnimation.setExitFadeDuration(4000);
 
         toolBarAnimation = (AnimationDrawable) toolbar.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
@@ -76,10 +78,6 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (buttonNextAnimation != null && !buttonNextAnimation.isRunning())
-            buttonNextAnimation.start();
-
         if (toolBarAnimation != null && !toolBarAnimation.isRunning())
             toolBarAnimation.start();
     }
@@ -88,9 +86,6 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        if (buttonNextAnimation != null && buttonNextAnimation.isRunning())
-            buttonNextAnimation.stop();
 
         if (toolBarAnimation != null && toolBarAnimation.isRunning())
             toolBarAnimation.stop();
@@ -105,32 +100,32 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         LanguageSettings.setLocale("en", ChoiceLanguageActivity.this);
-                        applyBackground();
+                        setLanguage();
                         break;
 
                     case 1:
                         LanguageSettings.setLocale("ru", ChoiceLanguageActivity.this);
-                        applyBackground();
+                        setLanguage();
                         break;
 
                     case 2:
                         LanguageSettings.setLocale("de", ChoiceLanguageActivity.this);
-                        applyBackground();
+                        setLanguage();
                         break;
 
                     case 3:
                         LanguageSettings.setLocale("fr", ChoiceLanguageActivity.this);
-                        applyBackground();
+                        setLanguage();
                         break;
 
                     case 4:
                         LanguageSettings.setLocale("es", ChoiceLanguageActivity.this);
-                        applyBackground();
+                        setLanguage();
                         break;
 
                     case 5:
                         LanguageSettings.setLocale("it", ChoiceLanguageActivity.this);
-                        applyBackground();
+                        setLanguage();
                         break;
                 }
             }
@@ -138,10 +133,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     }
 
 
-    private void applyBackground() {
-
-        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(getApplicationContext(),
-                backgroundImage.getDrawable()));
+    private void setLanguage() {
 
         Snacky.builder()
                 .setActivity(ChoiceLanguageActivity.this)
@@ -163,20 +155,20 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     }
 
 
-    public void startTranslatorActivity(final View view){
+    public void startTranslatorActivity(final View view) {
 
-       view.setBackground(getDrawable(R.drawable.view_rounded));
+        view.setBackground(getDrawable(R.drawable.view_rounded));
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
 
-                startActivity(new Intent(ChoiceLanguageActivity.this,TranslatorActivity.class)
+                startActivity(new Intent(ChoiceLanguageActivity.this, TranslatorActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
 
                 ChoiceLanguageActivity.this.finish();
             }
-        },0);
+        }, 0);
 
 
     }

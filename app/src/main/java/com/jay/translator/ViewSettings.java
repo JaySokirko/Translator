@@ -49,7 +49,7 @@ public class ViewSettings {
                backgroundImage.setImageResource(R.drawable.moscow);
                break;
            case "de":
-               backgroundImage.setImageResource(R.drawable.germany);
+               backgroundImage.setImageResource(R.drawable.berlin);
                break;
            case "fr":
                backgroundImage.setImageResource(R.drawable.paris);
@@ -58,7 +58,7 @@ public class ViewSettings {
                backgroundImage.setImageResource(R.drawable.madrid);
                break;
            case "it":
-               backgroundImage.setImageResource(R.drawable.italy);
+               backgroundImage.setImageResource(R.drawable.venice);
                break;
        }
    }

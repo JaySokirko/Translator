@@ -7,13 +7,10 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -28,7 +25,6 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 ;
@@ -88,8 +84,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private boolean isShowInputTextFrame;
     private boolean isShowShareSettings;
     private boolean isLanguageSupported;
-    private boolean isLayoutNarrow;
-    private boolean isLayoutStretch;
+    private boolean isInputFrameNarrow;
+    private boolean isInputFrameStretch;
+    private boolean isOutputFrameNarrow;
+    private boolean isOutputFrameStretch;
+    private boolean isSettingsCall;
     private Context context;
     private ValueAnimator valueAnimator;
     private String languageFrom;
@@ -103,6 +102,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private int allowableFrameHeight;
     private int actionBarHeight;
     private int inputTextFrameHeight;
+    private int outputTextFrameHeight;
+    private int settingsHeight;
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -173,9 +174,13 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         isLanguageSupported = true;
 
-        isLayoutNarrow = false;
+        isInputFrameNarrow = false;
+        isInputFrameStretch = false;
 
-        isLayoutStretch = false;
+        isOutputFrameNarrow = false;
+        isOutputFrameStretch = false;
+
+        isSettingsCall = false;
 
         outputTextLayout.setVisibility(View.GONE);
 
@@ -216,6 +221,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     @Override
     protected void onResume() {
         super.onResume();
+
         if (toolBarAnimation != null && !toolBarAnimation.isRunning())
             toolBarAnimation.start();
     }
@@ -238,6 +244,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+    /**
+     * set prompts in the app bar, which languages were selected
+     */
     private void setLayoutParamsToTextViews() {
 
         //get app bar height
@@ -260,11 +269,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    private void narrowLayout(final View view) {
+    private void narrowInputFrame(final View view) {
 
         inputTextFrameHeight = view.getHeight();
 
-        if (view.getHeight() >= allowableFrameHeight) {
+        if (inputTextFrameHeight >= allowableFrameHeight) {
 
             ResizeAnimation resizeAnimation = new ResizeAnimation(view, view.getHeight() / 2);
             resizeAnimation.setDuration(600);
@@ -272,7 +281,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         }
     }
 
-    private void stretchLayout(final View view) {
+    private void stretchInputFrame(final View view) {
 
         if (inputTextFrameHeight > view.getHeight()) {
 
@@ -282,11 +291,58 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         }
     }
 
+
+    private void narrowOutputFrame(View view) {
+
+        outputTextFrameHeight = view.getHeight();
+
+        if (outputTextFrameHeight >= allowableFrameHeight) {
+
+            ResizeAnimation resizeAnimation = new ResizeAnimation(view, view.getHeight() / 2);
+            resizeAnimation.setDuration(600);
+            view.startAnimation(resizeAnimation);
+        }
+    }
+
+    private void stretchOutputFrame(View view) {
+
+        if (outputTextFrameHeight > view.getHeight()) {
+
+            ResizeAnimation resizeAnimation = new ResizeAnimation(view, view.getHeight() * 2);
+            resizeAnimation.setDuration(600);
+            view.startAnimation(resizeAnimation);
+        }
+    }
+
+
     private void setDefaultSize(View view) {
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) view.getLayoutParams();
         params.height = FrameLayout.LayoutParams.WRAP_CONTENT;
         view.setLayoutParams(params);
+    }
+
+
+    private void onShowSettingsNarrow(View view) {
+
+        int height = view.getHeight();
+
+        ResizeAnimation resizeAnimation = new ResizeAnimation(view, height / 2);
+        resizeAnimation.setDuration(600);
+        view.startAnimation(resizeAnimation);
+
+        isSettingsCall = true;
+    }
+
+    private void onCloseSettingsStretch(View view) {
+
+        int height = view.getHeight();
+
+        ResizeAnimation resizeAnimation = new ResizeAnimation(view, height * 2);
+        resizeAnimation.setDuration(600);
+        view.startAnimation(resizeAnimation);
+
+        isSettingsCall = false;
     }
 
 
@@ -298,6 +354,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
             textToSpeech.setPitch(speechFeed);
             textToSpeech.setSpeechRate(speechSpeed);
+
         } else {
 
             alertDialogNoInternetConnection();
@@ -324,13 +381,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             } else {
 
                 startTranslate();
-
-                new Handler().post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showTranslatedTextFrame();
-                    }
-                });
             }
         } else {
 
@@ -352,9 +402,20 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         if (!isSpeechSettingsOpen) {
 
             openSpeechSettings();
+
+            settingsHeight = outputTextFrame.getHeight();
+
+            if (settingsHeight >= allowableFrameHeight) {
+                onShowSettingsNarrow(outputTextFrame);
+            }
+
         } else {
 
             closeSpeechSettings();
+
+            if (isSettingsCall) {
+                onCloseSettingsStretch(outputTextFrame);
+            }
         }
     }
 
@@ -388,8 +449,20 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         if (!isShowShareSettings) {
 
             showShareSettings();
+
+            settingsHeight = outputTextFrame.getHeight();
+
+            if (settingsHeight >= allowableFrameHeight) {
+                onShowSettingsNarrow(outputTextFrame);
+            }
+
         } else {
+
             closeShareSettings();
+
+            if (isSettingsCall) {
+                onCloseSettingsStretch(outputTextFrame);
+            }
         }
     }
 
@@ -407,9 +480,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    public void onViewSettings(View view){
+    public void onViewSettings(View view) {
 
-        startActivity(new Intent(context,SettingsActivity.class));
+        startActivity(new Intent(context, SettingsActivity.class));
     }
 
 
@@ -440,11 +513,19 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             languageFromHint.setVisibility(View.VISIBLE);
             languageToHint.setVisibility(View.VISIBLE);
 
-            isLayoutNarrow = false;
+            isInputFrameNarrow = false;
+            isOutputFrameNarrow = false;
 
-            if (isLayoutStretch) {
-                stretchLayout(inputTextFrame);
-                isLayoutStretch = false;
+            if (isInputFrameStretch) {
+                stretchInputFrame(inputTextFrame);
+                isInputFrameStretch = false;
+            }
+
+            if (isOutputFrameStretch) {
+                stretchOutputFrame(outputTextFrame);
+                closeShareSettings();
+                closeSpeechSettings();
+                isOutputFrameStretch = false;
             }
         }
 
@@ -457,11 +538,17 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         if (b > 0.9) {
 
-            isLayoutStretch = true;
+            isInputFrameStretch = true;
+            isOutputFrameStretch = true;
 
-            if (!isLayoutNarrow) {
-                narrowLayout(inputTextFrame);
-                isLayoutNarrow = true;
+            if (!isInputFrameNarrow) {
+                narrowInputFrame(inputTextFrame);
+                isInputFrameNarrow = true;
+            }
+
+            if (!isOutputFrameNarrow) {
+                narrowOutputFrame(outputTextFrame);
+                isOutputFrameNarrow = true;
             }
         }
     }
@@ -941,7 +1028,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             }
 
             translatedText.setText(result);
-
+            showTranslatedTextFrame();
             progressBar.dismiss();
 
         }
