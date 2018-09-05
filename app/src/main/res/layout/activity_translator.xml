@@ -20,10 +20,10 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/animation_list"
             android:fitsSystemWindows="true"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:toolbarId="@+id/toolbar">
+            app:toolbarId="@+id/toolbar"
+            android:background="@drawable/animation_list">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -112,7 +112,8 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom"
-        app:srcCompat="@drawable/ic_action_microphone" />
+        app:srcCompat="@drawable/ic_action_microphone"
+        android:onClick="onStartSpeechActivity"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_settings"

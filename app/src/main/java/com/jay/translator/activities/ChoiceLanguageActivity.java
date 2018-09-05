@@ -12,7 +12,7 @@ import android.widget.ListView;
 
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
-import com.jay.translator.adapters.choice_language.ChoiceLanguageAdapter;
+import com.jay.translator.adapters.ChoiceLanguageAdapter;
 
 import de.mateware.snacky.Snacky;
 

@@ -230,7 +230,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     @Override
     protected void onPause() {
         super.onPause();
+
         textToSpeech.shutdown();
+
         if (toolBarAnimation != null && toolBarAnimation.isRunning())
             toolBarAnimation.stop();
     }
@@ -483,6 +485,12 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     public void onViewSettings(View view) {
 
         startActivity(new Intent(context, SettingsActivity.class));
+    }
+
+
+    public void  onStartSpeechActivity(View view){
+
+        startActivity(new Intent(this,SpeechActivity.class));
     }
 
 

@@ -1,4 +1,4 @@
-package com.jay.translator.adapters.choice_language;
+package com.jay.translator.adapters;
 
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
