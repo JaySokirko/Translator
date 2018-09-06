@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="1dp"
-    android:orientation="vertical">
+    android:layout_margin="4dp"
+    android:orientation="vertical"
+    android:id="@+id/background">
 
     <android.support.v7.widget.CardView
-        android:layout_width="240dp"
-        android:layout_height="240dp"
+        android:layout_width="210dp"
+        android:layout_height="210dp"
+        android:layout_centerInParent="true"
         app:cardCornerRadius="4dp"
-        app:cardMaxElevation="2dp"
         app:cardElevation="1dp"
-        android:layout_centerInParent="true">
-
+        app:cardMaxElevation="2dp"
+        android:foreground="?android:attr/selectableItemBackground">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,28 +23,43 @@
 
             <ImageView
                 android:id="@+id/icon_language"
-                android:layout_width="200dp"
-                android:layout_height="195dp"
-                android:layout_marginTop="7dp"
+                android:layout_width="180dp"
+                android:layout_height="170dp"
                 android:layout_gravity="center_horizontal"
-                android:src="@drawable/london"
+                android:layout_marginTop="7dp"
+                android:contentDescription="@drawable/london"
                 android:scaleType="centerCrop"
-                android:contentDescription="@drawable/london" />
+                android:src="@drawable/london" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/colorPrimaryDark"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:background="@color/colorPrimaryDark" />
 
-            <TextView
-                android:id="@+id/hint_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="some text"
-                android:textColor="@color/colorText"
-                />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/hint_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:textColor="@color/colorText"
+                    android:text="some text"/>
+
+                <CheckBox
+                    android:id="@+id/check_box"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="20dp" />
+
+            </FrameLayout>
+
 
         </LinearLayout>
 

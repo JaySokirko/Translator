@@ -36,4 +36,9 @@
         <item name="android:background">?attr/colorPrimary</item>
     </style>
 
+    <style name="BrandedCheckBox" parent="AppTheme">
+        <item name="colorAccent">#aaf000</item>
+        <item name="colorControlNormal">#ff0000</item>
+    </style>
+
 </resources>
