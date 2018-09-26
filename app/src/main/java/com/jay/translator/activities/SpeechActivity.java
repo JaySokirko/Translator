@@ -1,9 +1,8 @@
 package com.jay.translator.activities;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -13,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +29,7 @@ public class SpeechActivity extends AppCompatActivity {
 
     private ArrayList<Integer> images = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
+    private boolean[] checked = new boolean[6];
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private RecyclerViewAdapter adapterInputLanguages;
@@ -39,6 +40,7 @@ public class SpeechActivity extends AppCompatActivity {
     private TextView languageFromHint;
     private TextView languageToHint;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,15 +59,31 @@ public class SpeechActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position, View v) {
 
-                switch (position){
-                    case 0 :
-                        languageFromHint.setText("English");
-                        break;
-                    case 1:
-                        languageFromHint.setText("Russian");
-                }
+
+
             }
         });
+    }
+
+
+    @Override
+    protected void onResumeFragments() {
+        super.onResumeFragments();
+
+    }
+
+    private void setChecked(int position) {
+
+
+//        RecyclerView.ViewHolder holder0 = recyclerViewInputLang.findViewHolderForAdapterPosition(5);
+//        CheckBox checkBox0 = holder0.itemView.findViewById(R.id.check_box);
+//        checkBox0.setChecked(checked[5] = true);
+
+
+        RecyclerView.ViewHolder holder = recyclerViewInputLang.findViewHolderForAdapterPosition(position);
+        CheckBox checkBox = holder.itemView.findViewById(R.id.check_box);
+        checkBox.setChecked(checked[position] = !checked[position]);
+
     }
 
 
@@ -134,6 +152,13 @@ public class SpeechActivity extends AppCompatActivity {
         names.add("Español");
         names.add("Italiano");
 
+        checked[0] = true;
+        checked[1] = false;
+        checked[2] = false;
+        checked[3] = false;
+        checked[4] = false;
+        checked[5] = false;
+
         managerInputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager managerOutputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
@@ -143,8 +168,8 @@ public class SpeechActivity extends AppCompatActivity {
         RecyclerView recyclerViewOutputLang = findViewById(R.id.languages_to_recycler);
         recyclerViewOutputLang.setLayoutManager(managerOutputLang);
 
-        adapterInputLanguages = new RecyclerViewAdapter(images, names, this);
-        adapterOutputLanguages = new RecyclerViewAdapter(images, names, this);
+        adapterInputLanguages = new RecyclerViewAdapter(images, names, checked, this);
+        adapterOutputLanguages = new RecyclerViewAdapter(images, names, checked, this);
 
         recyclerViewInputLang.setAdapter(adapterInputLanguages);
         recyclerViewOutputLang.setAdapter(adapterOutputLanguages);
