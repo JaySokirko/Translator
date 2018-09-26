@@ -17,11 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jay.translator.R;
+import com.jay.translator.adapters.OnItemClick;
 import com.jay.translator.adapters.RecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class SpeechActivity extends AppCompatActivity {
+public class SpeechActivity extends AppCompatActivity implements OnItemClick {
 
     private static final String TAG = "TAG";
     //    private TextView speechText;
@@ -29,13 +30,9 @@ public class SpeechActivity extends AppCompatActivity {
 
     private ArrayList<Integer> images = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
-    private boolean[] checked = new boolean[6];
+    private ArrayList<Boolean> checked = new ArrayList<>();
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
-    private RecyclerViewAdapter adapterInputLanguages;
-    private RecyclerViewAdapter adapterOutputLanguages;
-    private RecyclerView recyclerViewInputLang;
-    private LinearLayoutManager managerInputLang;
 
     private TextView languageFromHint;
     private TextView languageToHint;
@@ -55,34 +52,12 @@ public class SpeechActivity extends AppCompatActivity {
 
         initializeRecyclerView();
 
-        adapterInputLanguages.setOnItemClickListener(new RecyclerViewAdapter.ClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-
-
-
-            }
-        });
     }
 
 
     @Override
     protected void onResumeFragments() {
         super.onResumeFragments();
-
-    }
-
-    private void setChecked(int position) {
-
-
-//        RecyclerView.ViewHolder holder0 = recyclerViewInputLang.findViewHolderForAdapterPosition(5);
-//        CheckBox checkBox0 = holder0.itemView.findViewById(R.id.check_box);
-//        checkBox0.setChecked(checked[5] = true);
-
-
-        RecyclerView.ViewHolder holder = recyclerViewInputLang.findViewHolderForAdapterPosition(position);
-        CheckBox checkBox = holder.itemView.findViewById(R.id.check_box);
-        checkBox.setChecked(checked[position] = !checked[position]);
 
     }
 
@@ -152,26 +127,58 @@ public class SpeechActivity extends AppCompatActivity {
         names.add("Español");
         names.add("Italiano");
 
-        checked[0] = true;
-        checked[1] = false;
-        checked[2] = false;
-        checked[3] = false;
-        checked[4] = false;
-        checked[5] = false;
+        checked.add(false);
+        checked.add(true);
+        checked.add(false);
+        checked.add(false);
+        checked.add(false);
+        checked.add(false);
 
-        managerInputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager managerInputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager managerOutputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        recyclerViewInputLang = findViewById(R.id.languages_from_recycler);
+        RecyclerView recyclerViewInputLang = findViewById(R.id.languages_from_recycler);
         recyclerViewInputLang.setLayoutManager(managerInputLang);
 
         RecyclerView recyclerViewOutputLang = findViewById(R.id.languages_to_recycler);
         recyclerViewOutputLang.setLayoutManager(managerOutputLang);
 
-        adapterInputLanguages = new RecyclerViewAdapter(images, names, checked, this);
-        adapterOutputLanguages = new RecyclerViewAdapter(images, names, checked, this);
+        RecyclerViewAdapter adapterInputLanguages = new RecyclerViewAdapter(images, names, checked, this, this);
+        RecyclerViewAdapter adapterOutputLanguages = new RecyclerViewAdapter(images, names, checked, this, this);
 
         recyclerViewInputLang.setAdapter(adapterInputLanguages);
         recyclerViewOutputLang.setAdapter(adapterOutputLanguages);
+    }
+
+    @Override
+    public void Onclick(int position) {
+
+        switch (position) {
+
+            case 0:
+                languageFromHint.setText("English");
+                break;
+
+            case 1:
+                languageFromHint.setText("Русский");
+                break;
+
+            case 2:
+                languageFromHint.setText("Deutsch");
+                break;
+
+            case 3:
+                languageFromHint.setText("Français");
+                break;
+
+            case 4:
+                languageFromHint.setText("Español");
+                break;
+
+            case 5:
+                languageFromHint.setText("Italiano");
+                break;
+        }
+
     }
 }

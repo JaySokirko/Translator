@@ -1,21 +1,13 @@
 package com.jay.translator.adapters;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,21 +18,21 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
-    private static final String TAG = "TAG";
     private ArrayList<Integer> images;
     private ArrayList<String> names;
     private Context context;
-    private boolean[] checked;
+    private ArrayList<Boolean> checked;
 
     private int selectedPosition = -1;// no selection by default
 
-    private static ClickListener clickListener;
+    private OnItemClick onItemClick;
 
-    public RecyclerViewAdapter(ArrayList<Integer> imagesUrls, ArrayList<String> names, boolean[] checked, Context context) {
+    public RecyclerViewAdapter(ArrayList<Integer> imagesUrls, ArrayList<String> names, ArrayList<Boolean> checked, Context context, OnItemClick onItemClick) {
         this.images = imagesUrls;
         this.names = names;
         this.context = context;
         this.checked = checked;
+        this.onItemClick = onItemClick;
     }
 
     @NonNull
@@ -51,7 +43,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return new ViewHolder(view);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
@@ -61,7 +53,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.name.setText(names.get(position));
 
-        holder.checkBox.setChecked(selectedPosition == position);
+
+        if (selectedPosition == -1) {
+            holder.checkBox.setChecked(checked.get(position));
+        } else {
+            holder.checkBox.setChecked(selectedPosition == position);
+        }
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +66,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 selectedPosition = holder.getAdapterPosition();
                 notifyDataSetChanged();
+
+                onItemClick.Onclick(selectedPosition);
             }
         });
     }
@@ -79,7 +78,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return names.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         private ImageView image;
         private TextView name;
@@ -93,22 +92,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             name = itemView.findViewById(R.id.hint_language);
             checkBox = itemView.findViewById(R.id.check_box);
             layout = itemView.findViewById(R.id.background);
-
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onItemClick(getAdapterPosition(), v);
         }
     }
-
-    public interface ClickListener {
-        void onItemClick(int position, View v);
-    }
-
-    public void setOnItemClickListener(ClickListener clickListener) {
-        RecyclerViewAdapter.clickListener = clickListener;
-    }
-
 }
