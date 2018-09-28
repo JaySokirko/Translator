@@ -16,7 +16,7 @@ import com.jay.translator.R;
 
 import java.util.ArrayList;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+public class InputLanguageRecyclerViewAdapter extends RecyclerView.Adapter<InputLanguageRecyclerViewAdapter.ViewHolder> {
 
     private ArrayList<Integer> images;
     private ArrayList<String> names;
@@ -25,14 +25,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private int selectedPosition = -1;// no selection by default
 
-    private OnItemClick onItemClick;
+    private InputLanguageItemClick inputLanguageItemClick;
 
-    public RecyclerViewAdapter(ArrayList<Integer> imagesUrls, ArrayList<String> names, ArrayList<Boolean> checked, Context context, OnItemClick onItemClick) {
+    public InputLanguageRecyclerViewAdapter(ArrayList<Integer> imagesUrls, ArrayList<String> names, ArrayList<Boolean> checked, Context context, InputLanguageItemClick inputLanguageItemClick) {
         this.images = imagesUrls;
         this.names = names;
         this.context = context;
         this.checked = checked;
-        this.onItemClick = onItemClick;
+        this.inputLanguageItemClick = inputLanguageItemClick;
     }
 
     @NonNull
@@ -67,7 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 selectedPosition = holder.getAdapterPosition();
                 notifyDataSetChanged();
 
-                onItemClick.Onclick(selectedPosition);
+                inputLanguageItemClick.OnSelectInputLanguage(selectedPosition);
             }
         });
     }

@@ -4,25 +4,24 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jay.translator.R;
-import com.jay.translator.adapters.OnItemClick;
-import com.jay.translator.adapters.RecyclerViewAdapter;
+import com.jay.translator.adapters.InputLanguageItemClick;
+import com.jay.translator.adapters.InputLanguageRecyclerViewAdapter;
+import com.jay.translator.adapters.OutputLanguageItemClickTo;
+import com.jay.translator.adapters.OutputLanguageRecyclerViewAdapter;
 
 import java.util.ArrayList;
 
-public class SpeechActivity extends AppCompatActivity implements OnItemClick {
+public class SpeechActivity extends AppCompatActivity implements InputLanguageItemClick, OutputLanguageItemClickTo {
 
     private static final String TAG = "TAG";
     //    private TextView speechText;
@@ -30,7 +29,8 @@ public class SpeechActivity extends AppCompatActivity implements OnItemClick {
 
     private ArrayList<Integer> images = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
-    private ArrayList<Boolean> checked = new ArrayList<>();
+    private ArrayList<Boolean> checkedFrom = new ArrayList<>();
+    private ArrayList<Boolean> checkedTo = new ArrayList<>();
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
 
@@ -51,7 +51,6 @@ public class SpeechActivity extends AppCompatActivity implements OnItemClick {
         backgroundAnimation.setExitFadeDuration(4000);
 
         initializeRecyclerView();
-
     }
 
 
@@ -127,12 +126,19 @@ public class SpeechActivity extends AppCompatActivity implements OnItemClick {
         names.add("Español");
         names.add("Italiano");
 
-        checked.add(false);
-        checked.add(true);
-        checked.add(false);
-        checked.add(false);
-        checked.add(false);
-        checked.add(false);
+        checkedFrom.add(false);
+        checkedFrom.add(true);
+        checkedFrom.add(false);
+        checkedFrom.add(false);
+        checkedFrom.add(false);
+        checkedFrom.add(false);
+
+        checkedTo.add(false);
+        checkedTo.add(false);
+        checkedTo.add(false);
+        checkedTo.add(false);
+        checkedTo.add(true);
+        checkedTo.add(false);
 
         LinearLayoutManager managerInputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager managerOutputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -143,15 +149,15 @@ public class SpeechActivity extends AppCompatActivity implements OnItemClick {
         RecyclerView recyclerViewOutputLang = findViewById(R.id.languages_to_recycler);
         recyclerViewOutputLang.setLayoutManager(managerOutputLang);
 
-        RecyclerViewAdapter adapterInputLanguages = new RecyclerViewAdapter(images, names, checked, this, this);
-        RecyclerViewAdapter adapterOutputLanguages = new RecyclerViewAdapter(images, names, checked, this, this);
+        InputLanguageRecyclerViewAdapter adapterInputLanguages = new InputLanguageRecyclerViewAdapter(images, names, checkedFrom, this, this);
+        OutputLanguageRecyclerViewAdapter adapterOutputLanguages = new OutputLanguageRecyclerViewAdapter(images, names, checkedTo, this, this);
 
         recyclerViewInputLang.setAdapter(adapterInputLanguages);
         recyclerViewOutputLang.setAdapter(adapterOutputLanguages);
     }
 
     @Override
-    public void Onclick(int position) {
+    public void OnSelectInputLanguage(int position) {
 
         switch (position) {
 
@@ -180,5 +186,36 @@ public class SpeechActivity extends AppCompatActivity implements OnItemClick {
                 break;
         }
 
+    }
+
+    @Override
+    public void OnSelectOutputLanguage(int position) {
+
+        switch (position) {
+
+            case 0:
+                languageToHint.setText("English");
+                break;
+
+            case 1:
+                languageToHint.setText("Русский");
+                break;
+
+            case 2:
+                languageToHint.setText("Deutsch");
+                break;
+
+            case 3:
+                languageToHint.setText("Français");
+                break;
+
+            case 4:
+                languageToHint.setText("Español");
+                break;
+
+            case 5:
+                languageToHint.setText("Italiano");
+                break;
+        }
     }
 }

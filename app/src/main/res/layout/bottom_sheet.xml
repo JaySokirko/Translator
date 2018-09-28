@@ -4,10 +4,10 @@
     android:id="@+id/bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp"
     android:background="@drawable/animation_list"
     android:orientation="vertical"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
     app:behavior_peekHeight="?android:attr/actionBarSize"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
@@ -17,16 +17,15 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:textColor="@color/colorWhite"
-        android:text="select languages">
-    </TextView>
+        android:text="select languages"
+        android:textColor="@color/colorWhite" />
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical">
-
 
         <TextView
             android:id="@+id/language_from_recycler"
@@ -34,17 +33,28 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="from language: "
-            android:textColor="@color/colorWhite"
-            />
+            android:textColor="@color/colorWhite" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/languages_from_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="7dp">
+            android:layout_gravity="bottom"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="30dp"
+            android:orientation="horizontal">
 
         </android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/language_to_recycler"
@@ -58,14 +68,11 @@
             android:id="@+id/languages_to_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="7dp">
+            android:layout_marginTop="7dp"
+            android:orientation="horizontal">
 
         </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
-
-
-
 
 </LinearLayout>
