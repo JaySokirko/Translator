@@ -991,6 +991,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                 .show();
     }
 
+
     private class TranslateTask extends AsyncTask<Void, Void, String> {
 
         private Context context;
