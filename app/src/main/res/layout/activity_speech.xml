@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.SpeechActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="7dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/view_rounded">
+
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/reverse_layout"
+                tools:ignore="UselessParent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+                    </Space>
+
+                    <ImageView
+                        android:id="@+id/clear_text_output"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/circle_background_primary_dark"
+                        android:contentDescription="@drawable/ic_action_clear_text1"
+                        android:src="@drawable/ic_action_clear_text1"
+                        android:onClick="clearOutputText"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+                    </Space>
+
+                    <ImageView
+                        android:id="@+id/speech_speed_output"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/circle_background_primary_dark"
+                        android:contentDescription="@drawable/ic_action_speech_speed1"
+                        android:src="@drawable/ic_action_speech_speed1"
+                        android:onClick="outputSpeechSpeed"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+
+                    </Space>
+
+                    <ImageView
+                        android:id="@+id/speech_feed_output"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/circle_background_primary_dark"
+                        android:contentDescription="@drawable/ic_action_speech_feed1"
+                        android:src="@drawable/ic_action_speech_feed1"
+                        android:onClick="outputSpeechPitch"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+                    </Space>
+
+
+                    <ImageView
+                        android:id="@+id/speech_text_output"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/circle_background_primary_dark"
+                        android:contentDescription="@drawable/ic_action_speech1"
+                        android:src="@drawable/ic_action_speech1"
+                        android:onClick="speechOutputText"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+
+                    </Space>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="50dp"
+                    android:orientation="vertical">
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+
+                    </Space>
+
+                    <ImageView
+                        android:id="@+id/reverse"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:padding="7dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@drawable/ic_action_revers"
+                        android:src="@drawable/ic_action_revers"
+                        android:onClick="flipOutputLayout"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+
+                    </Space>
+
+                    <ImageView
+                        android:id="@+id/microphone_output"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/circle_background_primary_dark"
+                        android:contentDescription="@drawable/ic_action_microphone1"
+                        android:src="@drawable/ic_action_microphone1"
+                        android:onClick="outputSpeechToText"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+
+                    </Space>
+
+                    <ImageView
+                        android:id="@+id/translate_output_text"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/circle_background_primary_dark"
+                        android:contentDescription="@drawable/ic_action_translate"
+                        android:src="@drawable/ic_action_translate"
+                        android:onClick="translateOutputText"/>
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1">
+                    </Space>
+                </LinearLayout>
+
+
+                <EditText
+                    android:id="@+id/edit_output_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="55dp"
+                    android:layout_marginBottom="55dp"
+                    android:hint="@string/enter_text"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/colorText"
+                    android:textSize="16sp" />
+
+                <SeekBar
+                    android:id="@+id/output_speech_speed"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginBottom="25dp"
+                    android:background="@drawable/view_rounded"/>
+
+                <SeekBar
+                    android:id="@+id/output_speech_feed"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@drawable/view_rounded"/>
+
+            </FrameLayout>
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginBottom="63dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/view_rounded">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"/>
+
+                <ImageView
+                    android:id="@+id/clear_text_input"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/circle_background_primary_dark"
+                    android:contentDescription="@drawable/ic_action_clear_text1"
+                    android:src="@drawable/ic_action_clear_text1"
+                    android:onClick="clearInputText"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"/>
+
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/circle_background_primary_dark"
+                    android:contentDescription="@drawable/ic_action_speech_speed1"
+                    android:onClick="inputSpeechSpeed"
+                    android:src="@drawable/ic_action_speech_speed1"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"/>
+
+                <ImageView
+                    android:id="@+id/speech_speed_input"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/circle_background_primary_dark"
+                    android:contentDescription="@drawable/ic_action_speech_feed1"
+                    android:onClick="inputSpeechFeed"
+                    android:src="@drawable/ic_action_speech_feed1" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"/>
+
+
+                <ImageView
+                    android:id="@+id/speech_text_input"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/circle_background_primary_dark"
+                    android:contentDescription="@drawable/ic_action_speech1"
+                    android:src="@drawable/ic_action_speech1"
+                    android:onClick="speechInputText"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="50dp"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1">
+                </Space>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@drawable/ic_action_revers"
+                    android:src="@drawable/ic_action_revers"
+                    android:visibility="invisible" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1">
+                </Space>
+
+                <ImageView
+                    android:id="@+id/microphone_input"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/circle_background_primary_dark"
+                    android:contentDescription="@drawable/ic_action_microphone1"
+                    android:src="@drawable/ic_action_microphone1"
+                    android:onClick="inputSpeechToText"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1">
+                </Space>
+
+                <ImageView
+                    android:id="@+id/translate_input_text"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/circle_background_primary_dark"
+                    android:contentDescription="@drawable/ic_action_translate"
+                    android:src="@drawable/ic_action_translate"
+                    android:onClick="translateInputText"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/edit_input_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="55dp"
+                android:layout_marginBottom="55dp"
+                android:hint="@string/enter_text"
+                android:inputType="textMultiLine"
+                android:textColor="@color/colorText"
+                android:textSize="16sp" />
+
+            <SeekBar
+                android:id="@+id/input_speech_speed"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/view_rounded"/>
+
+            <SeekBar
+                android:id="@+id/input_speech_feed"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/view_rounded"/>
+
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <include layout="@layout/bottom_sheet" />
+
+
+</android.support.design.widget.CoordinatorLayout>
