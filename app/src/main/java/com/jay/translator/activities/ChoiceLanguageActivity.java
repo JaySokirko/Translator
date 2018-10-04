@@ -25,7 +25,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
             "Deutsch",
             "Français",
             "Español",
-            "Italiano"};
+            "Italiano",
+            "Polish"};
 
     private int[] images = {
             R.drawable.london,
@@ -33,7 +34,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
             R.drawable.berlin,
             R.drawable.paris,
             R.drawable.madrid,
-            R.drawable.venice};
+            R.drawable.venice,
+            R.drawable.warsaw};
 
 
     private int[] flags = {
@@ -42,7 +44,8 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
             R.drawable.ic_germany_flag,
             R.drawable.ic_french_flag,
             R.drawable.ic_spanish_flag,
-            R.drawable.ic_italian_flag
+            R.drawable.ic_italian_flag,
+            R.drawable.ic_poland_flag
     };
 
 
@@ -127,6 +130,11 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
                         LanguageSettings.setLocale("it", ChoiceLanguageActivity.this);
                         setLanguage();
                         break;
+
+                    case 6:
+                        LanguageSettings.setLocale("pl", ChoiceLanguageActivity.this);
+                        setLanguage();
+                        break;
                 }
             }
         });
@@ -169,7 +177,5 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
                 ChoiceLanguageActivity.this.finish();
             }
         }, 0);
-
-
     }
 }

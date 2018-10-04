@@ -36,8 +36,9 @@
             android:layout_marginEnd="30dp"
             android:layout_marginTop="20dp"
             android:onClick="startTranslatorActivity"
-            android:src="@drawable/ic_arrow_forward"
-            app:fabSize="mini"/>
+            android:src="@drawable/ic_action_accept"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:fabSize="normal" />
 
         <ListView
             android:id="@+id/list_view_choice_language"

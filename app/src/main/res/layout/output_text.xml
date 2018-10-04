@@ -50,7 +50,9 @@
         app:layout_anchor="@id/output_text_frame"
         app:layout_anchorGravity="bottom"
         app:srcCompat="@drawable/ic_action_save"
-        app:fabSize="mini"/>
+        app:fabSize="mini"
+        android:scaleType="center"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_send"
@@ -60,7 +62,8 @@
         app:layout_anchor="@id/output_text_frame"
         app:layout_anchorGravity="bottom"
         app:srcCompat="@drawable/ic_action_send"
-        app:fabSize="mini"/>
+        app:fabSize="mini"
+        />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_share"
@@ -70,7 +73,8 @@
         app:layout_anchor="@id/output_text_frame"
         app:layout_anchorGravity="bottom"
         app:srcCompat="@drawable/ic_action_share"
-        android:onClick="onShareClick"/>
+        android:onClick="onShareClick"
+        app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_speech_speed"
@@ -80,7 +84,7 @@
         app:layout_anchor="@id/output_text_frame"
         app:layout_anchorGravity="bottom|center"
         android:onClick="onSpeechSpeedClick"
-        app:srcCompat="@drawable/ic_action_speech_speed"
+        app:srcCompat="@drawable/ic_action_speech_speed1"
         app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
@@ -90,9 +94,10 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/output_text_frame"
         app:layout_anchorGravity="bottom|center"
-        app:srcCompat="@drawable/ic_action_speech_feed"
+        app:srcCompat="@drawable/ic_action_speech_feed1"
         android:onClick="onSpeechFeedClick"
-        app:fabSize="mini"/>
+        app:fabSize="mini"
+        android:scaleType="center"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_speech_settings"
@@ -102,7 +107,9 @@
         app:layout_anchor="@id/output_text_frame"
         app:layout_anchorGravity="bottom|center"
         app:srcCompat="@drawable/ic_action_speech_settings"
-        android:onClick="onSpeechSettingsClick"/>
+        android:onClick="onSpeechSettingsClick"
+        app:fabSize="mini"
+        android:scaleType="center"/>
 
 
     <android.support.design.widget.FloatingActionButton
@@ -113,7 +120,8 @@
         android:onClick="onSpeechText"
         app:layout_anchor="@id/output_text_frame"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_action_speech" />
+        app:srcCompat="@drawable/ic_action_speech1"
+        app:fabSize="mini"/>
 
     <SeekBar
         android:id="@+id/seek_bar_speech_speed"

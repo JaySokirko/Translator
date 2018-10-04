@@ -60,6 +60,9 @@ public class ViewSettings {
            case "it":
                backgroundImage.setImageResource(R.drawable.venice);
                break;
+           case "pl":
+               backgroundImage.setImageResource(R.drawable.warsaw);
+               break;
        }
    }
 

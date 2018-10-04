@@ -14,7 +14,7 @@
         android:layout_height="@dimen/app_bar_height"
         android:fitsSystemWindows="true"
         android:theme="@style/AppTheme.AppBarOverlay"
-        app:expanded="false">
+        app:expanded="true">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -123,7 +123,8 @@
         android:onClick="onSettingsClick"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_action_settings" />
+        app:srcCompat="@drawable/ic_action_settings"
+        />
 
 
 </android.support.design.widget.CoordinatorLayout>

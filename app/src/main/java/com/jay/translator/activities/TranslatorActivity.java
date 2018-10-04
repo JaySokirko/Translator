@@ -593,10 +593,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         //set speech speed button under share button
         final float x = fabSpeechSettings.getX() - fabShare.getX();
-        final float y = fabShare.getHeight() + 10;
+        final float y = fabShare.getHeight() + 20;
 
         //set speech feed button under speech speed
-        float y1 = y + fabShare.getHeight();
+        float y1 = y + fabShare.getHeight() + 30;
 
         fabSpeechSpeed.animate().translationX(-x).translationY(y).start();
 

@@ -8,22 +8,21 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -56,11 +55,18 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     private SharedPreferences.Editor editor;
     private int posInputLang;
     private int posOutputLang;
+    private int seekBarWidth;
+    private float inputSpeechSpeed;
+    private float inputSpeechPitch;
+    private float outputSpeechPitch;
+    private float outputSpeechSpeed;
     private boolean isFlipped;
     private boolean isInputLanguageSupported;
     private boolean isOutputLanguageSupported;
     private boolean isSeekBarInputSpeechSpeedShow;
-    private boolean isSeekBarInputSpeechFeedShow;
+    private boolean isSeekBarInputSpeechPitchShow;
+    private boolean isSeekBarOutputSpeechPitchShow;
+    private boolean isSeekBarOutputSpeechSpeedShow;
     private TextToSpeech inputTextToSpeech;
     private TextToSpeech outputTextToSpeech;
 
@@ -71,8 +77,10 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     private TextView outputLanguageHint;
     private EditText editInputText;
     private EditText editOutputText;
-    private SeekBar seekBarInputSpeechFeed;
+    private SeekBar seekBarInputSpeechPitch;
     private SeekBar seekBarInputSpeechSpeed;
+    private SeekBar seekBarOutputSpeechSpeed;
+    private SeekBar seekBarOutputSpeechPitch;
     private FrameLayout outputTextLayout;
 
 
@@ -89,15 +97,25 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         editOutputText = findViewById(R.id.edit_output_text);
         outputTextLayout = findViewById(R.id.reverse_layout);
         seekBarInputSpeechSpeed = findViewById(R.id.input_speech_speed);
+        seekBarInputSpeechPitch = findViewById(R.id.input_speech_feed);
+        seekBarOutputSpeechSpeed = findViewById(R.id.output_speech_speed);
+        seekBarOutputSpeechPitch = findViewById(R.id.output_speech_feed);
 
         seekBarInputSpeechSpeed.setProgress(50);
+        seekBarInputSpeechPitch.setProgress(50);
+        seekBarOutputSpeechPitch.setProgress(50);
+        seekBarOutputSpeechSpeed.setProgress(50);
+
 
         isFlipped = true;
         outputTextLayout.animate().rotationX(180).rotationY(180).start();
 
 
-        isSeekBarInputSpeechFeedShow = false;
+        isSeekBarInputSpeechPitchShow = false;
         isSeekBarInputSpeechSpeedShow = false;
+        isSeekBarOutputSpeechPitchShow = false;
+        isSeekBarOutputSpeechSpeedShow = false;
+
 
         backgroundAnimation = (AnimationDrawable) bottomSheet.getBackground();
         backgroundAnimation.setExitFadeDuration(4000);
@@ -128,6 +146,19 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         initializeInputTextToSpeech(inputLanguage);
 
         initializeOutputTextToSpeech(outputLanguage);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        seekBarWidth = size.x / 2;
+
+        onInputSpeechSpeedChange();
+
+        onInputSpeechPitchChange();
+
+        onOutputSpeechPitchChange();
+
+        onOutputSpeechSpeedChange();
     }
 
 
@@ -165,57 +196,84 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
     public void clearInputText(View view) {
         editInputText.setText("");
+
+        setClickable(view);
     }
 
 
     public void clearOutputText(View view) {
         editOutputText.setText("");
+
+        setClickable(view);
     }
 
 
     public void inputSpeechSpeed(View view) {
 
-        final int seekBarWidth = 400;
-
         if (!isSeekBarInputSpeechSpeedShow) {
 
             //stretch animation for speech speed seek bar
-            ValueAnimator anim = ValueAnimator.ofInt(seekBarInputSpeechSpeed.getMeasuredWidth(), seekBarWidth);
-            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    int val = (Integer) valueAnimator.getAnimatedValue();
-                    ViewGroup.LayoutParams layoutParams = seekBarInputSpeechSpeed.getLayoutParams();
-                    layoutParams.width = val;
-                    seekBarInputSpeechSpeed.setLayoutParams(layoutParams);
-                }
-            });
-            anim.setDuration(500);
-            anim.start();
+            applyTransformationSeekBar(seekBarInputSpeechSpeed, seekBarWidth);
 
         } else {
-
             //constriction animation for speed seek bar
-            ValueAnimator anim = ValueAnimator.ofInt(seekBarInputSpeechSpeed.getMeasuredWidth(), 0);
-            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                @Override
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    int val = (Integer) valueAnimator.getAnimatedValue();
-                    ViewGroup.LayoutParams layoutParams = seekBarInputSpeechSpeed.getLayoutParams();
-                    layoutParams.width = val;
-                    seekBarInputSpeechSpeed.setLayoutParams(layoutParams);
-                }
-            });
-            anim.setDuration(500);
-            anim.start();
+            applyTransformationSeekBar(seekBarInputSpeechSpeed, 0);
         }
 
         isSeekBarInputSpeechSpeedShow = !isSeekBarInputSpeechSpeedShow;
+
+        setClickable(view);
     }
 
 
     public void inputSpeechFeed(View view) {
 
+        if (!isSeekBarInputSpeechPitchShow) {
+
+            //stretch animation for speech feed seek bar
+            applyTransformationSeekBar(seekBarInputSpeechPitch, seekBarWidth);
+        } else {
+            //constriction animation for speed seek bar
+            applyTransformationSeekBar(seekBarInputSpeechPitch, 0);
+        }
+
+        isSeekBarInputSpeechPitchShow = !isSeekBarInputSpeechPitchShow;
+
+        setClickable(view);
+    }
+
+
+    public void outputSpeechPitch(View view){
+
+        if (!isSeekBarOutputSpeechPitchShow){
+
+            //stretch animation for speech pitch seek bar
+            applyTransformationSeekBar(seekBarOutputSpeechPitch, seekBarWidth);
+        } else {
+            //constriction animation for speed seek bar
+            applyTransformationSeekBar(seekBarOutputSpeechPitch,0);
+        }
+
+        isSeekBarOutputSpeechPitchShow = !isSeekBarOutputSpeechPitchShow;
+
+        setClickable(view);
+    }
+
+
+    public void outputSpeechSpeed(View view){
+
+        if (!isSeekBarOutputSpeechSpeedShow){
+
+            //stretch animation for speech pitch seek bar
+            applyTransformationSeekBar(seekBarOutputSpeechSpeed, seekBarWidth);
+        } else {
+            //constriction animation for speed seek bar
+            applyTransformationSeekBar(seekBarOutputSpeechSpeed,0);
+        }
+
+        isSeekBarOutputSpeechSpeedShow = !isSeekBarOutputSpeechSpeedShow;
+
+        setClickable(view);
     }
 
 
@@ -231,6 +289,8 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         } catch (ActivityNotFoundException a) {
             a.printStackTrace();
         }
+
+        setClickable(view);
     }
 
     public void outputSpeechToText(View view) {
@@ -245,15 +305,21 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         } catch (ActivityNotFoundException a) {
             a.printStackTrace();
         }
+
+        setClickable(view);
     }
 
 
     public void translateInputText(View view) {
         startTranslateInputText();
+
+        setClickable(view);
     }
 
     public void translateOutputText(View view) {
         startTranslateOutputText();
+
+        setClickable(view);
     }
 
 
@@ -271,11 +337,15 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
     public void speechInputText(View view) {
         speechInputText();
+
+        setClickable(view);
     }
 
 
     public void speechOutputText(View view) {
         speechOutputText();
+
+        setClickable(view);
     }
 
 
@@ -430,6 +500,23 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     }
 
 
+    private void applyTransformationSeekBar(final SeekBar seekBar, int width) {
+
+        ValueAnimator anim = ValueAnimator.ofInt(seekBar.getMeasuredWidth(), width);
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                int val = (Integer) valueAnimator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = seekBar.getLayoutParams();
+                layoutParams.width = val;
+                seekBar.setLayoutParams(layoutParams);
+            }
+        });
+        anim.setDuration(500);
+        anim.start();
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -478,7 +565,6 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
             alertDialogNoInternetConnection();
         }
-
     }
 
 
@@ -616,6 +702,111 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                 }
             }
         }, "com.google.android.tts");
+    }
+
+
+    private void onInputSpeechSpeedChange() {
+
+        seekBarInputSpeechSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                inputSpeechSpeed = (float) seekBarInputSpeechSpeed.getProgress() / 50;
+
+                if (inputSpeechSpeed < 0.1)
+                    inputSpeechSpeed = 0.1f;
+
+                inputTextToSpeech.setSpeechRate(inputSpeechSpeed);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+    }
+
+
+    private void onInputSpeechPitchChange(){
+
+        seekBarInputSpeechPitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                inputSpeechPitch = (float) seekBarInputSpeechPitch.getProgress() / 50;
+
+                if (inputSpeechPitch < 0.1)
+                    inputSpeechPitch = 0.1f;
+
+                inputTextToSpeech.setPitch(inputSpeechPitch);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+    }
+
+
+    private void onOutputSpeechPitchChange(){
+
+        seekBarOutputSpeechPitch.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                outputSpeechPitch = (float) seekBarOutputSpeechPitch.getProgress() / 50;
+
+                if (outputSpeechPitch < 0.1)
+                    outputSpeechPitch = 0.1f;
+
+                outputTextToSpeech.setPitch(outputSpeechPitch);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+    }
+
+
+    private void onOutputSpeechSpeedChange(){
+
+        seekBarOutputSpeechSpeed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                outputSpeechSpeed = (float) seekBarOutputSpeechSpeed.getProgress() / 50;
+
+                if (outputSpeechSpeed < 0.1)
+                    outputSpeechSpeed = 0.1f;
+
+                outputTextToSpeech.setSpeechRate(outputSpeechSpeed);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+    }
+
+
+    private void setClickable(final View view){
+
+        view.setBackground(getResources().getDrawable(R.drawable.circle_background_cyan));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                view.setBackground(getResources().getDrawable(R.drawable.circle_background_primary_dark));
+            }
+        },500);
     }
 
 
