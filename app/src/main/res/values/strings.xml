@@ -6,43 +6,31 @@
     <string name="select_your_language">Choice yor language</string>
     <string name="please_wait">Please wait</string>
     <string name="next">Next</string>
-    <string name="title_activity_translator">TranslatorActivity</string>
-    <string name="action_settings">Settings</string>
     <string name="change_language">Change language</string>
     <string name="change_views_background">change view</string>
     <string name="change_speech_speed">change speech speed</string>
     <string name="change_speech_feed">change speech frequency</string>
-
-
-    <string name="long_text">
-        Miusov, as a man of breeding and deilcacy, could not but feel some inwrd qualms,\n
-        when he reached the Father Superior\'s with Ivan: he felt ashamed of havin lost his temper.\n
-        He felt that he ought to have disdaimed that despicable wretch, Fyodor Pavlovitch, too much\n
-        to have been upset by him in Father Zossima\'s cell, and so to have forgotten himself.\n
-        "Teh monks were not to blame, in any case," he reflceted, on the steps.\n
-        "And if they're decent people here (and the Father Superior, I understand,\n
-        is a nobleman) why not be friendly and courteous withthem? I won't argue,\n
-        I'll fall in with everything, I'll win them by politness, and show them that\n
-        I've nothing to do with that Aesop,\n
-        thta buffoon, that Pierrot, and have merely been takken in over this affair, just as they have."\n
-          Miusov, as a man of breeding and deilcacy, could not but feel some inwrd qualms,\n
-        when he reached the Father Superior\'s with Ivan: he felt ashamed of havin lost his temper.\n
-        He felt that he ought to have disdaimed that despicable wretch, Fyodor Pavlovitch, too much\n
-        to have been upset by him in Father Zossima\'s cell, and so to have forgotten himself.\n
-        "Teh monks were not to blame, in any case," he reflceted, on the steps.\n
-        "And if they're decent people here (and the Father Superior, I understand,\n
-        is a nobleman) why not be friendly and courteous withthem? I won't argue\n
-        I'll fall in with everything, I'll win them by politness, and show them that\n
-        I've nothing to do with that Aesop,\n
-        thta buffoon, that Pierrot, and have merely been takken in over this affair, just as they have."\n
-
-    </string>
-
-
     <string name="enter_text">Enter some text</string>
     <string name="first_enter_the_text">First enter the text</string>
     <string name="the_language_of_translation_coincides_with_the_original">the language of
         translation coincides with the original</string>
-    <string name="title_activity_settings">Settings</string>
+
+    <string name="english" translatable="false">English</string>
+    <string name="russian" translatable="false">Русский</string>
+    <string name="german" translatable="false">Deutsch</string>
+    <string name="french" translatable="false">Français</string>
+    <string name="spanish" translatable="false">Español</string>
+    <string name="italian" translatable="false">Italiano</string>
+    <string name="polish" translatable="false">Polish</string>
+
+    <string name="enter_some_text_en" translatable="false">Enter some text</string>
+    <string name="enter_some_text_ru" translatable="false">Введите текст</string>
+    <string name="enter_some_text_de" translatable="false">Gib einen Text ein</string>
+    <string name="enter_some_text_es" translatable="false">Introduce algún texto</string>
+    <string name="enter_some_text_fr" translatable="false">Entrez du texte</string>
+    <string name="enter_some_text_it" translatable="false">Inserisci del testo</string>
+    <string name="enter_some_text_pl" translatable="false">Wprowadź trochę tekstu</string>
+
+    <string name="select_languages">select languages</string>
 
 </resources>

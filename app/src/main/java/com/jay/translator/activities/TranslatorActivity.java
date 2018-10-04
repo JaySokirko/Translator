@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -477,6 +476,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         if (isLanguageSupported) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
+            //todo locale
             buildSnackBar("неподдерживается язык");
         }
     }

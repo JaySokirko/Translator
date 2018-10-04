@@ -1,5 +1,6 @@
 package com.jay.translator.activities;
 
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -10,17 +11,23 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,18 +57,24 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     private int posInputLang;
     private int posOutputLang;
     private boolean isFlipped;
-    private boolean isLanguageSupported;
-    private TextToSpeech textToSpeech;
+    private boolean isInputLanguageSupported;
+    private boolean isOutputLanguageSupported;
+    private boolean isSeekBarInputSpeechSpeedShow;
+    private boolean isSeekBarInputSpeechFeedShow;
+    private TextToSpeech inputTextToSpeech;
+    private TextToSpeech outputTextToSpeech;
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private static final int REQ_CODE_SPEECH_OUTPUT = 200;
 
     private TextView inputLanguageHint;
     private TextView outputLanguageHint;
-    private TextView selectedLanguagesHint;
     private EditText editInputText;
     private EditText editOutputText;
+    private SeekBar seekBarInputSpeechFeed;
+    private SeekBar seekBarInputSpeechSpeed;
     private FrameLayout outputTextLayout;
+
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -74,32 +87,47 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         outputLanguageHint = findViewById(R.id.language_to_recycler);
         editInputText = findViewById(R.id.edit_input_text);
         editOutputText = findViewById(R.id.edit_output_text);
-        selectedLanguagesHint = findViewById(R.id.language_list);
         outputTextLayout = findViewById(R.id.reverse_layout);
+        seekBarInputSpeechSpeed = findViewById(R.id.input_speech_speed);
 
+        seekBarInputSpeechSpeed.setProgress(50);
 
         isFlipped = true;
         outputTextLayout.animate().rotationX(180).rotationY(180).start();
 
 
+        isSeekBarInputSpeechFeedShow = false;
+        isSeekBarInputSpeechSpeedShow = false;
+
         backgroundAnimation = (AnimationDrawable) bottomSheet.getBackground();
         backgroundAnimation.setExitFadeDuration(4000);
-
-
-        initializeRecyclerView();
 
 
         SharedPreferences preferences = this.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
         editor = preferences.edit();
 
-        posInputLang = preferences.getInt("posInputLang",0);
-        posOutputLang = preferences.getInt("posOutputLang",1);
 
-        inputLanguage = preferences.getString("inputLanguage","en");
-        outputLanguage = preferences.getString("outputLanguage","it");
+        posInputLang = preferences.getInt("posInputLang", 0);
+        posOutputLang = preferences.getInt("posOutputLang", 5);
 
-        Log.d(TAG, "onCreate: " + inputLanguage);
-        initializeTextToSpeech(inputLanguage);
+
+        initializeRecyclerView();
+
+
+        inputLanguage = preferences.getString("inputLanguage", "en");
+        outputLanguage = preferences.getString("outputLanguage", "it");
+
+
+        inputLanguageHint.setText(preferences.getString("inputLanguageHint", "English"));
+        outputLanguageHint.setText(preferences.getString("outputLanguageHint", "Italiano"));
+
+
+        editInputText.setHint(preferences.getString("setHintToEditText", "Enter some text"));
+        editOutputText.setHint(preferences.getString("setHintFromEditText", "Inserisci del testo"));
+
+        initializeInputTextToSpeech(inputLanguage);
+
+        initializeOutputTextToSpeech(outputLanguage);
     }
 
 
@@ -124,18 +152,70 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
         if (backgroundAnimation != null && backgroundAnimation.isRunning())
             backgroundAnimation.stop();
-
-        textToSpeech.shutdown();
     }
 
 
-    public void clearInputText(View view){
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        inputTextToSpeech.shutdown();
+        outputTextToSpeech.shutdown();
+    }
+
+    public void clearInputText(View view) {
         editInputText.setText("");
     }
 
 
-    public void clearOutputText(View view){
+    public void clearOutputText(View view) {
         editOutputText.setText("");
+    }
+
+
+    public void inputSpeechSpeed(View view) {
+
+        final int seekBarWidth = 400;
+
+        if (!isSeekBarInputSpeechSpeedShow) {
+
+            //stretch animation for speech speed seek bar
+            ValueAnimator anim = ValueAnimator.ofInt(seekBarInputSpeechSpeed.getMeasuredWidth(), seekBarWidth);
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = seekBarInputSpeechSpeed.getLayoutParams();
+                    layoutParams.width = val;
+                    seekBarInputSpeechSpeed.setLayoutParams(layoutParams);
+                }
+            });
+            anim.setDuration(500);
+            anim.start();
+
+        } else {
+
+            //constriction animation for speed seek bar
+            ValueAnimator anim = ValueAnimator.ofInt(seekBarInputSpeechSpeed.getMeasuredWidth(), 0);
+            anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    int val = (Integer) valueAnimator.getAnimatedValue();
+                    ViewGroup.LayoutParams layoutParams = seekBarInputSpeechSpeed.getLayoutParams();
+                    layoutParams.width = val;
+                    seekBarInputSpeechSpeed.setLayoutParams(layoutParams);
+                }
+            });
+            anim.setDuration(500);
+            anim.start();
+        }
+
+        isSeekBarInputSpeechSpeedShow = !isSeekBarInputSpeechSpeedShow;
+    }
+
+
+    public void inputSpeechFeed(View view) {
+
     }
 
 
@@ -153,7 +233,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         }
     }
 
-    public void outputSpeechToText(View view){
+    public void outputSpeechToText(View view) {
 
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, outputLanguage);
@@ -168,21 +248,20 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     }
 
 
-    public void translateInputText(View view){
+    public void translateInputText(View view) {
         startTranslateInputText();
     }
 
-    public void translateOutputText(View view){
+    public void translateOutputText(View view) {
         startTranslateOutputText();
     }
 
 
-    public void flipOutputLayout(View view){
+    public void flipOutputLayout(View view) {
 
         if (isFlipped) {
             outputTextLayout.animate().rotationX(360).rotationY(360).start();
-        }
-        else {
+        } else {
             outputTextLayout.animate().rotationX(180).rotationY(180).start();
         }
 
@@ -190,8 +269,216 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     }
 
 
-    public void speechInputText(View view){
+    public void speechInputText(View view) {
         speechInputText();
+    }
+
+
+    public void speechOutputText(View view) {
+        speechOutputText();
+    }
+
+
+    /**
+     * Set checked to the checkbox in recycler view
+     *
+     * @param list list with boolean elements
+     * @param pos  number of selected recycler
+     */
+    private void setSelectedRecycler(ArrayList<Boolean> list, int pos) {
+
+        for (int i = 0; i < 7; i++) {
+
+            if (pos == i) {
+
+                list.add(true);
+
+                Log.d(TAG, "setSelectedRecycler: " + pos);
+
+            } else {
+
+                list.add(false);
+            }
+
+        }
+    }
+
+    @Override
+    public void OnSelectInputLanguage(int position) {
+
+        switch (position) {
+
+            case 0:
+                inputLanguageHint.setText(getResources().getText(R.string.english));
+                inputLanguage = "en";
+                setHintToEditText(editInputText, getResources().getString(R.string.enter_some_text_en));
+                break;
+
+            case 1:
+                inputLanguageHint.setText(getResources().getText(R.string.russian));
+                inputLanguage = "ru";
+                setHintToEditText(editInputText, getResources().getString(R.string.enter_some_text_ru));
+                break;
+
+            case 2:
+                inputLanguageHint.setText(getResources().getText(R.string.german));
+                inputLanguage = "de";
+                setHintToEditText(editInputText, getResources().getString(R.string.enter_some_text_de));
+                break;
+
+            case 3:
+                inputLanguageHint.setText(getResources().getText(R.string.french));
+                inputLanguage = "fr";
+                setHintToEditText(editInputText, getResources().getString(R.string.enter_some_text_fr));
+                break;
+
+            case 4:
+                inputLanguageHint.setText(getResources().getText(R.string.spanish));
+                inputLanguage = "es";
+                setHintToEditText(editInputText, getResources().getString(R.string.enter_some_text_es));
+                break;
+
+            case 5:
+                inputLanguageHint.setText(getResources().getText(R.string.italian));
+                inputLanguage = "it";
+                setHintToEditText(editInputText, getResources().getString(R.string.enter_some_text_it));
+                break;
+
+            case 6:
+                inputLanguageHint.setText(getResources().getText(R.string.polish));
+                inputLanguage = "pl";
+                setHintToEditText(editInputText, getResources().getString(R.string.enter_some_text_pl));
+                break;
+        }
+
+        initializeInputTextToSpeech(inputLanguage);
+
+        editor.putInt("posInputLang", position);
+        editor.putString("inputLanguage", inputLanguage);
+        editor.putString("inputLanguageHint", inputLanguageHint.getText().toString());
+        editor.apply();
+
+    }
+
+    @Override
+    public void OnSelectOutputLanguage(int position) {
+
+        switch (position) {
+
+            case 0:
+                outputLanguageHint.setText(getResources().getText(R.string.english));
+                outputLanguage = "en";
+                setHintToEditText(editOutputText, getResources().getString(R.string.enter_some_text_en));
+                break;
+
+            case 1:
+                outputLanguageHint.setText(getResources().getText(R.string.russian));
+                outputLanguage = "ru";
+                setHintToEditText(editOutputText, getResources().getString(R.string.enter_some_text_ru));
+                break;
+
+            case 2:
+                outputLanguageHint.setText(getResources().getText(R.string.german));
+                outputLanguage = "de";
+                setHintToEditText(editOutputText, getResources().getString(R.string.enter_some_text_de));
+                break;
+
+            case 3:
+                outputLanguageHint.setText(getResources().getText(R.string.french));
+                outputLanguage = "fr";
+                setHintToEditText(editOutputText, getResources().getString(R.string.enter_some_text_fr));
+                break;
+
+            case 4:
+                outputLanguageHint.setText(getResources().getText(R.string.spanish));
+                outputLanguage = "es";
+                setHintToEditText(editOutputText, getResources().getString(R.string.enter_some_text_es));
+                break;
+
+            case 5:
+                outputLanguageHint.setText(getResources().getText(R.string.italian));
+                outputLanguage = "it";
+                setHintToEditText(editOutputText, getResources().getString(R.string.enter_some_text_it));
+                break;
+
+            case 6:
+                outputLanguageHint.setText(getResources().getText(R.string.polish));
+                outputLanguage = "pl";
+                setHintToEditText(editOutputText, getResources().getString(R.string.enter_some_text_pl));
+                break;
+        }
+
+        initializeOutputTextToSpeech(outputLanguage);
+
+        editor.putInt("posOutputLang", position);
+        editor.putString("outputLanguage", outputLanguage);
+        editor.putString("outputLanguageHint", outputLanguageHint.getText().toString());
+        editor.apply();
+    }
+
+    private void setHintToEditText(EditText editText, String text) {
+
+        editText.setHint(text);
+
+        if (editText == editInputText) {
+            editor.putString("setHintToEditText", text);
+        }
+
+        if (editText == editOutputText) {
+            editor.putString("setHintFromEditText", text);
+        }
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQ_CODE_SPEECH_INPUT:
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    editInputText.setText(result.get(0));
+                    startTranslateInputText();
+                }
+                break;
+
+            case REQ_CODE_SPEECH_OUTPUT:
+                if (resultCode == RESULT_OK && null != data) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    editOutputText.setText(result.get(0));
+                    startTranslateOutputText();
+                }
+                break;
+        }
+    }
+
+
+    private void startTranslateInputText() {
+        if (isOnline()) {
+
+            new InputTextTranslator(this).execute();
+
+            //TODO set speech speed & rate
+
+        } else {
+
+            alertDialogNoInternetConnection();
+        }
+    }
+
+    private void startTranslateOutputText() {
+        if (isOnline()) {
+
+            new OutputTextTranslator(this).execute();
+
+            //TODO set speech speed & rate
+
+        } else {
+
+            alertDialogNoInternetConnection();
+        }
+
     }
 
 
@@ -202,6 +489,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         images.add(R.drawable.paris);
         images.add(R.drawable.madrid);
         images.add(R.drawable.venice);
+        images.add(R.drawable.warsaw);
 
         names.add("English");
         names.add("Russian");
@@ -209,9 +497,10 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         names.add("Français");
         names.add("Español");
         names.add("Italiano");
+        names.add("Polish");
 
-        setSelectedRecycler(checkedFrom,posInputLang);
-        setSelectedRecycler(checkedTo,posOutputLang);
+        setSelectedRecycler(checkedFrom, posInputLang);
+        setSelectedRecycler(checkedTo, posOutputLang);
 
         LinearLayoutManager managerInputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager managerOutputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -230,164 +519,6 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     }
 
 
-    /**
-     * Set checked to the checkbox in recycler view
-     * @param list list with boolean elements
-     * @param pos number of selected recycler
-     */
-    private void setSelectedRecycler(ArrayList<Boolean> list, int pos){
-
-        for (int i = 0; i < 6; i++){
-
-            if (pos == i) {
-
-                list.add(true);
-
-            }else {
-
-                list.add(false);
-            }
-
-        }
-    }
-
-    @Override
-    public void OnSelectInputLanguage(int position) {
-
-        switch (position) {
-
-            case 0:
-                inputLanguageHint.setText("English");
-                inputLanguage = "en";
-                break;
-
-            case 1:
-                inputLanguageHint.setText("Русский");
-                inputLanguage = "ru";
-                break;
-
-            case 2:
-                inputLanguageHint.setText("Deutsch");
-                inputLanguage = "de";
-                break;
-
-            case 3:
-                inputLanguageHint.setText("Français");
-                inputLanguage = "fr";
-                break;
-
-            case 4:
-                inputLanguageHint.setText("Español");
-                inputLanguage = "es";
-                break;
-
-            case 5:
-                inputLanguageHint.setText("Italiano");
-                inputLanguage = "it";
-                break;
-        }
-
-        editor.putInt("posInputLang",position);
-        editor.putString("inputLanguage",inputLanguage);
-        editor.apply();
-
-    }
-
-    @Override
-    public void OnSelectOutputLanguage(int position) {
-
-        switch (position) {
-
-            case 0:
-                outputLanguageHint.setText("English");
-                outputLanguage = "en";
-                break;
-
-            case 1:
-                outputLanguageHint.setText("Русский");
-                outputLanguage = "ru";
-                break;
-
-            case 2:
-                outputLanguageHint.setText("Deutsch");
-                outputLanguage = "de";
-                break;
-
-            case 3:
-                outputLanguageHint.setText("Français");
-                outputLanguage = "fr";
-                break;
-
-            case 4:
-                outputLanguageHint.setText("Español");
-                outputLanguage = "es";
-                break;
-
-            case 5:
-                outputLanguageHint.setText("Italiano");
-                outputLanguage = "it";
-                break;
-        }
-
-        editor.putInt("posOutputLang",position);
-        editor.putString("outputLanguage",outputLanguage);
-        editor.apply();
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REQ_CODE_SPEECH_INPUT:
-                if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    editInputText.setText(result.get(0));
-                    startTranslateInputText();
-                }
-                break;
-
-            case REQ_CODE_SPEECH_OUTPUT :
-                if (resultCode == RESULT_OK && null != data) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    editOutputText.setText(result.get(0));
-                    startTranslateOutputText();
-                }
-                break;
-        }
-    }
-
-
-    private void startTranslateInputText() {
-        if (isOnline()) {
-
-            new InputTextTranslator(this).execute();
-
-           //TODO set speech speed & rate
-
-        } else {
-
-            alertDialogNoInternetConnection();
-        }
-    }
-
-    private void startTranslateOutputText(){
-        if (isOnline()) {
-
-            new OutputTextTranslator(this).execute();
-
-            //TODO set speech speed & rate
-
-        } else {
-
-            alertDialogNoInternetConnection();
-        }
-
-    }
-
-
-
     //check an internet connection
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -402,49 +533,89 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     }
 
 
-
-    private void speechInputText(){
+    private void speechInputText() {
 
         String text;
         text = editInputText.getText().toString();
 
-        Log.d(TAG, "speechInputText: " + text);
-
-        if (isLanguageSupported) {
-            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        if (isInputLanguageSupported) {
+            inputTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
-            Toast.makeText(getApplicationContext(),"language does not supported", Toast.LENGTH_SHORT).show();
+            //TODO locale
+            Toast.makeText(getApplicationContext(), "language does not supported", Toast.LENGTH_SHORT).show();
         }
-
     }
 
-    public void initializeTextToSpeech(final String locale) {
 
-        textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+    private void speechOutputText() {
+
+        String text;
+        text = editOutputText.getText().toString();
+
+        if (isOutputLanguageSupported) {
+            outputTextToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        } else {
+            //TODO locale
+            Toast.makeText(getApplicationContext(), "language does not supported", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private void initializeInputTextToSpeech(final String locale) {
+
+        inputTextToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
 
-                Log.d(TAG, "onInit: " + locale);
                 int result;
 
                 if (status == TextToSpeech.SUCCESS) {
 
-                    isLanguageSupported = true;
+                    isInputLanguageSupported = true;
 
                     if (locale != null) {
-                        result = textToSpeech.setLanguage(new Locale(locale));
+                        result = inputTextToSpeech.setLanguage(new Locale(locale));
                     } else {
-                        result = textToSpeech.setLanguage(Locale.ENGLISH);
+                        result = inputTextToSpeech.setLanguage(Locale.ENGLISH);
                     }
 
                     if (result == TextToSpeech.LANG_MISSING_DATA ||
                             result == TextToSpeech.LANG_NOT_SUPPORTED) {
 
-                        isLanguageSupported = false;
+                        isInputLanguageSupported = false;
                     }
                 }
             }
-        });
+        }, "com.google.android.tts");
+    }
+
+
+    private void initializeOutputTextToSpeech(final String locale) {
+
+        outputTextToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+
+                int result;
+
+                if (status == TextToSpeech.SUCCESS) {
+
+                    isOutputLanguageSupported = true;
+
+                    if (locale != null) {
+                        result = outputTextToSpeech.setLanguage(new Locale(locale));
+                    } else {
+                        result = outputTextToSpeech.setLanguage(Locale.ENGLISH);
+                    }
+
+                    if (result == TextToSpeech.LANG_MISSING_DATA ||
+                            result == TextToSpeech.LANG_NOT_SUPPORTED) {
+
+                        isOutputLanguageSupported = false;
+                    }
+                }
+            }
+        }, "com.google.android.tts");
     }
 
 
@@ -455,6 +626,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
         InputTextTranslator(Context context) {
             progressBar = new ProgressDialog(context);
+            //TODO locale
             progressBar.setTitle("идет перевод");
         }
 
@@ -493,6 +665,8 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
             editOutputText.setText(result);
             progressBar.dismiss();
 
+            speechOutputText();
+
         }
     }
 
@@ -504,6 +678,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
         OutputTextTranslator(Context context) {
             progressBar = new ProgressDialog(context);
+            //TODO locale
             progressBar.setTitle("идет перевод");
         }
 
@@ -541,6 +716,9 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
             editInputText.setText(result);
             progressBar.dismiss();
+
+            //TODO if speech selected
+            speechInputText();
 
         }
     }

@@ -11,5 +11,6 @@
     <string name="enter_text">Enter some text</string>
     <string name="first_enter_the_text">First enter the text</string>
     <string name="the_language_of_translation_coincides_with_the_original">The language of translation coincides with the original</string>
+    <string name="select_languages">select languages</string>
 
 </resources>

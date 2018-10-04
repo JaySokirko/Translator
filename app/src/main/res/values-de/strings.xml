@@ -11,4 +11,5 @@
     <string name="enter_text">Gib einen text ein</string>
     <string name="first_enter_the_text">Geben sie zuerst den text ein</string>
     <string name="the_language_of_translation_coincides_with_the_original">Die sprache der übersetzung stimmt mit dem original überein</string>
+    <string name="select_languages">Wählen Sie Sprachen</string>
 </resources>

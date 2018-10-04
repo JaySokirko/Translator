@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="select languages"
+        android:text="@string/select_languages"
         android:textColor="@color/colorWhite" />
 
 
@@ -28,15 +28,15 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/language_from_recycler"
+            android:id="@+id/language_to_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="from language: "
+            android:text=""
             android:textColor="@color/colorWhite" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/languages_from_recycler"
+            android:id="@+id/languages_to_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
@@ -56,15 +56,15 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/language_to_recycler"
+            android:id="@+id/language_from_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="to language: "
+            android:text=""
             android:textColor="@color/colorWhite" />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/languages_to_recycler"
+            android:id="@+id/languages_from_recycler"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
