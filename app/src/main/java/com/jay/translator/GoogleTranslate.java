@@ -23,6 +23,7 @@ public class GoogleTranslate {
     public static final String SPANISH = "es";
     public static final String GERMAN = "de";
     public static final String FRENCH = "fr";
+    public static final String POLISH = "pl";
     private static final String TAG = "TAG";
 
     public GoogleTranslate() {

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Translator</string>
+    <string name="select_your_language">Wybierz swój język</string>
+    <string name="please_wait">Proszę czekać</string>
+    <string name="next">Dalej</string>
+    <string name="change_language">Zmień język</string>
+    <string name="change_views_background">Ustawienia tła</string>
+    <string name="change_speech_speed">zmiana prędkości mowy</string>
+    <string name="change_speech_feed">zmiana częstotliwości mowy</string>
+    <string name="enter_text">Wprowadź trochę tekstu</string>
+    <string name="first_enter_the_text">Najpierw wprowadź tekst</string>
+    <string name="the_language_of_translation_coincides_with_the_original">język tłumaczenia jest taki sam jak oryginał</string>
+    <string name="select_languages">wybierz języki</string>
+    <string name="language_is_not_support">Język nie jest obsługiwany</string>
+</resources>

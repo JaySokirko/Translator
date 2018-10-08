@@ -6,6 +6,18 @@
     android:orientation="vertical"
     tools:context=".activities.SpeechActivity">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/image_view_speech_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@drawable/london"
+            android:scaleType="centerCrop" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -176,6 +188,14 @@
                     </Space>
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/output_language_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="50dp"
+                    android:layout_marginTop="3dp"
+                    android:textSize="12sp"/>
 
                 <EditText
                     android:id="@+id/edit_output_text"
@@ -197,7 +217,10 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="25dp"
-                    android:background="@drawable/view_rounded"/>
+                    android:background="@drawable/view_rounded_accent"
+                    android:progressBackgroundTint="@color/colorBlack"
+                    android:progressTint="@color/colorPrimaryDark"
+                    android:thumbTint="@color/colorPrimaryDark"/>
 
                 <SeekBar
                     android:id="@+id/output_speech_feed"
@@ -206,7 +229,10 @@
                     android:layout_gravity="center"
                     android:layout_marginEnd="15dp"
                     android:layout_marginTop="25dp"
-                    android:background="@drawable/view_rounded"/>
+                    android:background="@drawable/view_rounded_accent"
+                    android:progressBackgroundTint="@color/colorBlack"
+                    android:progressTint="@color/colorPrimaryDark"
+                    android:thumbTint="@color/colorPrimaryDark"/>
 
             </FrameLayout>
         </FrameLayout>
@@ -368,6 +394,15 @@
                     android:layout_weight="1"/>
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/input_language_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="50dp"
+                android:layout_marginTop="3dp"
+                android:textSize="12sp"/>
+
             <EditText
                 android:id="@+id/edit_input_text"
                 android:layout_width="wrap_content"
@@ -388,7 +423,10 @@
                 android:layout_gravity="center"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="25dp"
-                android:background="@drawable/view_rounded"/>
+                android:background="@drawable/view_rounded_accent"
+                android:progressBackgroundTint="@color/colorBlack"
+                android:progressTint="@color/colorPrimaryDark"
+                android:thumbTint="@color/colorPrimaryDark"/>
 
             <SeekBar
                 android:id="@+id/input_speech_feed"
@@ -397,7 +435,10 @@
                 android:layout_gravity="center"
                 android:layout_marginEnd="15dp"
                 android:layout_marginTop="25dp"
-                android:background="@drawable/view_rounded"/>
+                android:background="@drawable/view_rounded_accent"
+                android:progressBackgroundTint="@color/colorBlack"
+                android:progressTint="@color/colorPrimaryDark"
+                android:thumbTint="@color/colorPrimaryDark"/>
 
         </FrameLayout>
     </LinearLayout>

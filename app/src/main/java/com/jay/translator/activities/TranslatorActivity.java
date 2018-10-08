@@ -20,7 +20,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -33,8 +32,9 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.jay.translator.DialogLanguageNotSupported;
+import com.jay.translator.DialogNoInternet;
 import com.jay.translator.GoogleTranslate;
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.OnSwipeTouchListener;
@@ -156,9 +156,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         toolBarAnimation = (AnimationDrawable) toolbarLayout.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
 
-        LanguageSettings.loadLocale(context);
-
-        setBackground();
 
         //settings menu is collapsed by default
         isSettingsOpen = false;
@@ -230,8 +227,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     protected void onPause() {
         super.onPause();
 
-        textToSpeech.shutdown();
-
         if (toolBarAnimation != null && toolBarAnimation.isRunning())
             toolBarAnimation.stop();
     }
@@ -239,9 +234,18 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         editor.putString("editedText", editedText.getText().toString());
         editor.apply();
+
+        //Close the Text to Speech Library
+        if (textToSpeech != null) {
+
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+
+        super.onDestroy();
     }
 
 
@@ -476,21 +480,22 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         if (isLanguageSupported) {
             textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
         } else {
-            //todo locale
-            buildSnackBar("неподдерживается язык");
+
+            DialogLanguageNotSupported dialog = new DialogLanguageNotSupported(this);
+            dialog.show();
         }
     }
 
 
     public void onViewSettings(View view) {
 
-        startActivity(new Intent(context, SettingsActivity.class));
+        startActivity(new Intent(context, ChoiceSettingsActivity.class));
     }
 
 
-    public void  onStartSpeechActivity(View view){
+    public void onStartSpeechActivity(View view) {
 
-        startActivity(new Intent(this,SpeechActivity.class));
+        startActivity(new Intent(this, SpeechActivity.class));
     }
 
 
@@ -564,8 +569,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     private void showShareSettings() {
 
-        float x = getResources().getDimension(R.dimen.standard_55);
-        float y = fabSpeechSettings.getHeight() + 10;
+        float x = getResources().getDimension(R.dimen.standard_95);
+        float y = fabSpeechSettings.getHeight() + getResources().getDimension(R.dimen.standard_50);
 
         fabSave.animate().translationY(y).translationX(x).start();
         fabSend.animate().translationY(y).start();
@@ -593,10 +598,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         //set speech speed button under share button
         final float x = fabSpeechSettings.getX() - fabShare.getX();
-        final float y = fabShare.getHeight() + 20;
+        final float y = fabShare.getHeight() + getResources().getDimension(R.dimen.standard_50);
 
         //set speech feed button under speech speed
-        float y1 = y + fabShare.getHeight() + 30;
+        float y1 = y + fabShare.getHeight() + getResources().getDimension(R.dimen.standard_50);
 
         fabSpeechSpeed.animate().translationX(-x).translationY(y).start();
 
@@ -663,10 +668,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                 fabSettings.animate().rotation(360).setDuration(1500).start();
 
-                fabChoiceLanguage.animate().translationY(getResources().getDimension(R.dimen.standard_55))
+                fabChoiceLanguage.animate()
+                        .translationY(getResources().getDimension(R.dimen.standard_50))
+                        .translationX(-getResources().getDimension(R.dimen.standard_95))
                         .setDuration(500).start();
-                fabBackgroundSettings.animate().translationY(getResources().getDimension(R.dimen.standard_55))
-                        .translationX(-getResources().getDimension(R.dimen.standard_55))
+
+                fabBackgroundSettings.animate()
+                        .translationY(getResources().getDimension(R.dimen.standard_50))
+                        .translationX(-getResources().getDimension(R.dimen.standard_175))
                         .setDuration(500).start();
             }
         });
@@ -683,8 +692,14 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
                 fabSettings.animate().rotation(0).setDuration(1500).start();
 
-                fabChoiceLanguage.animate().translationY(0).setDuration(500).start();
-                fabBackgroundSettings.animate().translationY(0).translationX(0)
+                fabChoiceLanguage.animate()
+                        .translationY(0)
+                        .translationX(0)
+                        .setDuration(500).start();
+
+                fabBackgroundSettings.animate()
+                        .translationY(0)
+                        .translationX(0)
                         .setDuration(500).start();
             }
         });
@@ -813,6 +828,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                         languageFrom = GoogleTranslate.SPANISH;
                         languageFromHint.setText("Español");
                         break;
+
+                    case 6:
+                        languageFrom = GoogleTranslate.POLISH;
+                        languageFromHint.setText("Polish");
+                        break;
                 }
 
                 editor.putInt("selectionFrom", newVal);
@@ -861,6 +881,11 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                         languageTo = GoogleTranslate.SPANISH;
                         languageToHint.setText("Español");
                         break;
+
+                    case 6:
+                        languageTo = GoogleTranslate.POLISH;
+                        languageToHint.setText("Polish");
+                        break;
                 }
 
                 editor.putInt("selectionTo", newVal);
@@ -875,6 +900,12 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
 
     public void initializeTextToSpeech(final String locale) {
+
+        if (textToSpeech != null) {
+
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
 
         textToSpeech = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
             @Override
@@ -899,7 +930,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                     }
                 }
             }
-        });
+        }, "com.google.android.tts");
     }
 
 
@@ -958,14 +989,16 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     //If there is no internet connection then show the dialog
     public void alertDialogNoInternetConnection() {
-        Toast.makeText(context, "no internet connection", Toast.LENGTH_SHORT).show();
-        //TODO
+
+        DialogNoInternet dialog = new DialogNoInternet(this);
+        dialog.show();
     }
 
 
     private void initLanguagesSpinners() {
 
-        languages = new String[]{"English", "Русский", "Français", "Deutsch", "Italiano", "Español"};
+        languages = new String[]{"English", "Русский", "Français", "Deutsch", "Italiano", "Español"
+                , "Polish"};
 
         spinnerFrom.setMinValue(0);
         spinnerFrom.setMaxValue(languages.length - 1);

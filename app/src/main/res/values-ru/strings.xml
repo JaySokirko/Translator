@@ -12,4 +12,5 @@
     <string name="first_enter_the_text">Сначала введите текст</string>
     <string name="the_language_of_translation_coincides_with_the_original">язык перевода совпадает с оригиналом</string>
     <string name="select_languages">выберите языки</string>
+    <string name="language_is_not_support">Язык не поддерживается</string>
 </resources>

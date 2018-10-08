@@ -12,4 +12,5 @@
     <string name="first_enter_the_text">Entrer d\'abord le texte</string>
     <string name="the_language_of_translation_coincides_with_the_original">La langue de traduction coïncide avec l\'original</string>
     <string name="select_languages">sélectionner les langues</string>
+    <string name="language_is_not_support">Langue non supportée</string>
 </resources>
