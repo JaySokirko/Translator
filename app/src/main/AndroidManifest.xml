@@ -16,39 +16,38 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <!--  -->
         <activity
             android:name=".activities.ChoiceLanguageActivity"
             android:theme="@style/AppTheme" />
+        <!--  -->
         <activity
             android:name=".activities.LauncherActivity"
             android:theme="@style/AppTheme.Launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
+        <!--  -->
         <activity
             android:name=".activities.TranslatorActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <activity android:name=".activities.ChoiceSettingsActivity">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
-        </activity>
-
+        <!--  -->
+        <activity android:name=".activities.ChoiceSettingsActivity"></activity>
+        <!--  -->
         <activity
             android:name=".activities.SpeechActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-
+        <!--  -->
         <activity android:name=".activities.TextSettingsActivity" />
-
-        <activity android:name=".activities.SubstrateSettingsActivity">
-        </activity>
+        <!--  -->
+        <activity android:name=".activities.SubstrateSettingsActivity"></activity>
+        <activity android:name=".activities.SelectAppActivity"></activity>
     </application>
 
 </manifest>

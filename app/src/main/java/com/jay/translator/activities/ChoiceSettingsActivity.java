@@ -19,6 +19,8 @@ public class ChoiceSettingsActivity extends AppCompatActivity implements View.On
     private static final String TAG = "TAG";
 
     private SharedPreferences preferences;
+    private LinearLayout startTextSettings;
+    private LinearLayout startSubstrateSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +29,10 @@ public class ChoiceSettingsActivity extends AppCompatActivity implements View.On
 
         ImageView backgroundImage = findViewById(R.id.settings_background);
 
-        LinearLayout startTextSettings = findViewById(R.id.set_text_style);
+        startTextSettings = findViewById(R.id.set_text_style);
         startTextSettings.setOnClickListener(this);
 
-        LinearLayout startSubstrateSettings = findViewById(R.id.start_substrate_settings);
+        startSubstrateSettings = findViewById(R.id.start_substrate_settings);
         startSubstrateSettings.setOnClickListener(this);
 
         preferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
@@ -75,8 +77,6 @@ public class ChoiceSettingsActivity extends AppCompatActivity implements View.On
         navigationSettingsTV.setTextColor(Color.rgb(red, green, blue));
         appSettingsTV.setTextColor(Color.rgb(red, green, blue));
 
-        Log.d(TAG, "loadSettings: " + red);
-
         int style = preferences.getInt("textStyle", 0);
 
         textSettingsTV.setTypeface(null, style);
@@ -84,5 +84,17 @@ public class ChoiceSettingsActivity extends AppCompatActivity implements View.On
         backgroundSettingsTV.setTypeface(null, style);
         navigationSettingsTV.setTypeface(null, style);
         appSettingsTV.setTypeface(null, style);
+
+        int  substrateColor = Color.rgb(
+                (preferences.getInt("redBarSubstrate", 255)),
+                (preferences.getInt("greenBarSubstrate", 255)),
+                (preferences.getInt("blueBarSubstrate", 255)));
+
+        startSubstrateSettings.setBackgroundColor(substrateColor);
+        startTextSettings.setBackgroundColor(substrateColor);
+
+        int substrateAlpha = preferences.getInt("substrateAlpha",255);
+        startTextSettings.getBackground().setAlpha(substrateAlpha);
+        startSubstrateSettings.getBackground().setAlpha(substrateAlpha);
     }
 }

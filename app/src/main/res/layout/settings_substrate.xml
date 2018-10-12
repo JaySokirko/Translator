@@ -32,16 +32,26 @@
             android:layout_marginTop="16dp"
             android:text="substrate transparent" />
 
-        <SeekBar
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:background="@drawable/view_rounded"
-            android:layout_marginTop="12dp"
             android:layout_marginEnd="16dp"
+            android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
-            android:progressBackgroundTint="@color/colorPrimaryDark"
-            android:progressTint="@color/colorPrimaryDark"
-            android:thumbTint="@color/colorPrimaryDark"/>
+            android:id="@+id/substrate_alpha_seek_bar_background">
+
+            <SeekBar
+                android:id="@+id/substrate_alpha_settings"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:progressBackgroundTint="@color/colorPrimaryDark"
+                android:progressTint="@color/colorPrimaryDark"
+                android:thumbTint="@color/colorPrimaryDark"/>
+
+        </LinearLayout>
+
 
         <View
             android:layout_width="match_parent"

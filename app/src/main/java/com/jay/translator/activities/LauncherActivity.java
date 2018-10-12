@@ -24,12 +24,12 @@ public class LauncherActivity extends Activity {
         if (isAppRunFirstTime) {
             startActivity(new Intent(this, ChoiceLanguageActivity.class));
         } else {
-            startActivity(new Intent(this,TranslatorActivity.class));
+            startActivity(new Intent(this,SelectAppActivity.class));
         }
 
         finish();
 
-        editor.putBoolean("isAppRunFirstTime",false);
+        editor.putBoolean("isAppRunFirstTime",true);
         editor.apply();
     }
 }

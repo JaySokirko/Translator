@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -17,12 +20,12 @@ import com.jay.translator.R;
 
 public class TextSettingsActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView textStyle;
-    private TextView textColor;
-    private TextView textExample;
-    private Button styleNormal;
-    private Button styleBold;
-    private Button styleItalic;
+    private TextView textStyleTV;
+    private TextView textColorTV;
+    private TextView textExampleTV;
+    private Button styleNormalBtn;
+    private Button styleBoldBtn;
+    private Button styleItalicBtn;
     private SeekBar redBar;
     private SeekBar greenBar;
     private SeekBar blueBar;
@@ -40,18 +43,18 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_text);
 
-        textStyle = findViewById(R.id.set_text_style);
-        textColor = findViewById(R.id.set_text_color);
-        textExample = findViewById(R.id.text_settings_example);
+        textStyleTV = findViewById(R.id.set_text_style);
+        textColorTV = findViewById(R.id.set_text_color);
+        textExampleTV = findViewById(R.id.text_settings_example);
 
-        styleNormal = findViewById(R.id.text_style_normal);
-        styleNormal.setOnClickListener(this);
+        styleNormalBtn = findViewById(R.id.text_style_normal);
+        styleNormalBtn.setOnClickListener(this);
 
-        styleBold = findViewById(R.id.text_style_bold);
-        styleBold.setOnClickListener(this);
+        styleBoldBtn = findViewById(R.id.text_style_bold);
+        styleBoldBtn.setOnClickListener(this);
 
-        styleItalic = findViewById(R.id.text_style_italic);
-        styleItalic.setOnClickListener(this);
+        styleItalicBtn = findViewById(R.id.text_style_italic);
+        styleItalicBtn.setOnClickListener(this);
 
         preferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
         editor = preferences.edit();
@@ -105,12 +108,12 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                textColor.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                textStyle.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                styleNormal.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                styleBold.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                styleItalic.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                textExample.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
+                textColorTV.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
+                textStyleTV.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
+                styleNormalBtn.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
+                styleBoldBtn.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
+                styleItalicBtn.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
+                textExampleTV.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
 
                 redBarProgress = progress;
             }
@@ -134,12 +137,12 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                textColor.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                textStyle.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                styleNormal.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                styleBold.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                styleItalic.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                textExample.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
+                textColorTV.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
+                textStyleTV.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
+                styleNormalBtn.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
+                styleBoldBtn.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
+                styleItalicBtn.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
+                textExampleTV.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
 
                 greenBarProgress = progress;
             }
@@ -163,12 +166,12 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                textColor.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                textStyle.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                styleNormal.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                styleBold.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                styleItalic.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                textExample.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
+                textColorTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
+                textStyleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
+                styleNormalBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
+                styleBoldBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
+                styleItalicBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
+                textExampleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
 
                 blueBarProgress = progress;
             }
@@ -188,16 +191,33 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
 
     private void loadSettings() {
 
-        textColor.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        textStyle.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        styleNormal.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        styleBold.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        styleItalic.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        textExample.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
+        textColorTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
+        textStyleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
+        styleNormalBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
+        styleBoldBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
+        styleItalicBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
+        textExampleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
 
-        textColor.setTypeface(null,preferences.getInt("textStyle",0));
-        textStyle.setTypeface(null,preferences.getInt("textStyle",0));
-        textExample.setTypeface(null,preferences.getInt("textStyle",0));
+        textColorTV.setTypeface(null,preferences.getInt("textStyleTV",0));
+        textStyleTV.setTypeface(null,preferences.getInt("textStyleTV",0));
+        textExampleTV.setTypeface(null,preferences.getInt("textStyleTV",0));
+
+        LinearLayout substrateLayout = findViewById(R.id.text_settings_substrate_background);
+
+        LayerDrawable layerDrawable = (LayerDrawable) getResources().getDrawable(R.drawable.view_rounded);
+        GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.rounded_view_color);
+
+        int substrateColor = Color.rgb(
+                (preferences.getInt("redBarSubstrate", 255)),
+                (preferences.getInt("greenBarSubstrate", 255)),
+                (preferences.getInt("blueBarSubstrate", 255)));
+
+        gradientDrawable.setColor(substrateColor);
+        substrateLayout.setBackground(layerDrawable);
+
+        int substrateAlpha = preferences.getInt("substrateAlpha",255);
+
+        substrateLayout.getBackground().setAlpha(substrateAlpha);
     }
 
     @Override
@@ -207,30 +227,31 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.text_style_normal:
 
-                textColor.setTypeface(null,Typeface.NORMAL);
-                textStyle.setTypeface(null,Typeface.NORMAL);
-                textExample.setTypeface(null,Typeface.NORMAL);
+                textColorTV.setTypeface(null,Typeface.NORMAL);
+                textStyleTV.setTypeface(null,Typeface.NORMAL);
+                textExampleTV.setTypeface(null,Typeface.NORMAL);
 
-                editor.putInt("textStyle",Typeface.NORMAL);
+                editor.putInt("textStyleTV",Typeface.NORMAL);
                 break;
 
 
             case R.id.text_style_bold:
 
-                textColor.setTypeface(null,Typeface.BOLD);
-                textStyle.setTypeface(null,Typeface.BOLD);
-                textExample.setTypeface(null,Typeface.BOLD);
+                textColorTV.setTypeface(null,Typeface.BOLD);
+                textStyleTV.setTypeface(null,Typeface.BOLD);
+                textExampleTV.setTypeface(null,Typeface.BOLD);
 
-                editor.putInt("textStyle",Typeface.BOLD);
+                editor.putInt("textStyleTV",Typeface.BOLD);
                 break;
+
 
             case R.id.text_style_italic:
 
-                textColor.setTypeface(null,Typeface.ITALIC);
-                textStyle.setTypeface(null,Typeface.ITALIC);
-                textExample.setTypeface(null,Typeface.ITALIC);
+                textColorTV.setTypeface(null,Typeface.ITALIC);
+                textStyleTV.setTypeface(null,Typeface.ITALIC);
+                textExampleTV.setTypeface(null,Typeface.ITALIC);
 
-                editor.putInt("textStyle",Typeface.ITALIC);
+                editor.putInt("textStyleTV",Typeface.ITALIC);
                 break;
         }
         editor.apply();

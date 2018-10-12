@@ -112,8 +112,9 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom"
-        app:srcCompat="@drawable/ic_action_microphone"
-        android:onClick="onStartSpeechActivity"/>
+        app:srcCompat="@drawable/ic_action_microphone1"
+        android:onClick="onStartSpeechActivity"
+        app:fabSize="mini"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_settings"

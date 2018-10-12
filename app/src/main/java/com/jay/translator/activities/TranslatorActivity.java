@@ -712,8 +712,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             @Override
             public void run() {
                 ViewSettings.setBackgroundImage(LanguageSettings.getLanguage(), backgroundImage);
-                backgroundImage.setImageBitmap
-                        (ViewSettings.setImageBlurry(context, backgroundImage.getDrawable()));
+                backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(context, backgroundImage.getDrawable()));
             }
         });
     }

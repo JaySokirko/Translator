@@ -1,6 +1,9 @@
 package com.jay.translator.activities;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,7 +11,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
@@ -48,10 +53,15 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
             R.drawable.ic_poland_flag
     };
 
+    private TextView appBarTV;
 
     private ListView listView;
     private AnimationDrawable toolBarAnimation;
 
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
+
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +71,9 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_choice_language);
 
         listView = findViewById(R.id.list_view_choice_language);
-        FloatingActionButton next = findViewById(R.id.button_choice_language_next);
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_choice_language);
+
+        appBarTV = findViewById(R.id.app_bar_choice_language_tv);
 
         ChoiceLanguageAdapter adapter = new ChoiceLanguageAdapter(ChoiceLanguageActivity.this,
                 languages, images, flags);
@@ -71,6 +82,9 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
         toolBarAnimation = (AnimationDrawable) toolbar.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
+
+        preferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        editor = preferences.edit();
 
         //on list view click listener
         onListClickListener();
@@ -103,79 +117,49 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         LanguageSettings.setLocale("en", ChoiceLanguageActivity.this);
-                        setLanguage();
+                        appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 1:
                         LanguageSettings.setLocale("ru", ChoiceLanguageActivity.this);
-                        setLanguage();
+                        appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 2:
                         LanguageSettings.setLocale("de", ChoiceLanguageActivity.this);
-                        setLanguage();
+                        appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 3:
                         LanguageSettings.setLocale("fr", ChoiceLanguageActivity.this);
-                        setLanguage();
+                        appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 4:
                         LanguageSettings.setLocale("es", ChoiceLanguageActivity.this);
-                        setLanguage();
+                        appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 5:
                         LanguageSettings.setLocale("it", ChoiceLanguageActivity.this);
-                        setLanguage();
+                        appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 6:
                         LanguageSettings.setLocale("pl", ChoiceLanguageActivity.this);
-                        setLanguage();
+                        appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
                 }
+                editor.putInt("blurImage",images[position]);
+                editor.apply();
             }
         });
     }
 
 
-    private void setLanguage() {
+    public void acceptLanguageChoice(View view){
 
-        Snacky.builder()
-                .setActivity(ChoiceLanguageActivity.this)
-                .setText(R.string.please_wait)
-                .setTextColor(getResources().getColor(R.color.colorText))
-                .centerText()
-                .setBackgroundColor(getResources().getColor(R.color.colorPrimary))
-                .setDuration(Snacky.LENGTH_SHORT)
-                .build()
-                .show();
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(ChoiceLanguageActivity.this,
-                        ChoiceLanguageActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-            }
-        }, 1000);
-    }
-
-
-    public void startTranslatorActivity(final View view) {
-
-        view.setBackground(getDrawable(R.drawable.view_rounded));
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-                startActivity(new Intent(ChoiceLanguageActivity.this, TranslatorActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
-
-                ChoiceLanguageActivity.this.finish();
-            }
-        }, 0);
+        startActivity(new Intent(this, SelectAppActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 }
