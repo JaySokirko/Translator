@@ -2,6 +2,7 @@ package com.jay.translator.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -37,8 +38,6 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         speaker.setOnClickListener(this);
 
         accept = findViewById(R.id.accept_app_choice);
-        accept.setVisibility(View.GONE);
-        accept.animate().translationX(1000).start();
         accept.setOnClickListener(this);
 
         backgroundImage = findViewById(R.id.select_app_background_image);
@@ -48,6 +47,7 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         image = preferences.getInt("blurImage",R.drawable.london);
         backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this,getResources().getDrawable(image)));
     }
+
 
     @Override
     public void onClick(View v) {
@@ -69,6 +69,15 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                 } else {
                     startActivity(new Intent(this, SpeechActivity.class));
                 }
+
+                accept.setBackground(getResources().getDrawable(R.drawable.circle_background_cyan));
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        accept.setBackground(getResources().getDrawable
+                                (R.drawable.circle_background_primary_dark));
+                    }
+                },300);
                 break;
         }
     }
@@ -118,9 +127,8 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
 
     private void showAccept() {
 
-        accept.setVisibility(View.VISIBLE);
         accept.animate()
-                .setDuration(1000)
+                .setDuration(500)
                 .translationX(0)
                 .start();
     }

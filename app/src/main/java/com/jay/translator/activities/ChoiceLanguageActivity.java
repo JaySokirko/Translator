@@ -7,11 +7,11 @@ import android.content.SharedPreferences;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -19,11 +19,8 @@ import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
 import com.jay.translator.adapters.ChoiceLanguageAdapter;
 
-import de.mateware.snacky.Snacky;
-
 public class ChoiceLanguageActivity extends AppCompatActivity {
 
-    private static final String TAG = "TAG";
     private String[] languages = {
             "English",
             "Русский",
@@ -58,7 +55,6 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
     private ListView listView;
     private AnimationDrawable toolBarAnimation;
 
-    private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
 
     @SuppressLint("CommitPrefEdits")
@@ -83,7 +79,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
         toolBarAnimation = (AnimationDrawable) toolbar.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
 
-        preferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("Settings", Activity.MODE_PRIVATE);
         editor = preferences.edit();
 
         //on list view click listener
@@ -150,16 +146,28 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
                 }
-                editor.putInt("blurImage",images[position]);
+                editor.putInt("blurImage", images[position]);
                 editor.apply();
+
+                Animation animation1 = new AlphaAnimation(0.3f, 1.0f);
+                animation1.setDuration(1000);
+                view.startAnimation(animation1);
             }
         });
     }
 
 
-    public void acceptLanguageChoice(View view){
+    public void acceptLanguageChoice(final View view) {
 
-        startActivity(new Intent(this, SelectAppActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+        view.setBackground(getResources().getDrawable(R.drawable.circle_background_cyan));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                view.setBackground(getResources().getDrawable(R.drawable.circle_background_primary_dark));
+                startActivity(new Intent(ChoiceLanguageActivity.this, SelectAppActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            }
+        }, 300);
     }
 }

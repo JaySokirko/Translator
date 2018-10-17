@@ -50,5 +50,9 @@
     <string name="text_style">text style</string>
     <string name="text_color">text color</string>
     <string name="substrate_color">substrate color</string>
+    <string name="translator">Translator</string>
+    <string name="translation_description">Translate the text into a foreign language, you can share the translation</string>
+    <string name="chat_description">Chat with foreigners using the loudspeaker</string>
+    <string name="speaker">Speaker</string>
 
 </resources>

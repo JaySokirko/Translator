@@ -20,15 +20,18 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -51,9 +54,8 @@ import de.mateware.snacky.Snacky;
 public class TranslatorActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = "TAG";
-    private FloatingActionButton fabSettings;
-    private FloatingActionButton fabChoiceLanguage;
-    private FloatingActionButton fabBackgroundSettings;
+    private ImageView fabChoiceLanguage;
+    private ImageView fabBackgroundSettings;
     private FloatingActionButton fabStartTranslate;
     private FloatingActionButton fabSpeechSettings;
     private FloatingActionButton fabSpeechFeed;
@@ -65,6 +67,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private CoordinatorLayout inputTextLayout;
     private CoordinatorLayout outputTextLayout;
     private FrameLayout onTouchEventField;
+    private LinearLayout swipeSettingsMenu;
     private SeekBar seekBarSpeechSpeed;
     private SeekBar seekBarSpeechFeed;
     private EditText editedText;
@@ -77,7 +80,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private FrameLayout outputTextFrame;
 
     private AnimationDrawable toolBarAnimation;
-    private boolean isSettingsOpen;
     private boolean isSpeechSettingsOpen;
     private boolean isShowTranslatedTextFrame;
     private boolean isShowInputTextFrame;
@@ -120,7 +122,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         AppBarLayout barLayout = findViewById(R.id.app_bar);
         barLayout.addOnOffsetChangedListener(this);
 
-        fabSettings = findViewById(R.id.fab_settings);
         fabChoiceLanguage = findViewById(R.id.fab_language_settings);
         fabBackgroundSettings = findViewById(R.id.fab_view_settings);
         fabStartTranslate = findViewById(R.id.fab_translation);
@@ -138,6 +139,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         outputTextLayout = findViewById(R.id.output_text_layout);
         onTouchEventField = findViewById(R.id.container);
         backgroundImage = findViewById(R.id.image_view_translator_background);
+        swipeSettingsMenu = findViewById(R.id.swipe_settings_menu);
 
         seekBarSpeechSpeed = findViewById(R.id.seek_bar_speech_speed);
         seekBarSpeechSpeed.setMax(100);
@@ -156,9 +158,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         toolBarAnimation = (AnimationDrawable) toolbarLayout.getBackground();
         toolBarAnimation.setExitFadeDuration(4000);
 
-
-        //settings menu is collapsed by default
-        isSettingsOpen = false;
 
         isSpeechSettingsOpen = false;
 
@@ -210,7 +209,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
+        final int width = size.x;
         allowableFrameHeight = height - 400 - actionBarHeight;
+
+
     }
 
 
@@ -425,18 +427,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    public void onSettingsClick(View view) {
-
-        if (!isSettingsOpen) {
-
-            showSettings();
-        } else {
-
-            closeSettings();
-        }
-    }
-
-
     public void onSpeechSpeedClick(View view) {
 
         buildSnackBar(getResources().getString(R.string.change_speech_speed));
@@ -501,11 +491,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-
-        if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0) {
-            //if app bar is collapsed hide settings view
-            closeSettings();
-        }
 
         //turning the maximum value of the verticalOffset in the number = 1.0f,
         // and the minimum in 0.0
@@ -658,54 +643,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    private void showSettings() {
-
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-
-                isSettingsOpen = true;
-
-                fabSettings.animate().rotation(360).setDuration(1500).start();
-
-                fabChoiceLanguage.animate()
-                        .translationY(getResources().getDimension(R.dimen.standard_50))
-                        .translationX(-getResources().getDimension(R.dimen.standard_95))
-                        .setDuration(500).start();
-
-                fabBackgroundSettings.animate()
-                        .translationY(getResources().getDimension(R.dimen.standard_50))
-                        .translationX(-getResources().getDimension(R.dimen.standard_175))
-                        .setDuration(500).start();
-            }
-        });
-    }
-
-
-    private void closeSettings() {
-
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-
-                isSettingsOpen = false;
-
-                fabSettings.animate().rotation(0).setDuration(1500).start();
-
-                fabChoiceLanguage.animate()
-                        .translationY(0)
-                        .translationX(0)
-                        .setDuration(500).start();
-
-                fabBackgroundSettings.animate()
-                        .translationY(0)
-                        .translationX(0)
-                        .setDuration(500).start();
-            }
-        });
-    }
-
-
     private void setBackground() {
 
         new Handler().post(new Runnable() {
@@ -784,6 +721,24 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                 if (!isShowInputTextFrame) {
                     showInputTextFrame();
                 }
+            }
+        });
+
+
+        swipeSettingsMenu.setOnTouchListener(new OnSwipeTouchListener(context) {
+
+            @Override
+            public void onSwipeRight() {
+                super.onSwipeRight();
+                swipeSettingsMenu.animate()
+                        .translationX(getResources().getDimension(R.dimen.standard_145))
+                        .start();
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                super.onSwipeLeft();
+                swipeSettingsMenu.animate().translationX(0).start();
             }
         });
     }

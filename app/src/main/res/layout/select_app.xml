@@ -9,7 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@drawable/london"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:contentDescription="@drawable/london" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Translator"
+                    android:text="@string/translator"
                     android:textColor="@color/colorText"
                     android:textStyle="bold" />
 
@@ -60,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="text color and style"
+                    android:text="@string/translation_description"
                     android:textColor="@android:color/darker_gray" />
 
             </LinearLayout>
@@ -96,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="Speaker"
+                    android:text="@string/speaker"
                     android:textColor="@color/colorText"
                     android:textStyle="bold" />
 
@@ -111,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="5dp"
-                    android:text="text color and style"
+                    android:text="@string/chat_description"
                     android:textColor="@android:color/darker_gray" />
 
             </LinearLayout>
@@ -122,14 +123,15 @@
 
     <ImageView
         android:id="@+id/accept_app_choice"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="41dp"
+        android:layout_height="41dp"
         android:background="@drawable/circle_background_primary_dark"
         android:layout_gravity="end|bottom"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/ic_action_done"
-        android:padding="7dp"
-        android:contentDescription="@drawable/ic_action_done" />
+        android:padding="9dp"
+        android:contentDescription="@drawable/ic_action_done"
+        android:translationX="@dimen/standard_200"/>
 
 </FrameLayout>

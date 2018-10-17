@@ -67,16 +67,19 @@ public class ChoiceSettingsActivity extends AppCompatActivity implements View.On
         TextView navigationSettingsTV = findViewById(R.id.settings_navigation_tv);
         TextView appSettingsTV = findViewById(R.id.settings_app_tv);
 
-        int red = preferences.getInt("redBarProgress", 0);
-        int green = preferences.getInt("greenBarProgress", 0);
-        int blue = preferences.getInt("blueBarProgress", 0);
+        //load text color
+        int textColor = Color.rgb(
+                (preferences.getInt("textColorRed", 0)),
+                (preferences.getInt("textColorGreen", 0)),
+                (preferences.getInt("textColorBlue", 0)));
 
-        textSettingsTV.setTextColor(Color.rgb(red, green, blue));
-        substrateSettingsTV.setTextColor(Color.rgb(red, green, blue));
-        backgroundSettingsTV.setTextColor(Color.rgb(red, green, blue));
-        navigationSettingsTV.setTextColor(Color.rgb(red, green, blue));
-        appSettingsTV.setTextColor(Color.rgb(red, green, blue));
+        textSettingsTV.setTextColor(textColor);
+        substrateSettingsTV.setTextColor(textColor);
+        backgroundSettingsTV.setTextColor(textColor);
+        navigationSettingsTV.setTextColor(textColor);
+        appSettingsTV.setTextColor(textColor);
 
+        //load text style
         int style = preferences.getInt("textStyle", 0);
 
         textSettingsTV.setTypeface(null, style);
@@ -84,11 +87,12 @@ public class ChoiceSettingsActivity extends AppCompatActivity implements View.On
         backgroundSettingsTV.setTypeface(null, style);
         navigationSettingsTV.setTypeface(null, style);
         appSettingsTV.setTypeface(null, style);
-
+        
+        // load substrate color
         int  substrateColor = Color.rgb(
-                (preferences.getInt("redBarSubstrate", 255)),
-                (preferences.getInt("greenBarSubstrate", 255)),
-                (preferences.getInt("blueBarSubstrate", 255)));
+                (preferences.getInt("substrateColorRed", 255)),
+                (preferences.getInt("substrateColorGreen", 255)),
+                (preferences.getInt("substrateColorBlue", 255)));
 
         startSubstrateSettings.setBackgroundColor(substrateColor);
         startTextSettings.setBackgroundColor(substrateColor);

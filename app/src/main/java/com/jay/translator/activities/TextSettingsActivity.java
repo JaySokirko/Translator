@@ -30,9 +30,9 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
     private SeekBar greenBar;
     private SeekBar blueBar;
 
-    private int redBarProgress;
-    private int greenBarProgress;
-    private int blueBarProgress;
+    private int textColorRed;
+    private int textColorGreen;
+    private int textColorBlue;
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
@@ -77,28 +77,28 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
 
     private void initializeRedSeekBar() {
         redBar = findViewById(R.id.text_settings_red);
-        redBarProgress = preferences.getInt("redBarProgress", 0);
+        textColorRed = preferences.getInt("textColorRed", 0);
         redBar.setMax(255);
         redBar.incrementProgressBy(1);
-        redBar.setProgress(redBarProgress);
+        redBar.setProgress(textColorRed);
     }
 
 
     private void initializeGreenSeekBar() {
         greenBar = findViewById(R.id.text_settings_green);
-        greenBarProgress = preferences.getInt("greenBarProgress", 0);
+        textColorGreen = preferences.getInt("textColorGreen", 0);
         greenBar.setMax(255);
         greenBar.incrementProgressBy(1);
-        greenBar.setProgress(greenBarProgress);
+        greenBar.setProgress(textColorGreen);
     }
 
 
     private void initializeBlueSeekBar() {
         blueBar = findViewById(R.id.text_settings_blue);
-        blueBarProgress = preferences.getInt("blueBarProgress", 0);
+        textColorBlue = preferences.getInt("textColorBlue", 0);
         blueBar.setMax(255);
         blueBar.incrementProgressBy(1);
-        blueBar.setProgress(blueBarProgress);
+        blueBar.setProgress(textColorBlue);
     }
 
 
@@ -108,14 +108,14 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                textColorTV.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                textStyleTV.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                styleNormalBtn.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                styleBoldBtn.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                styleItalicBtn.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
-                textExampleTV.setTextColor(Color.rgb(progress, greenBarProgress, blueBarProgress));
+                textColorTV.setTextColor(Color.rgb(progress, textColorGreen, textColorBlue));
+                textStyleTV.setTextColor(Color.rgb(progress, textColorGreen, textColorBlue));
+                styleNormalBtn.setTextColor(Color.rgb(progress, textColorGreen, textColorBlue));
+                styleBoldBtn.setTextColor(Color.rgb(progress, textColorGreen, textColorBlue));
+                styleItalicBtn.setTextColor(Color.rgb(progress, textColorGreen, textColorBlue));
+                textExampleTV.setTextColor(Color.rgb(progress, textColorGreen, textColorBlue));
 
-                redBarProgress = progress;
+                textColorRed = progress;
             }
 
             @Override
@@ -124,7 +124,7 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                editor.putInt("redBarProgress", redBarProgress);
+                editor.putInt("textColorRed", textColorRed);
                 editor.apply();
             }
         });
@@ -137,14 +137,14 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                textColorTV.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                textStyleTV.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                styleNormalBtn.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                styleBoldBtn.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                styleItalicBtn.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
-                textExampleTV.setTextColor(Color.rgb(redBarProgress, progress, blueBarProgress));
+                textColorTV.setTextColor(Color.rgb(textColorRed, progress, textColorBlue));
+                textStyleTV.setTextColor(Color.rgb(textColorRed, progress, textColorBlue));
+                styleNormalBtn.setTextColor(Color.rgb(textColorRed, progress, textColorBlue));
+                styleBoldBtn.setTextColor(Color.rgb(textColorRed, progress, textColorBlue));
+                styleItalicBtn.setTextColor(Color.rgb(textColorRed, progress, textColorBlue));
+                textExampleTV.setTextColor(Color.rgb(textColorRed, progress, textColorBlue));
 
-                greenBarProgress = progress;
+                textColorGreen = progress;
             }
 
             @Override
@@ -153,7 +153,7 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                editor.putInt("greenBarProgress", greenBarProgress);
+                editor.putInt("textColorGreen", textColorGreen);
                 editor.apply();
             }
         });
@@ -166,14 +166,14 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                textColorTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                textStyleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                styleNormalBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                styleBoldBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                styleItalicBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
-                textExampleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, progress));
+                textColorTV.setTextColor(Color.rgb(textColorRed, textColorGreen, progress));
+                textStyleTV.setTextColor(Color.rgb(textColorRed, textColorGreen, progress));
+                styleNormalBtn.setTextColor(Color.rgb(textColorRed, textColorGreen, progress));
+                styleBoldBtn.setTextColor(Color.rgb(textColorRed, textColorGreen, progress));
+                styleItalicBtn.setTextColor(Color.rgb(textColorRed, textColorGreen, progress));
+                textExampleTV.setTextColor(Color.rgb(textColorRed, textColorGreen, progress));
 
-                blueBarProgress = progress;
+                textColorBlue = progress;
             }
 
             @Override
@@ -182,43 +182,12 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                editor.putInt("blueBarProgress", blueBarProgress);
+                editor.putInt("textColorBlue", textColorBlue);
                 editor.apply();
             }
         });
     }
 
-
-    private void loadSettings() {
-
-        textColorTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        textStyleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        styleNormalBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        styleBoldBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        styleItalicBtn.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-        textExampleTV.setTextColor(Color.rgb(redBarProgress, greenBarProgress, blueBarProgress));
-
-        textColorTV.setTypeface(null,preferences.getInt("textStyleTV",0));
-        textStyleTV.setTypeface(null,preferences.getInt("textStyleTV",0));
-        textExampleTV.setTypeface(null,preferences.getInt("textStyleTV",0));
-
-        LinearLayout substrateLayout = findViewById(R.id.text_settings_substrate_background);
-
-        LayerDrawable layerDrawable = (LayerDrawable) getResources().getDrawable(R.drawable.view_rounded);
-        GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.rounded_view_color);
-
-        int substrateColor = Color.rgb(
-                (preferences.getInt("redBarSubstrate", 255)),
-                (preferences.getInt("greenBarSubstrate", 255)),
-                (preferences.getInt("blueBarSubstrate", 255)));
-
-        gradientDrawable.setColor(substrateColor);
-        substrateLayout.setBackground(layerDrawable);
-
-        int substrateAlpha = preferences.getInt("substrateAlpha",255);
-
-        substrateLayout.getBackground().setAlpha(substrateAlpha);
-    }
 
     @Override
     public void onClick(View v) {
@@ -231,7 +200,7 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
                 textStyleTV.setTypeface(null,Typeface.NORMAL);
                 textExampleTV.setTypeface(null,Typeface.NORMAL);
 
-                editor.putInt("textStyleTV",Typeface.NORMAL);
+                editor.putInt("textStyle",Typeface.NORMAL);
                 break;
 
 
@@ -241,7 +210,7 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
                 textStyleTV.setTypeface(null,Typeface.BOLD);
                 textExampleTV.setTypeface(null,Typeface.BOLD);
 
-                editor.putInt("textStyleTV",Typeface.BOLD);
+                editor.putInt("textStyle",Typeface.BOLD);
                 break;
 
 
@@ -251,7 +220,7 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
                 textStyleTV.setTypeface(null,Typeface.ITALIC);
                 textExampleTV.setTypeface(null,Typeface.ITALIC);
 
-                editor.putInt("textStyleTV",Typeface.ITALIC);
+                editor.putInt("textStyle",Typeface.ITALIC);
                 break;
         }
         editor.apply();
@@ -262,5 +231,40 @@ public class TextSettingsActivity extends AppCompatActivity implements View.OnCl
     public void onBackPressed() {
         startActivity(new Intent(this,ChoiceSettingsActivity.class));
         super.onBackPressed();
+    }
+
+
+    private void loadSettings() {
+
+        //load text color
+        textColorTV.setTextColor(Color.rgb(textColorRed, textColorGreen, textColorBlue));
+        textStyleTV.setTextColor(Color.rgb(textColorRed, textColorGreen, textColorBlue));
+        styleNormalBtn.setTextColor(Color.rgb(textColorRed, textColorGreen, textColorBlue));
+        styleBoldBtn.setTextColor(Color.rgb(textColorRed, textColorGreen, textColorBlue));
+        styleItalicBtn.setTextColor(Color.rgb(textColorRed, textColorGreen, textColorBlue));
+        textExampleTV.setTextColor(Color.rgb(textColorRed, textColorGreen, textColorBlue));
+
+        //load text style
+        textColorTV.setTypeface(null,preferences.getInt("textStyle",0));
+        textStyleTV.setTypeface(null,preferences.getInt("textStyle",0));
+        textExampleTV.setTypeface(null,preferences.getInt("textStyle",0));
+
+        LinearLayout substrateLayout = findViewById(R.id.text_settings_substrate_background);
+
+        LayerDrawable layerDrawable = (LayerDrawable) getResources().getDrawable(R.drawable.view_rounded);
+        GradientDrawable gradientDrawable = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.rounded_view_color);
+
+        //load substrate color
+        int  substrateColor = Color.rgb(
+                (preferences.getInt("substrateColorRed", 255)),
+                (preferences.getInt("substrateColorGreen", 255)),
+                (preferences.getInt("substrateColorBlue", 255)));
+
+        gradientDrawable.setColor(substrateColor);
+        substrateLayout.setBackground(layerDrawable);
+
+        //load substrate alpha
+        int substrateAlpha = preferences.getInt("substrateAlpha",255);
+        substrateLayout.getBackground().setAlpha(substrateAlpha);
     }
 }

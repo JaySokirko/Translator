@@ -90,7 +90,7 @@ public class SubstrateSettingsActivity extends AppCompatActivity {
 
     private void initializeRedSeekBar() {
         redBar = findViewById(R.id.substrate_settings_red);
-        red = preferences.getInt("redBarSubstrate", 255);
+        red = preferences.getInt("substrateColorRed", 255);
         redBar.setMax(255);
         redBar.incrementProgressBy(1);
         redBar.setProgress(red);
@@ -99,7 +99,7 @@ public class SubstrateSettingsActivity extends AppCompatActivity {
 
     private void initializeGreenSeekBar() {
         greenBar = findViewById(R.id.substrate_settings_green);
-        green = preferences.getInt("greenBarSubstrate", 255);
+        green = preferences.getInt("substrateColorGreen", 255);
         greenBar.setMax(255);
         greenBar.incrementProgressBy(1);
         greenBar.setProgress(green);
@@ -108,7 +108,7 @@ public class SubstrateSettingsActivity extends AppCompatActivity {
 
     private void initializeBlueSeekBar() {
         blueBar = findViewById(R.id.substrate_settings_blue);
-        blue = preferences.getInt("blueBarSubstrate", 255);
+        blue = preferences.getInt("substrateColorBlue", 255);
         blueBar.setMax(255);
         blueBar.incrementProgressBy(1);
         blueBar.setProgress(blue);
@@ -133,7 +133,7 @@ public class SubstrateSettingsActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                editor.putInt("redBarSubstrate", red);
+                editor.putInt("substrateColorRed", red);
                 editor.apply();
             }
         });
@@ -158,7 +158,7 @@ public class SubstrateSettingsActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                editor.putInt("greenBarSubstrate", green);
+                editor.putInt("substrateColorGreen", green);
                 editor.apply();
             }
         });
@@ -183,7 +183,7 @@ public class SubstrateSettingsActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                editor.putInt("blueBarSubstrate", blue);
+                editor.putInt("substrateColorBlue", blue);
                 editor.apply();
             }
         });
@@ -225,28 +225,33 @@ public class SubstrateSettingsActivity extends AppCompatActivity {
         TextView substrateAlphaTV = findViewById(R.id.substrate_transparent_tv);
         TextView substrateColorTV = findViewById(R.id.substrate_color_tv);
 
+        //load text style
         int style = preferences.getInt("textStyle", 0);
         substrateAlphaTV.setTypeface(null, style);
         substrateColorTV.setTypeface(null, style);
 
+        //load text color
         int textColor = Color.rgb(
-                (preferences.getInt("redBarProgress", 0)),
-                (preferences.getInt("greenBarProgress", 0)),
-                (preferences.getInt("blueBarProgress", 0)));
+                (preferences.getInt("textColorRed", 0)),
+                (preferences.getInt("textColorGreen", 0)),
+                (preferences.getInt("textColorBlue", 0)));
 
         substrateAlphaTV.setTextColor(textColor);
         substrateColorTV.setTextColor(textColor);
 
+        //load substrate color
         int  substrateColor = Color.rgb(
-                (preferences.getInt("redBarSubstrate", 255)),
-                (preferences.getInt("greenBarSubstrate", 255)),
-                (preferences.getInt("blueBarSubstrate", 255)));
+                (preferences.getInt("substrateColorRed", 255)),
+                (preferences.getInt("substrateColorGreen", 255)),
+                (preferences.getInt("substrateColorBlue", 255)));
 
         gradientDrawable.setColor(substrateColor);
         gradientDrawable1.setColor(substrateColor);
         substrate.setBackground(layerDrawable);
         alphaBarLayout.setBackground(layerDrawable1);
 
+
+        //load substrate alpha
         int alpha = preferences.getInt("substrateAlpha", 255);
 
         substrate.getBackground().setAlpha(alpha);

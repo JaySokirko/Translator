@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginBottom="21dp"
-                    android:layout_marginStart="@dimen/standard_95" />
+                    android:layout_marginStart="@dimen/standard_75" />
 
                 <NumberPicker
                     android:id="@+id/spinner_to"
@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/standard_95"
+                    android:layout_marginEnd="@dimen/standard_75"
                     android:layout_marginBottom="21dp"/>
 
             </RelativeLayout>
@@ -81,51 +81,69 @@
 
     <include layout="@layout/content_translator" />
 
+    <LinearLayout
+        android:id="@+id/swipe_settings_menu"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:layout_marginBottom="7dp"
+        android:background="@drawable/swipe_menu_background"
+        android:layout_gravity="bottom|end"
+        android:translationX="@dimen/standard_145">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_language_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_action_global"
-        android:onClick="setLanguage"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_view_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:fabSize="mini"
-        app:srcCompat="@drawable/ic_action_image_settings"
-        android:onClick="onViewSettings"/>
+        <ImageView
+            android:id="@+id/fab2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:onClick="onStartSpeechActivity"
+            android:background="@drawable/circle_background_primary_dark"
+            android:src="@drawable/ic_action_microphone1"
+            android:contentDescription="@drawable/ic_action_microphone1"
+            android:layout_gravity="center"/>
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom"
-        app:srcCompat="@drawable/ic_action_microphone1"
-        android:onClick="onStartSpeechActivity"
-        app:fabSize="mini"/>
+        <ImageView
+            android:id="@+id/fab_language_settings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_background_primary_dark"
+            android:src="@drawable/ic_action_global"
+            android:contentDescription="@drawable/ic_action_global"
+            android:onClick="setLanguage"
+            android:padding="7dp"
+            android:layout_gravity="center" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
-        android:onClick="onSettingsClick"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@drawable/ic_action_settings"
-        />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:id="@+id/fab_view_settings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/circle_background_primary_dark"
+            android:padding="7dp"
+            android:onClick="onViewSettings"
+            android:contentDescription="@drawable/ic_action_image_settings"
+            android:src="@drawable/ic_action_image_settings"
+            android:layout_gravity="center"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
 
 
 </android.support.design.widget.CoordinatorLayout>

@@ -4,11 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.view.Window;
-import android.view.WindowManager;
-
-import com.jay.translator.R;
 
 public class LauncherActivity extends Activity {
 
@@ -29,7 +24,7 @@ public class LauncherActivity extends Activity {
 
         finish();
 
-        editor.putBoolean("isAppRunFirstTime",true);
+        editor.putBoolean("isAppRunFirstTime",false);
         editor.apply();
     }
 }
