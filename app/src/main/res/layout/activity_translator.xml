@@ -134,8 +134,8 @@
             android:background="@drawable/circle_background_primary_dark"
             android:padding="7dp"
             android:onClick="onViewSettings"
-            android:contentDescription="@drawable/ic_action_image_settings"
-            android:src="@drawable/ic_action_image_settings"
+            android:contentDescription="@drawable/ic_action_saved_text"
+            android:src="@drawable/ic_action_saved_text"
             android:layout_gravity="center"/>
 
         <Space

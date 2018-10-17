@@ -38,15 +38,12 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--  -->
-        <activity android:name=".activities.ChoiceSettingsActivity"></activity>
         <!--  -->
         <activity
             android:name=".activities.SpeechActivity"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <!--  -->
-        <activity android:name=".activities.TextSettingsActivity" />
         <!--  -->
-        <activity android:name=".activities.SubstrateSettingsActivity"></activity>
         <activity android:name=".activities.SelectAppActivity"></activity>
     </application>
 

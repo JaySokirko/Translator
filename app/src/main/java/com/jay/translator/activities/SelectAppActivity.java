@@ -45,7 +45,7 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         preferences = getSharedPreferences("Settings", MODE_PRIVATE);
 
         image = preferences.getInt("blurImage",R.drawable.london);
-        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this,getResources().getDrawable(image)));
+//        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this,getResources().getDrawable(image)));
     }
 
 

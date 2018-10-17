@@ -209,10 +209,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         Point size = new Point();
         display.getSize(size);
         int height = size.y;
-        final int width = size.x;
         allowableFrameHeight = height - 400 - actionBarHeight;
 
-
+        int image = preferences.getInt("blurImage",R.drawable.london);
+        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this,getResources().getDrawable(image)));
     }
 
 
@@ -479,7 +479,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     public void onViewSettings(View view) {
 
-        startActivity(new Intent(context, ChoiceSettingsActivity.class));
+        //todo on saved translations
+//        startActivity(new Intent(context, ChoiceSettingsActivity.class));
     }
 
 
