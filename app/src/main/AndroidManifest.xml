@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.jay.translator">
 
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,34 +16,51 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <!--  -->
+        <!---->
         <activity
             android:name=".activities.ChoiceLanguageActivity"
             android:theme="@style/AppTheme" />
-        <!--  -->
+        <!---->
+
+        <!---->
         <activity
             android:name=".activities.LauncherActivity"
-            android:theme="@style/AppTheme.Launcher">
+            android:theme="@style/AppTheme.Launcher"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--  -->
+        <!---->
+
+        <!---->
         <activity
             android:name=".activities.TranslatorActivity"
             android:label=""
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
-        <!--  -->
-        <!--  -->
+        <!---->
+
+        <!---->
         <activity
             android:name=".activities.SpeechActivity"
-            android:windowSoftInputMode="stateHidden|adjustPan" />
-        <!--  -->
-        <!--  -->
-        <activity android:name=".activities.SelectAppActivity"></activity>
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:screenOrientation="portrait"/>
+        <!---->
+
+        <!---->
+        <activity android:name=".activities.SelectAppActivity"/>
+        <!---->
+
+        <!---->
+        <activity
+            android:name=".activities.SavedTextActivity"
+            android:screenOrientation="portrait" />
+        <!---->
+
     </application>
 
 </manifest>

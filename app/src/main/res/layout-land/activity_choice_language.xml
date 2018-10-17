@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/choice_language_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.ChoiceLanguageActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_choice_language"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/animation_list">
+
+        <TextView
+            android:id="@+id/app_bar_choice_language_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/select_your_language"
+            android:textColor="@color/colorPrimary" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/list_view_choice_language"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:dividerHeight="1dp" />
+
+        <ImageView
+            android:id="@+id/button_choice_language_next"
+            android:layout_width="41dp"
+            android:layout_height="41dp"
+            android:background="@drawable/circle_background_primary_dark"
+            android:layout_gravity="end|bottom"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:padding="9dp"
+            android:src="@drawable/ic_action_done"
+            android:contentDescription="@drawable/ic_action_done"
+            android:onClick="acceptLanguageChoice"/>
+
+    </FrameLayout>
+</LinearLayout>

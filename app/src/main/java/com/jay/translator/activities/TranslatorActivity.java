@@ -105,6 +105,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private int inputTextFrameHeight;
     private int outputTextFrameHeight;
     private int settingsHeight;
+    private SharedPreferences preferences;
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -186,7 +187,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         onSelectLanguageFromListener();
         onSelectLanguageToListener();
 
-        SharedPreferences preferences = context.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
         editor = preferences.edit();
 
         spinnerFrom.setValue(preferences.getInt("selectionFrom", 0));
@@ -211,8 +212,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         int height = size.y;
         allowableFrameHeight = height - 400 - actionBarHeight;
 
-        int image = preferences.getInt("blurImage",R.drawable.london);
-        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this,getResources().getDrawable(image)));
+        int image = preferences.getInt("blurImage", R.drawable.london);
+        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this, getResources().getDrawable(image)));
     }
 
 
@@ -251,8 +252,44 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
+    private void showTutorial(){
+
+        boolean isAppRunFirstTime = preferences.getBoolean("isTranslatorRunFirstTime", true);
+
+
+
+        editor.putBoolean("isTranslatorRunFirstTime",false);
+        editor.apply();
+    }
+
+
     /**
-     * set prompts in the app bar, which languages were selected
+     * Share with translated text
+     *
+     * @param view share button
+     */
+    public void sendText(View view) {
+
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, translatedText.getText());
+        startActivity(Intent.createChooser(sharingIntent, "Title"));
+    }
+
+
+    /**
+     * Start saved text activity
+     *
+     * @param view saved text button
+     */
+    public void startSavedTextActivity(View view) {
+
+        startActivity(new Intent(this, SavedTextActivity.class));
+    }
+
+
+    /**
+     * Set prompts in the app bar, which languages were selected
      */
     private void setLayoutParamsToTextViews() {
 
@@ -587,7 +624,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         final float y = fabShare.getHeight() + getResources().getDimension(R.dimen.standard_50);
 
         //set speech feed button under speech speed
-        float y1 = y + fabShare.getHeight() + getResources().getDimension(R.dimen.standard_50);
+        float y1 = y + fabShare.getHeight() + getResources().getDimension(R.dimen.standard_21);
 
         fabSpeechSpeed.animate().translationX(-x).translationY(y).start();
 
@@ -596,7 +633,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         seekBarSpeechSpeed.animate().translationY(y).start();
         seekBarSpeechFeed.animate().translationY(y1).start();
 
-        final int seekBarWidth = onTouchEventField.getWidth() - fabShare.getWidth() * 2;
+        final float seekBarWidth = getResources().getDimension(R.dimen.standard_220);
         Animation animation = new Animation() {
 
             @Override

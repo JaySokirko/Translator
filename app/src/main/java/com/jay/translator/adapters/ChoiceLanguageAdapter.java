@@ -1,33 +1,21 @@
 package com.jay.translator.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.AnimationDrawable;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jay.translator.R;
-import com.jay.translator.ViewSettings;
-
-import java.util.ArrayList;
 
 public class ChoiceLanguageAdapter extends BaseAdapter {
-
 
     private Context context;
     private String[] values;
     private int[] images;
     private int[] flags;
-
-    private AnimationDrawable animationDrawable;
 
     public ChoiceLanguageAdapter(Context context, String[] values, int[] images, int[] flags) {
         this.context = context;
@@ -77,11 +65,6 @@ public class ChoiceLanguageAdapter extends BaseAdapter {
         viewHolder.txtName.setText(values[position]);
         viewHolder.icon.setImageResource(images[position]);
         viewHolder.icFlag.setImageResource(flags[position]);
-
-//        Animation anim = AnimationUtils.loadAnimation(context,R.anim.grid_item_animation_on_start);
-//        anim.setStartOffset(position * 100);
-//        convertView.setAnimation(anim);
-//        anim.start();
 
         return convertView;
     }

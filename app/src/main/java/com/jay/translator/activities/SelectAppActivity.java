@@ -2,7 +2,9 @@ package com.jay.translator.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -18,18 +20,15 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
     private CardView translator;
     private CardView speaker;
     private ImageView accept;
-    private ImageView backgroundImage;
 
     private boolean isTranslatorSelected;
 
-    private int image;
-
-    private SharedPreferences preferences;
+    private int orientation = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.select_app);
+        setContentView(R.layout.activity_select_app);
 
         translator = findViewById(R.id.translator);
         translator.setOnClickListener(this);
@@ -40,12 +39,15 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         accept = findViewById(R.id.accept_app_choice);
         accept.setOnClickListener(this);
 
-        backgroundImage = findViewById(R.id.select_app_background_image);
+        ImageView backgroundImage = findViewById(R.id.select_app_background_image);
 
-        preferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences preferences = getSharedPreferences("Settings", MODE_PRIVATE);
 
-        image = preferences.getInt("blurImage",R.drawable.london);
-//        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this,getResources().getDrawable(image)));
+        //set background image
+        int image = preferences.getInt("blurImage", R.drawable.london);
+        backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this, getResources().getDrawable(image)));
+
+        orientation = getResources().getConfiguration().orientation;
     }
 
 
@@ -77,7 +79,7 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                         accept.setBackground(getResources().getDrawable
                                 (R.drawable.circle_background_primary_dark));
                     }
-                },300);
+                }, 300);
                 break;
         }
     }
@@ -85,19 +87,40 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
 
     private void showTranslatorFrame() {
 
-        translator.animate().setDuration(500)
-                .translationY(250)
-                .scaleY(1.2f)
-                .scaleX(1.2f)
-                .alpha(1f)
-                .start();
+        //animation for portrait orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-        speaker.animate().setDuration(500)
-                .translationY(50)
-                .scaleX(0.4f)
-                .scaleY(0.4f)
-                .alpha(0.5f)
-                .start();
+            translator.animate().setDuration(500)
+                    .translationY(250)
+                    .scaleY(1.2f)
+                    .scaleX(1.18f)
+                    .alpha(1f)
+                    .start();
+
+            speaker.animate().setDuration(500)
+                    .translationY(50)
+                    .scaleX(0.4f)
+                    .scaleY(0.4f)
+                    .alpha(0.5f)
+                    .start();
+
+        //animation for landscape orientation
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            translator.animate().setDuration(500)
+                    .translationX(250)
+                    .scaleY(1.2f)
+                    .scaleX(1.2f)
+                    .alpha(1f)
+                    .start();
+
+            speaker.animate().setDuration(500)
+                    .translationX(50)
+                    .scaleX(0.4f)
+                    .scaleY(0.4f)
+                    .alpha(0.5f)
+                    .start();
+        }
 
         isTranslatorSelected = true;
         showAccept();
@@ -106,19 +129,40 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
 
     private void showSpeakerFrame() {
 
-        translator.animate().setDuration(500)
-                .translationY(-50)
-                .scaleY(0.4f)
-                .scaleX(0.4f)
-                .alpha(0.5f)
-                .start();
+        //animation for portrait orientation
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
 
-        speaker.animate().setDuration(500)
-                .translationY(-250)
-                .scaleY(1.2f)
-                .scaleX(1.2f)
-                .alpha(1f)
-                .start();
+            translator.animate().setDuration(500)
+                    .translationY(-50)
+                    .scaleY(0.4f)
+                    .scaleX(0.4f)
+                    .alpha(0.5f)
+                    .start();
+
+            speaker.animate().setDuration(500)
+                    .translationY(-250)
+                    .scaleY(1.2f)
+                    .scaleX(1.18f)
+                    .alpha(1f)
+                    .start();
+
+        //animation for landscape orientation
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+
+            translator.animate().setDuration(500)
+                    .translationX(-50)
+                    .scaleY(0.4f)
+                    .scaleX(0.4f)
+                    .alpha(0.5f)
+                    .start();
+
+            speaker.animate().setDuration(500)
+                    .translationX(-250)
+                    .scaleY(1.2f)
+                    .scaleX(1.2f)
+                    .alpha(1f)
+                    .start();
+        }
 
         isTranslatorSelected = false;
         showAccept();
