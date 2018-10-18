@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="50dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,20 +14,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:textSize="18sp"
-            android:text="10 jun 2019"/>
+            android:layout_marginTop="11dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorPrimary"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            android:background="@color/colorPrimary" />
 
-        <ScrollView
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_margin="8dp"
             android:background="@drawable/view_rounded">
 
@@ -36,51 +36,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:text="Input text"
-                android:textSize="15sp"
                 android:textColor="@color/colorText"
-                android:textIsSelectable="true"/>
-        </ScrollView>
+                android:textSize="15sp" />
+
+        </FrameLayout>
+
 
         <FrameLayout
-            android:id="@+id/translated_text"
+            android:id="@+id/touch_listener"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:background="@drawable/view_rounded">
+            android:layout_height="100dp"
+            android:layout_margin="8dp">
 
-            <ImageView
-                android:id="@+id/delete_translated_text"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_gravity="bottom|end"
-                android:layout_margin="16dp"
-                android:background="@drawable/circle_background_primary_dark"
-                android:src="@drawable/ic_action_delete"
-                android:contentDescription="@drawable/ic_action_delete"
-                android:padding="10dp"
-                android:visibility="invisible"/>
-
-            <ScrollView
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@drawable/view_rounded_accent">
+
+                <ImageView
+                    android:id="@+id/delete_translated_text"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center|end"
+                    android:layout_margin="16dp"
+                    android:background="@drawable/circle_background_primary_dark"
+                    android:contentDescription="@drawable/ic_action_delete"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_action_delete" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/translated_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/view_rounded">
+
 
                 <TextView
                     android:id="@+id/output_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
-                    android:text="@string/lon"
-                    android:textSize="15sp"
+                    android:text="text"
                     android:textColor="@color/colorText"
-                    android:textIsSelectable="true"/>
+                    android:textSize="15sp" />
 
-            </ScrollView>
 
+            </FrameLayout>
         </FrameLayout>
     </LinearLayout>
-
-
-
 
 </FrameLayout>

@@ -58,7 +58,9 @@
         <!---->
         <activity
             android:name=".activities.SavedTextActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+    </activity>
         <!---->
 
     </application>

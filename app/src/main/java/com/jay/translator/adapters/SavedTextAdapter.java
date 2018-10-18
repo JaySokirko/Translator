@@ -2,90 +2,131 @@ package com.jay.translator.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.RecyclerView;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
 
+import java.util.ArrayList;
+
 import static android.support.constraint.Constraints.TAG;
 
-public class SavedTextAdapter extends BaseAdapter {
+public class SavedTextAdapter extends RecyclerView.Adapter<SavedTextAdapter.ViewHolder> {
 
+    private ArrayList<String> dates;
+    private ArrayList<String> inputTexts;
+    private ArrayList<String> translatedTexts;
     private Context context;
-    private String[] date;
-    private String[] inputText;
-    private String[] outputText;
+    private boolean isClicked = true;
 
-    public SavedTextAdapter(Context context, String[] date, String[] inputText, String[] outputText) {
+    public SavedTextAdapter(ArrayList<String> date, ArrayList<String> inputText, ArrayList<String> translatedText, Context context) {
+        this.dates = date;
+        this.inputTexts = inputText;
+        this.translatedTexts = translatedText;
         this.context = context;
-        this.date = date;
-        this.inputText = inputText;
-        this.outputText = outputText;
     }
 
+
+    @NonNull
     @Override
-    public int getCount() {
-        return date.length;
+    public SavedTextAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.saved_text_list_view,
+                parent, false);
+
+        return new ViewHolder(view);
     }
 
-    @Override
-    public Object getItem(int position) {
-        return position;
-    }
-
-    @Override
-    public long getItemId(int id) {
-        return id;
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public void onBindViewHolder(@NonNull final SavedTextAdapter.ViewHolder holder, int position) {
 
-        final ViewHolder viewHolder;
+        holder.date.setText(dates.get(position));
+        holder.inputText.setText(inputTexts.get(position));
+        holder.translatedText.setText(translatedTexts.get(position));
 
-        if (convertView == null) {
 
-            viewHolder = new ViewHolder();
+        holder.touchLayout.setOnTouchListener(new OnSwipeTouchListener(context) {
 
-            LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.saved_text_list_view, parent, false);
+            @Override
+            public void onClick() {
+                super.onClick();
 
-            viewHolder.date = convertView.findViewById(R.id.saved_text_date);
-            viewHolder.inputText = convertView.findViewById(R.id.input_text);
-            viewHolder.outputText = convertView.findViewById(R.id.output_text);
+                if (isClicked) {
 
-            viewHolder.layout = convertView.findViewById(R.id.translated_text);
+                    holder.layout.animate()
+                            .translationX(-(context.getResources()
+                                    .getDimension(R.dimen.standard_77)))
+                            .start();
+                } else {
 
-            viewHolder.delete = convertView.findViewById(R.id.delete_translated_text);
+                    holder.layout.animate()
+                            .translationX(0)
+                            .start();
+                }
 
-            convertView.setTag(viewHolder);
-        } else {
+                isClicked = !isClicked;
+                Log.d(TAG, "onClick: ");
+            }
+        });
 
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
 
-        viewHolder.date.setText(date[position]);
-        viewHolder.inputText.setText(inputText[position]);
-        viewHolder.outputText.setText(outputText[position]);
 
-        return convertView;
+        final int pos = position;
+        holder.deleteRow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dates.remove(pos);
+                inputTexts.remove(pos);
+                translatedTexts.remove(pos);
+                notifyItemRemoved(pos);
+                notifyItemRangeChanged(pos, dates.size());
+            }
+        });
+
+
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return dates.size();
     }
 
 
-    class ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView date;
-        TextView inputText;
-        TextView outputText;
-        FrameLayout layout;
-        ImageView delete;
+        private TextView date;
+        private TextView inputText;
+        private TextView translatedText;
+        private FrameLayout layout;
+        private ImageView deleteRow;
+        private FrameLayout touchLayout;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+
+            date = itemView.findViewById(R.id.saved_text_date);
+            inputText = itemView.findViewById(R.id.input_text);
+            translatedText = itemView.findViewById(R.id.output_text);
+            layout = itemView.findViewById(R.id.translated_text);
+            deleteRow = itemView.findViewById(R.id.delete_translated_text);
+            touchLayout = itemView.findViewById(R.id.touch_listener);
+        }
     }
 }

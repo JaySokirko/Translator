@@ -256,7 +256,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         boolean isAppRunFirstTime = preferences.getBoolean("isTranslatorRunFirstTime", true);
 
-
+        //todo tutorial
 
         editor.putBoolean("isTranslatorRunFirstTime",false);
         editor.apply();

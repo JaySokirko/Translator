@@ -5,16 +5,19 @@
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/saved_text_image_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/london"
         android:contentDescription="@drawable/london"/>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/saved_text"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    </android.support.v7.widget.RecyclerView>
 
 </FrameLayout>

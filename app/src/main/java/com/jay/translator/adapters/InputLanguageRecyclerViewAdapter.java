@@ -27,7 +27,9 @@ public class InputLanguageRecyclerViewAdapter extends RecyclerView.Adapter<Input
 
     private InputLanguageItemClick inputLanguageItemClick;
 
-    public InputLanguageRecyclerViewAdapter(ArrayList<Integer> imagesUrls, ArrayList<String> names, ArrayList<Boolean> checked, Context context, InputLanguageItemClick inputLanguageItemClick) {
+    public InputLanguageRecyclerViewAdapter(ArrayList<Integer> imagesUrls, ArrayList<String> names,
+                                            ArrayList<Boolean> checked, Context context,
+                                            InputLanguageItemClick inputLanguageItemClick) {
         this.images = imagesUrls;
         this.names = names;
         this.context = context;
@@ -77,6 +79,8 @@ public class InputLanguageRecyclerViewAdapter extends RecyclerView.Adapter<Input
     public int getItemCount() {
         return names.size();
     }
+
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
