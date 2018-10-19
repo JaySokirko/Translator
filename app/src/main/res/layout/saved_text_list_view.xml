@@ -27,7 +27,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:background="@drawable/view_rounded">
 
@@ -45,7 +45,7 @@
         <FrameLayout
             android:id="@+id/touch_listener"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:layout_margin="8dp">
 
             <FrameLayout
@@ -81,7 +81,6 @@
                     android:text="text"
                     android:textColor="@color/colorText"
                     android:textSize="15sp" />
-
 
             </FrameLayout>
         </FrameLayout>

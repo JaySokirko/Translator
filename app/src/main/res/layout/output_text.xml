@@ -51,7 +51,8 @@
         app:layout_anchorGravity="bottom"
         app:srcCompat="@drawable/ic_action_save"
         app:fabSize="mini"
-        android:scaleType="center" />
+        android:scaleType="center"
+        android:onClick="saveText"/>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_send"

@@ -2,22 +2,20 @@ package com.jay.translator.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
+import com.jay.translator.SavedTextDB;
 
 import java.util.ArrayList;
 
@@ -25,17 +23,20 @@ import static android.support.constraint.Constraints.TAG;
 
 public class SavedTextAdapter extends RecyclerView.Adapter<SavedTextAdapter.ViewHolder> {
 
+    private final SavedTextDB db;
     private ArrayList<String> dates;
     private ArrayList<String> inputTexts;
     private ArrayList<String> translatedTexts;
     private Context context;
     private boolean isClicked = true;
+    private SQLiteDatabase database;
 
     public SavedTextAdapter(ArrayList<String> date, ArrayList<String> inputText, ArrayList<String> translatedText, Context context) {
         this.dates = date;
         this.inputTexts = inputText;
         this.translatedTexts = translatedText;
         this.context = context;
+        db = new SavedTextDB(context);
     }
 
 
@@ -79,10 +80,8 @@ public class SavedTextAdapter extends RecyclerView.Adapter<SavedTextAdapter.View
                 }
 
                 isClicked = !isClicked;
-                Log.d(TAG, "onClick: ");
             }
         });
-
 
 
         final int pos = position;
@@ -90,18 +89,21 @@ public class SavedTextAdapter extends RecyclerView.Adapter<SavedTextAdapter.View
             @Override
             public void onClick(View v) {
 
+                database = db.getWritableDatabase();
+
+                database.execSQL("DELETE FROM " + "ST"+ " WHERE "+"output"+"='"+translatedTexts.get(pos)+"'");
+
                 dates.remove(pos);
                 inputTexts.remove(pos);
                 translatedTexts.remove(pos);
                 notifyItemRemoved(pos);
                 notifyItemRangeChanged(pos, dates.size());
+
+                database.close();
             }
         });
-
-
-
-
     }
+
 
     @Override
     public int getItemCount() {

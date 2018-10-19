@@ -4,9 +4,11 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Point;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.ConnectivityManager;
@@ -43,9 +45,14 @@ import com.jay.translator.LanguageSettings;
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
 import com.jay.translator.ResizeAnimation;
+import com.jay.translator.SavedTextDB;
 import com.jay.translator.ViewSettings;
 
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import de.mateware.snacky.Snacky;
@@ -90,6 +97,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private boolean isOutputFrameNarrow;
     private boolean isOutputFrameStretch;
     private boolean isSettingsCall;
+    private boolean isSaveClicked;
     private Context context;
     private ValueAnimator valueAnimator;
     private String languageFrom;
@@ -106,6 +114,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private int outputTextFrameHeight;
     private int settingsHeight;
     private SharedPreferences preferences;
+    private SavedTextDB db;
+    private SQLiteDatabase sqLiteDatabase;
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -178,6 +188,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         isSettingsCall = false;
 
+        isSaveClicked = false;
+
         outputTextLayout.setVisibility(View.GONE);
 
         onSwipeTouchListener();
@@ -214,6 +226,9 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         int image = preferences.getInt("blurImage", R.drawable.london);
         backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this, getResources().getDrawable(image)));
+
+        db = new SavedTextDB(this);
+        sqLiteDatabase = db.getWritableDatabase();
     }
 
 
@@ -252,13 +267,63 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     }
 
 
-    private void showTutorial(){
+    /**
+     * Animate view click
+     *
+     * @param view click button
+     */
+    private void setClickable(final View view) {
+
+        view.setBackground(getResources().getDrawable(R.drawable.circle_background_cyan));
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                view.setBackground(getResources().getDrawable(R.drawable.circle_background_primary_dark));
+            }
+        }, 500);
+    }
+
+
+    /**
+     * Save text to data base
+     *
+     * @param view save text button
+     */
+
+    public void saveText(View view) {
+
+        if (!isSaveClicked) {
+            String date = new SimpleDateFormat("dd-MMM-yyyy", Locale.getDefault()).format(new Date());
+            String input = editedText.getText().toString();
+            String output = translatedText.getText().toString();
+
+            ContentValues content = new ContentValues();
+            content.put("data", date);
+            content.put("input", input);
+            content.put("output", output);
+
+            sqLiteDatabase.insert("ST", null, content);
+
+            buildSnackBar("saved");
+
+        } else {
+
+            //todo translation
+            buildSnackBar("already saved");
+        }
+
+        isSaveClicked = true;
+    }
+
+
+    private void showTutorial() {
 
         boolean isAppRunFirstTime = preferences.getBoolean("isTranslatorRunFirstTime", true);
 
         //todo tutorial
 
-        editor.putBoolean("isTranslatorRunFirstTime",false);
+        editor.putBoolean("isTranslatorRunFirstTime", false);
         editor.apply();
     }
 
@@ -273,6 +338,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, translatedText.getText());
+        //todo translation
         startActivity(Intent.createChooser(sharingIntent, "Title"));
     }
 
@@ -283,6 +349,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
      * @param view saved text button
      */
     public void startSavedTextActivity(View view) {
+
+        setClickable(view);
 
         startActivity(new Intent(this, SavedTextActivity.class));
     }
@@ -399,6 +467,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             textToSpeech.setPitch(speechFeed);
             textToSpeech.setSpeechRate(speechSpeed);
 
+            isSaveClicked = false;
+
         } else {
 
             alertDialogNoInternetConnection();
@@ -407,6 +477,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
 
     public void setLanguage(View view) {
+
+        setClickable(view);
 
         startActivity(new Intent(context, ChoiceLanguageActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
@@ -522,6 +594,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
 
     public void onStartSpeechActivity(View view) {
+
+        setClickable(view);
 
         startActivity(new Intent(this, SpeechActivity.class));
     }
@@ -678,18 +752,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         seekBarSpeechFeed.startAnimation(animation);
 
         isSpeechSettingsOpen = false;
-    }
-
-
-    private void setBackground() {
-
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                ViewSettings.setBackgroundImage(LanguageSettings.getLanguage(), backgroundImage);
-                backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(context, backgroundImage.getDrawable()));
-            }
-        });
     }
 
 
@@ -1064,7 +1126,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             translatedText.setText(result);
             showTranslatedTextFrame();
             progressBar.dismiss();
-
         }
     }
 }

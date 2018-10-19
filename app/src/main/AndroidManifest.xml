@@ -59,7 +59,6 @@
         <activity
             android:name=".activities.SavedTextActivity"
             android:screenOrientation="portrait">
-
     </activity>
         <!---->
 
