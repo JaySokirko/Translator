@@ -37,32 +37,4 @@ public class ViewSettings {
 
        return Bitmap.createBitmap(outBitmap);
    }
-
-
-   public static void setBackgroundImage(String language, ImageView backgroundImage){
-
-       switch (language) {
-           case "en":
-               backgroundImage.setImageResource(R.drawable.london);
-               break;
-           case "ru":
-               backgroundImage.setImageResource(R.drawable.moscow);
-               break;
-           case "de":
-               backgroundImage.setImageResource(R.drawable.berlin);
-               break;
-           case "fr":
-               backgroundImage.setImageResource(R.drawable.paris);
-               break;
-           case "es":
-               backgroundImage.setImageResource(R.drawable.madrid);
-               break;
-           case "it":
-               backgroundImage.setImageResource(R.drawable.venice);
-               break;
-           case "pl":
-               backgroundImage.setImageResource(R.drawable.warsaw);
-               break;
-       }
-   }
 }

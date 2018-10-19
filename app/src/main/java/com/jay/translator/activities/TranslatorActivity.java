@@ -56,6 +56,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import de.mateware.snacky.Snacky;
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 
 
 public class TranslatorActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
@@ -116,6 +117,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private SharedPreferences preferences;
     private SavedTextDB db;
     private SQLiteDatabase sqLiteDatabase;
+    private CollapsingToolbarLayout toolbarLayout;
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -128,7 +130,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        CollapsingToolbarLayout toolbarLayout = findViewById(R.id.toolbar_layout);
+        toolbarLayout = findViewById(R.id.toolbar_layout);
 
         AppBarLayout barLayout = findViewById(R.id.app_bar);
         barLayout.addOnOffsetChangedListener(this);
@@ -229,6 +231,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         db = new SavedTextDB(this);
         sqLiteDatabase = db.getWritableDatabase();
+
+        showTutorial();
     }
 
 
@@ -321,9 +325,32 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         boolean isAppRunFirstTime = preferences.getBoolean("isTranslatorRunFirstTime", true);
 
-        //todo tutorial
+        if (isAppRunFirstTime) {
+            new GuideView.Builder(this)
+                    //todo translation
+                    .setTitle("Потяните вниз, чтобы выбрать языки")
+                    .setGravity(GuideView.Gravity.auto) //optional
+                    .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                    .setTargetView(toolbarLayout)
+                    .setTitleTextSize(14)//optional
+                    .setGuideListener(new GuideView.GuideListener() {
+                        @Override
+                        public void onDismiss(View view) {
 
-        editor.putBoolean("isTranslatorRunFirstTime", false);
+                            new GuideView.Builder(context)
+                                    //todo translation
+                                    .setTitle("Потяните вправо, чтобы открыть дополнительное меню")
+                                    .setGravity(GuideView.Gravity.auto) //optional
+                                    .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                    .setTargetView(swipeSettingsMenu)
+                                    .build()
+                                    .show();
+                        }
+                    })
+                    .build()
+                    .show();
+        }
+        editor.putBoolean("isTranslatorRunFirstTime", true);
         editor.apply();
     }
 

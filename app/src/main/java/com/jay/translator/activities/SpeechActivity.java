@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,9 +35,7 @@ import android.widget.TextView;
 import com.jay.translator.DialogLanguageNotSupported;
 import com.jay.translator.DialogNoInternet;
 import com.jay.translator.GoogleTranslate;
-import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
-import com.jay.translator.ViewSettings;
 import com.jay.translator.adapters.InputLanguageItemClick;
 import com.jay.translator.adapters.InputLanguageRecyclerViewAdapter;
 import com.jay.translator.adapters.OutputLanguageItemClickTo;
@@ -43,6 +43,8 @@ import com.jay.translator.adapters.OutputLanguageRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.Locale;
+
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 
 public class SpeechActivity extends AppCompatActivity implements InputLanguageItemClick, OutputLanguageItemClickTo {
 
@@ -89,6 +91,11 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     private SeekBar seekBarOutputSpeechPitch;
     private FrameLayout outputTextLayout;
     private ImageView backgroundImage;
+    private LinearLayout bottomSheet;
+
+    private SharedPreferences preferences;
+    private RecyclerView recyclerViewInputLang;
+    private RecyclerView recyclerViewOutputLang;
 
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
@@ -97,7 +104,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speech);
 
-        LinearLayout bottomSheet = findViewById(R.id.bottom_sheet);
+        bottomSheet = findViewById(R.id.bottom_sheet);
         inputLanguageHint = findViewById(R.id.language_from_recycler);
         outputLanguageHint = findViewById(R.id.language_to_recycler);
         editInputText = findViewById(R.id.edit_input_text);
@@ -131,7 +138,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         backgroundAnimation.setExitFadeDuration(4000);
 
 
-        SharedPreferences preferences = this.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
+        preferences = this.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
         editor = preferences.edit();
 
 
@@ -174,6 +181,8 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         onOutputSpeechPitchChange();
 
         onOutputSpeechSpeedChange();
+
+        showAppTutorial();
     }
 
 
@@ -217,6 +226,100 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         }
 
         super.onDestroy();
+    }
+
+
+    private void showAppTutorial() {
+
+        boolean isAppRunFirstTime = preferences.getBoolean("isSpeechRunFirstTime", true);
+
+        if (isAppRunFirstTime) {
+
+            FrameLayout inputLayout = findViewById(R.id.input_layout);
+            final FrameLayout outputLayout = findViewById(R.id.output_layout);
+
+            new GuideView.Builder(this)
+                    //todo translation
+                    .setTitle("Это поле ввода для Вас")
+                    .setGravity(GuideView.Gravity.auto) //optional
+                    .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                    .setTargetView(inputLayout)
+                    .setTitleTextSize(14)//optional
+                    .setGuideListener(new GuideView.GuideListener() {
+                        @Override
+                        public void onDismiss(View view) {
+                            new GuideView.Builder(SpeechActivity.this)
+                                    //todo translation
+                                    .setTitle("Это для Вашего собеседника")
+                                    .setGravity(GuideView.Gravity.auto) //optional
+                                    .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                    .setTargetView(outputLayout)
+                                    .setTitleTextSize(14)//optional
+                                    .setGuideListener(new GuideView.GuideListener() {
+                                        @Override
+                                        public void onDismiss(View view) {
+                                            new GuideView.Builder(SpeechActivity.this)
+                                                    //todo translation
+                                                    .setTitle("Потяните вверх чтобы выбрать языки")
+                                                    .setGravity(GuideView.Gravity.auto) //optional
+                                                    .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                                    .setTargetView(bottomSheet)
+                                                    .setTitleTextSize(14)//optional
+                                                    .build()
+                                                    .show();
+                                        }
+                                    })
+                                    .build()
+                                    .show();
+                        }
+                    })
+                    .build()
+                    .show();
+
+
+            BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+
+            behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                @Override
+                public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                    if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+
+                        new GuideView.Builder(SpeechActivity.this)
+                                //todo translator
+                                .setTitle("Выберите Ваш язык")
+                                .setGravity(GuideView.Gravity.auto) //optional
+                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                .setTargetView(recyclerViewInputLang)
+                                .setTitleTextSize(14)//optional
+                                .setGuideListener(new GuideView.GuideListener() {
+                                    @Override
+                                    public void onDismiss(View view) {
+                                        new GuideView.Builder(SpeechActivity.this)
+                                                //todo translator
+                                                .setTitle("Язык для Вашего собеседника")
+                                                .setGravity(GuideView.Gravity.auto) //optional
+                                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                                .setTargetView(recyclerViewOutputLang)
+                                                .setTitleTextSize(14)//optional
+                                                .build()
+                                                .show();
+                                    }
+                                })
+                                .build()
+                                .show();
+                    }
+                }
+
+                @Override
+                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+                }
+            });
+
+            editor.putBoolean("isSpeechRunFirstTime", true);
+            editor.apply();
+        }
     }
 
 
@@ -634,10 +737,10 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         LinearLayoutManager managerInputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager managerOutputLang = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
-        RecyclerView recyclerViewInputLang = findViewById(R.id.languages_from_recycler);
+        recyclerViewInputLang = findViewById(R.id.languages_from_recycler);
         recyclerViewInputLang.setLayoutManager(managerInputLang);
 
-        RecyclerView recyclerViewOutputLang = findViewById(R.id.languages_to_recycler);
+        recyclerViewOutputLang = findViewById(R.id.languages_to_recycler);
         recyclerViewOutputLang.setLayoutManager(managerOutputLang);
 
         InputLanguageRecyclerViewAdapter adapterInputLanguages = new InputLanguageRecyclerViewAdapter(images, names, checkedFrom, this, this);
