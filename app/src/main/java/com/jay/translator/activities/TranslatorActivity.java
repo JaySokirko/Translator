@@ -56,9 +56,6 @@ import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 
 public class TranslatorActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
-    private static final String TAG = "TAG";
-    private ImageView fabChoiceLanguage;
-    private ImageView fabBackgroundSettings;
     private FloatingActionButton fabStartTranslate;
     private FloatingActionButton fabSpeechSettings;
     private FloatingActionButton fabSpeechFeed;
@@ -66,7 +63,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private FloatingActionButton fabShare;
     private FloatingActionButton fabSave;
     private FloatingActionButton fabSend;
-    private ImageView backgroundImage;
     private CoordinatorLayout inputTextLayout;
     private CoordinatorLayout outputTextLayout;
     private FrameLayout onTouchEventField;
@@ -110,7 +106,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private int outputTextFrameHeight;
     private int settingsHeight;
     private SharedPreferences preferences;
-    private SavedTextDB db;
     private SQLiteDatabase sqLiteDatabase;
     private CollapsingToolbarLayout toolbarLayout;
 
@@ -130,8 +125,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         AppBarLayout barLayout = findViewById(R.id.app_bar);
         barLayout.addOnOffsetChangedListener(this);
 
-        fabChoiceLanguage = findViewById(R.id.fab_language_settings);
-        fabBackgroundSettings = findViewById(R.id.fab_view_settings);
         fabStartTranslate = findViewById(R.id.fab_translation);
         fabSpeechSettings = findViewById(R.id.fab_speech_settings);
         fabSpeechFeed = findViewById(R.id.fab_speech_feed);
@@ -146,7 +139,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         inputTextLayout = findViewById(R.id.input_text_layout);
         outputTextLayout = findViewById(R.id.output_text_layout);
         onTouchEventField = findViewById(R.id.container);
-        backgroundImage = findViewById(R.id.image_view_translator_background);
+        ImageView backgroundImage = findViewById(R.id.image_view_translator_background);
         swipeSettingsMenu = findViewById(R.id.swipe_settings_menu);
 
         seekBarSpeechSpeed = findViewById(R.id.seek_bar_speech_speed);
@@ -224,7 +217,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         int image = preferences.getInt("blurImage", R.drawable.london);
         backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this, getResources().getDrawable(image)));
 
-        db = new SavedTextDB(this);
+        SavedTextDB db = new SavedTextDB(this);
         sqLiteDatabase = db.getWritableDatabase();
 
         showTutorial();
@@ -304,12 +297,10 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
             sqLiteDatabase.insert("ST", null, content);
 
-            buildSnackBar("saved");
+            buildSnackBar(getResources().getString(R.string.text_saved));
 
         } else {
-
-            //todo translation
-            buildSnackBar("already saved");
+            buildSnackBar(getResources().getString(R.string.text_already_saved));
         }
 
         isSaveClicked = true;
@@ -322,8 +313,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         if (isAppRunFirstTime) {
             new GuideView.Builder(this)
-                    //todo translation
-                    .setTitle("Потяните вниз, чтобы выбрать языки")
+                    .setTitle(getResources().getString(R.string.pull_down_to_select_languages))
                     .setGravity(GuideView.Gravity.auto) //optional
                     .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                     .setTargetView(toolbarLayout)
@@ -333,8 +323,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                         public void onDismiss(View view) {
 
                             new GuideView.Builder(context)
-                                    //todo translation
-                                    .setTitle("Потяните вправо, чтобы открыть дополнительное меню")
+                                    .setTitle(getResources().getString(R.string.move_to_the_right_to_open_the_additional_menu))
                                     .setGravity(GuideView.Gravity.auto) //optional
                                     .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                                     .setTargetView(swipeSettingsMenu)
@@ -360,8 +349,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
         sharingIntent.setType("text/plain");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, translatedText.getText());
-        //todo translation
-        startActivity(Intent.createChooser(sharingIntent, "Title"));
+        startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.select_app)));
     }
 
 
@@ -605,13 +593,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             DialogLanguageNotSupported dialog = new DialogLanguageNotSupported(this);
             dialog.show();
         }
-    }
-
-
-    public void onViewSettings(View view) {
-
-        //todo on saved translations
-//        startActivity(new Intent(context, ChoiceSettingsActivity.class));
     }
 
 
@@ -1103,14 +1084,12 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
     private class TranslateTask extends AsyncTask<Void, Void, String> {
 
-        private Context context;
         private ProgressDialog progressBar;
 
 
         TranslateTask(Context context) {
-            this.context = context;
             progressBar = new ProgressDialog(context);
-            progressBar.setTitle("идет перевод");
+            progressBar.setTitle(getResources().getString(R.string.translating));
         }
 
         @Override

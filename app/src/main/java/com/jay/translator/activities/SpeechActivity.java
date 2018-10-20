@@ -21,13 +21,11 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -241,8 +239,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
             final FrameLayout outputLayout = findViewById(R.id.output_layout);
 
             new GuideView.Builder(this)
-                    //todo translation
-                    .setTitle("Это поле ввода для Вас")
+                    .setTitle(getResources().getString(R.string.input_field_for_you))
                     .setGravity(GuideView.Gravity.auto) //optional
                     .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                     .setTargetView(inputLayout)
@@ -251,8 +248,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                         @Override
                         public void onDismiss(View view) {
                             new GuideView.Builder(SpeechActivity.this)
-                                    //todo translation
-                                    .setTitle("Это для Вашего собеседника")
+                                    .setTitle(getResources().getString(R.string.this_is_for_your_interlocutor))
                                     .setGravity(GuideView.Gravity.auto) //optional
                                     .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                                     .setTargetView(outputLayout)
@@ -261,8 +257,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                                         @Override
                                         public void onDismiss(View view) {
                                             new GuideView.Builder(SpeechActivity.this)
-                                                    //todo translation
-                                                    .setTitle("Потяните вверх чтобы выбрать языки")
+                                                    .setTitle(getResources().getString(R.string.pull_up_to_select_languages))
                                                     .setGravity(GuideView.Gravity.auto) //optional
                                                     .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                                                     .setTargetView(bottomSheet)
@@ -291,8 +286,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                         if (isOpened) {
 
                             new GuideView.Builder(SpeechActivity.this)
-                                    //todo translator
-                                    .setTitle("Выберите Ваш язык")
+                                    .setTitle(getResources().getString(R.string.choose_your_language))
                                     .setGravity(GuideView.Gravity.auto) //optional
                                     .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                                     .setTargetView(recyclerViewInputLang)
@@ -301,8 +295,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                                         @Override
                                         public void onDismiss(View view) {
                                             new GuideView.Builder(SpeechActivity.this)
-                                                    //todo translator
-                                                    .setTitle("Язык для Вашего собеседника")
+                                                    .setTitle(getResources().getString(R.string.language_for_your_interlocutor))
                                                     .setGravity(GuideView.Gravity.auto) //optional
                                                     .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                                                     .setTargetView(recyclerViewOutputLang)
@@ -992,8 +985,8 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
         InputTextTranslator(Context context) {
             progressBar = new ProgressDialog(context);
-            //TODO locale
-            progressBar.setTitle("идет перевод");
+
+            progressBar.setTitle(getResources().getString(R.string.translating));
         }
 
         @Override
@@ -1041,11 +1034,9 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
         private ProgressDialog progressBar;
 
-
         OutputTextTranslator(Context context) {
             progressBar = new ProgressDialog(context);
-            //TODO locale
-            progressBar.setTitle("идет перевод");
+            progressBar.setTitle(getResources().getString(R.string.translating));
         }
 
         @Override
@@ -1083,9 +1074,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
             editInputText.setText(result);
             progressBar.dismiss();
 
-            //TODO if speech selected
             speechInputText();
-
         }
     }
 }

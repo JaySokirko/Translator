@@ -13,4 +13,21 @@
     <string name="the_language_of_translation_coincides_with_the_original">La langue de traduction coïncide avec l\'original</string>
     <string name="select_languages">sélectionner les langues</string>
     <string name="language_is_not_support">Langue non supportée</string>
+    <string name="cancel">"Annuler "</string>
+    <string name="no_internet_connection">"Pas de connexion Internet "</string>
+    <string name="open_settings">Paramètres ouverts</string>
+    <string name="translation_description">Traduire le texte dans une langue étrangère</string>
+    <string name="chat_description">Discuter avec des étrangers en utilisant le haut-parleur</string>
+    <string name="input_field_for_you">Champ de saisie pour vous</string>
+    <string name="this_is_for_your_interlocutor">Ceci est pour votre interlocuteur</string>
+    <string name="pull_up_to_select_languages">Tirez pour sélectionner les langues</string>
+    <string name="choose_your_language">Choisissez votre langue</string>
+    <string name="language_for_your_interlocutor">Langue pour votre interlocuteur</string>
+    <string name="text_saved">Le texte a été enregistré</string>
+    <string name="text_already_saved">Le texte est déjà enregistré</string>
+    <string name="pull_down_to_select_languages">Déroulez pour sélectionner les langues</string>
+    <string name="move_to_the_right_to_open_the_additional_menu">Faites glisser votre doigt vers la droite pour ouvrir le menu supplémentaire.</string>
+    <string name="select_app">Sélectionnez l\'application</string>
+    <string name="translating">Traduction en cours</string>
+    <string name="tap_here_to_delete">Appuyez ici pour supprimer</string>
 </resources>

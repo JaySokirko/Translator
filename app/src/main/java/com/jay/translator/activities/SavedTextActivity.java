@@ -10,8 +10,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -103,8 +101,7 @@ public class SavedTextActivity extends AppCompatActivity {
                         FrameLayout layout = holder.itemView.findViewById(R.id.translated_text);
 
                         new GuideView.Builder(SavedTextActivity.this)
-                                //todo translation
-                                .setTitle("Это поле ввода для Вас")
+                                .setTitle(getResources().getString(R.string.tap_here_to_delete))
                                 .setGravity(GuideView.Gravity.auto) //optional
                                 .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
                                 .setTargetView(layout)

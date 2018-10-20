@@ -29,7 +29,6 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
     private RelativeLayout rememberChoiceLandScapeLayout;
 
     private boolean isTranslatorSelected;
-    private boolean isRememberChoice;
 
     private SharedPreferences.Editor editor;
 
@@ -66,7 +65,6 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         rememberChoiceLandScapeLayout = findViewById(R.id.remember_choice_relative_layout);
 
         orientation = getResources().getConfiguration().orientation;
-
     }
 
 
@@ -91,7 +89,7 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                     startActivity(new Intent(this, SpeechActivity.class));
                 }
 
-                isRememberChoice = rememberChoice.isChecked();
+                boolean isRememberChoice = rememberChoice.isChecked();
                 editor.putBoolean("isRememberChoice", isRememberChoice);
                 editor.putBoolean("isTranslatorSelected", isTranslatorSelected);
                 editor.apply();
