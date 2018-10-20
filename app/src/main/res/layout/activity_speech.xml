@@ -350,12 +350,14 @@
                 </Space>
 
                 <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center"
-                    android:contentDescription="@drawable/ic_action_revers"
-                    android:src="@drawable/ic_action_revers"
-                    android:visibility="invisible" />
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:contentDescription="@drawable/ic_action_menu"
+                    android:src="@drawable/ic_action_menu"
+                    android:padding="7dp"
+                    android:onClick="onSelectApp"/>
 
                 <Space
                     android:layout_width="0dp"

@@ -48,10 +48,6 @@ import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 
 public class SpeechActivity extends AppCompatActivity implements InputLanguageItemClick, OutputLanguageItemClickTo {
 
-    private static final String TAG = "TAG";
-    //    private TextView speechText;
-    private AnimationDrawable backgroundAnimation;
-
     private ArrayList<Integer> images = new ArrayList<>();
     private ArrayList<String> names = new ArrayList<>();
     private ArrayList<Boolean> checkedFrom = new ArrayList<>();
@@ -75,6 +71,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     private boolean isSeekBarOutputSpeechSpeedShow;
     private TextToSpeech inputTextToSpeech;
     private TextToSpeech outputTextToSpeech;
+    private AnimationDrawable backgroundAnimation;
 
     private static final int REQ_CODE_SPEECH_INPUT = 100;
     private static final int REQ_CODE_SPEECH_OUTPUT = 200;
@@ -90,12 +87,12 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     private SeekBar seekBarOutputSpeechSpeed;
     private SeekBar seekBarOutputSpeechPitch;
     private FrameLayout outputTextLayout;
-    private ImageView backgroundImage;
     private LinearLayout bottomSheet;
 
     private SharedPreferences preferences;
     private RecyclerView recyclerViewInputLang;
     private RecyclerView recyclerViewOutputLang;
+    private boolean isOpened;
 
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
@@ -116,7 +113,6 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
         seekBarOutputSpeechPitch = findViewById(R.id.output_speech_feed);
         outputLanguageSmallHint = findViewById(R.id.output_language_hint);
         inputLanguageSmallHint = findViewById(R.id.input_language_hint);
-        backgroundImage = findViewById(R.id.image_view_speech_background);
 
         seekBarInputSpeechSpeed.setProgress(50);
         seekBarInputSpeechPitch.setProgress(50);
@@ -229,6 +225,12 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     }
 
 
+    public void onSelectApp(View view){
+
+        startActivity(new Intent(this, SelectAppActivity.class));
+    }
+
+
     private void showAppTutorial() {
 
         boolean isAppRunFirstTime = preferences.getBoolean("isSpeechRunFirstTime", true);
@@ -278,6 +280,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
 
             BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+            isOpened = true;
 
             behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                 @Override
@@ -285,29 +288,33 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
                     if (newState == BottomSheetBehavior.STATE_EXPANDED) {
 
-                        new GuideView.Builder(SpeechActivity.this)
-                                //todo translator
-                                .setTitle("Выберите Ваш язык")
-                                .setGravity(GuideView.Gravity.auto) //optional
-                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
-                                .setTargetView(recyclerViewInputLang)
-                                .setTitleTextSize(14)//optional
-                                .setGuideListener(new GuideView.GuideListener() {
-                                    @Override
-                                    public void onDismiss(View view) {
-                                        new GuideView.Builder(SpeechActivity.this)
-                                                //todo translator
-                                                .setTitle("Язык для Вашего собеседника")
-                                                .setGravity(GuideView.Gravity.auto) //optional
-                                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
-                                                .setTargetView(recyclerViewOutputLang)
-                                                .setTitleTextSize(14)//optional
-                                                .build()
-                                                .show();
-                                    }
-                                })
-                                .build()
-                                .show();
+                        if (isOpened) {
+
+                            new GuideView.Builder(SpeechActivity.this)
+                                    //todo translator
+                                    .setTitle("Выберите Ваш язык")
+                                    .setGravity(GuideView.Gravity.auto) //optional
+                                    .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                    .setTargetView(recyclerViewInputLang)
+                                    .setTitleTextSize(14)//optional
+                                    .setGuideListener(new GuideView.GuideListener() {
+                                        @Override
+                                        public void onDismiss(View view) {
+                                            new GuideView.Builder(SpeechActivity.this)
+                                                    //todo translator
+                                                    .setTitle("Язык для Вашего собеседника")
+                                                    .setGravity(GuideView.Gravity.auto) //optional
+                                                    .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                                    .setTargetView(recyclerViewOutputLang)
+                                                    .setTitleTextSize(14)//optional
+                                                    .build()
+                                                    .show();
+                                        }
+                                    })
+                                    .build()
+                                    .show();
+                            isOpened = false;
+                        }
                     }
                 }
 
@@ -317,7 +324,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                 }
             });
 
-            editor.putBoolean("isSpeechRunFirstTime", true);
+            editor.putBoolean("isSpeechRunFirstTime", false);
             editor.apply();
         }
     }
@@ -492,8 +499,6 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
                 list.add(true);
 
-                Log.d(TAG, "setSelectedRecycler: " + pos);
-
             } else {
 
                 list.add(false);
@@ -501,6 +506,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
         }
     }
+
 
     @Override
     public void OnSelectInputLanguage(int position) {

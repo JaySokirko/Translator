@@ -345,7 +345,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                     .build()
                     .show();
         }
-        editor.putBoolean("isTranslatorRunFirstTime", true);
+        editor.putBoolean("isTranslatorRunFirstTime", false);
         editor.apply();
     }
 

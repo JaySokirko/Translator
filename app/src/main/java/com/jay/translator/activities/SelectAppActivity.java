@@ -1,18 +1,19 @@
 package com.jay.translator.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.jay.translator.R;
 import com.jay.translator.ViewSettings;
@@ -25,11 +26,16 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
     private ImageView accept;
     private CheckBox rememberChoice;
     private LinearLayout rememberChoiceLayout;
+    private RelativeLayout rememberChoiceLandScapeLayout;
 
     private boolean isTranslatorSelected;
+    private boolean isRememberChoice;
+
+    private SharedPreferences.Editor editor;
 
     private int orientation = 1;
 
+    @SuppressLint("CommitPrefEdits")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +53,7 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         ImageView backgroundImage = findViewById(R.id.select_app_background_image);
 
         SharedPreferences preferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        editor = preferences.edit();
 
         //set background image
         int image = preferences.getInt("blurImage", R.drawable.london);
@@ -55,7 +62,11 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         rememberChoice = findViewById(R.id.choice);
         rememberChoiceLayout = findViewById(R.id.remember_choice_layout);
 
+        //for landscape orientation
+        rememberChoiceLandScapeLayout = findViewById(R.id.remember_choice_relative_layout);
+
         orientation = getResources().getConfiguration().orientation;
+
     }
 
 
@@ -79,6 +90,11 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                 } else {
                     startActivity(new Intent(this, SpeechActivity.class));
                 }
+
+                isRememberChoice = rememberChoice.isChecked();
+                editor.putBoolean("isRememberChoice", isRememberChoice);
+                editor.putBoolean("isTranslatorSelected", isTranslatorSelected);
+                editor.apply();
 
                 accept.setBackground(getResources().getDrawable(R.drawable.circle_background_cyan));
                 new Handler().postDelayed(new Runnable() {
@@ -134,9 +150,9 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                     .alpha(0.5f)
                     .start();
 
-            rememberChoiceLayout.animate()
+            rememberChoiceLandScapeLayout.animate()
                     .alpha(1f)
-                    .translationY(50)
+                    .translationX(50)
                     .setDuration(500).start();
 
         }
@@ -187,9 +203,9 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                     .alpha(1f)
                     .start();
 
-            rememberChoiceLayout.animate()
+            rememberChoiceLandScapeLayout.animate()
                     .alpha(1f)
-                    .translationY(50)
+                    .translationX(50)
                     .setDuration(500).start();
         }
 
