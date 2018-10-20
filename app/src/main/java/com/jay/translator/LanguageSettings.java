@@ -10,8 +10,6 @@ import java.util.Locale;
 
 public class LanguageSettings {
 
-    private static String language;
-
     public static void setLocale(String language, Context context) {
 
         Locale locale = new Locale(language);
@@ -33,12 +31,7 @@ public class LanguageSettings {
     public static void loadLocale(Context context) {
 
         SharedPreferences sharedPreferences = context.getSharedPreferences("Settings", Activity.MODE_PRIVATE);
-        language = sharedPreferences.getString("language", "en");
+        String language = sharedPreferences.getString("language", "en");
         setLocale(language, context);
-    }
-
-
-    public static String getLanguage() {
-        return language;
     }
 }

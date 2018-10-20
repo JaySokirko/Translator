@@ -30,4 +30,6 @@
     <string name="select_app">Выберите приложение</string>
     <string name="translating">Идет перевод</string>
     <string name="tap_here_to_delete">Нажмите здесь, чтобы удалить</string>
+    <string name="remember_choice">Запомнить выбор</string>
+    <string name="swipe_to_back">Проведите вправо, чтобы вернуться к текстовому вводу</string>
 </resources>

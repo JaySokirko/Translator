@@ -22,12 +22,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -38,6 +40,7 @@ import android.widget.TextView;
 
 import com.jay.translator.DialogLanguageNotSupported;
 import com.jay.translator.DialogNoInternet;
+import com.jay.translator.EditTextLineCountChangeListener;
 import com.jay.translator.GoogleTranslate;
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
@@ -77,6 +80,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private TextView languageToHint;
     private FrameLayout inputTextFrame;
     private FrameLayout outputTextFrame;
+    private ImageView forward;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSpeechSettingsOpen;
@@ -108,6 +112,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private SharedPreferences preferences;
     private SQLiteDatabase sqLiteDatabase;
     private CollapsingToolbarLayout toolbarLayout;
+    private boolean isShowTranslatedHint;
+    private EditTextLineCountChangeListener lineCountChangeListener;
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -141,6 +147,8 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         onTouchEventField = findViewById(R.id.container);
         ImageView backgroundImage = findViewById(R.id.image_view_translator_background);
         swipeSettingsMenu = findViewById(R.id.swipe_settings_menu);
+        forward = findViewById(R.id.translate_help_button);
+
 
         seekBarSpeechSpeed = findViewById(R.id.seek_bar_speech_speed);
         seekBarSpeechSpeed.setMax(100);
@@ -221,6 +229,20 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         sqLiteDatabase = db.getWritableDatabase();
 
         showTutorial();
+
+
+        lineCountChangeListener = new EditTextLineCountChangeListener();
+        lineCountChangeListener.setListener(new EditTextLineCountChangeListener.ChangeListener() {
+
+            @Override
+            public void onChange(int lineCount) {
+
+                lineCount = editedText.getLineCount();
+
+                Log.d("TAG", "onChange: " + lineCount);
+            }
+        });
+
     }
 
 
@@ -778,6 +800,37 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         isShowTranslatedTextFrame = true;
         isShowInputTextFrame = false;
+
+        //todo
+        boolean isAppRunFirstTime = preferences.getBoolean("isTranslatedFrameShowFirstTime",true);
+        isShowTranslatedHint = true;
+
+        if (isAppRunFirstTime){
+
+            final FrameLayout swipeField = findViewById(R.id.swipe_field);
+
+            if (isShowTranslatedHint) {
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        new GuideView.Builder(context)
+                                .setTitle(getResources().getString(R.string.swipe_to_back))
+                                .setGravity(GuideView.Gravity.auto) //optional
+                                .setDismissType(GuideView.DismissType.anywhere) //optional - default GuideView.DismissType.targetView
+                                .setTargetView(swipeField)
+                                .build()
+                                .show();
+
+                        isShowTranslatedHint = false;
+                    }
+                }, 1000);
+            }
+
+            editor.putBoolean("isTranslatedFrameShowFirstTime", false);
+            editor.apply();
+        }
     }
 
 
@@ -859,36 +912,43 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
                     case 0:
                         languageFrom = GoogleTranslate.ENGLISH;
                         languageFromHint.setText("English");
+                        editedText.setHint("English");
                         break;
 
                     case 1:
                         languageFrom = GoogleTranslate.RUSSIAN;
                         languageFromHint.setText("Русский");
+                        editedText.setHint("Русский");
                         break;
 
                     case 2:
                         languageFrom = GoogleTranslate.FRENCH;
                         languageFromHint.setText("Français");
+                        editedText.setHint("Français");
                         break;
 
                     case 3:
                         languageFrom = GoogleTranslate.GERMAN;
                         languageFromHint.setText("Deutsch");
+                        editedText.setHint("Deutsch");
                         break;
 
                     case 4:
                         languageFrom = GoogleTranslate.ITALIAN;
                         languageFromHint.setText("Italiano");
+                        editedText.setHint("Italiano");
                         break;
 
                     case 5:
                         languageFrom = GoogleTranslate.SPANISH;
                         languageFromHint.setText("Español");
+                        editedText.setHint("Español");
                         break;
 
                     case 6:
                         languageFrom = GoogleTranslate.POLISH;
                         languageFromHint.setText("Polish");
+                        editedText.setHint("Polish");
                         break;
                 }
 
@@ -1127,6 +1187,15 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             translatedText.setText(result);
             showTranslatedTextFrame();
             progressBar.dismiss();
+
+            //hide keyboard
+            View view = TranslatorActivity.this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
         }
     }
 }

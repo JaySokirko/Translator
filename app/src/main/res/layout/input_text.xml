@@ -26,18 +26,38 @@
             android:minHeight="100dp"
             tools:ignore="UselessParent">
 
-            <EditText
-                android:id="@+id/edited_text"
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
                 android:layout_marginBottom="40dp"
-                android:hint="@string/enter_text"
-                android:textColor="@color/colorText"
-                android:textSize="16sp"
-                android:inputType="textMultiLine" />
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edited_text"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:hint="@string/enter_text"
+                    android:textColor="@color/colorText"
+                    android:textSize="16sp"
+                    android:inputType="textMultiLine" />
+
+
+                <ImageView
+                    android:id="@+id/translate_help_button"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:src="@drawable/ic_action_forward"
+                    android:layout_gravity="end|bottom"
+                    android:layout_margin="4dp"
+                    android:contentDescription="@drawable/ic_action_forward"
+                    android:visibility="invisible"/>
+            </LinearLayout>
+
 
         </ScrollView>
     </FrameLayout>

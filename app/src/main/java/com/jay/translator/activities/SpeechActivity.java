@@ -223,7 +223,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     }
 
 
-    public void onSelectApp(View view){
+    public void onSelectApp(View view) {
 
         startActivity(new Intent(this, SelectAppActivity.class));
     }
@@ -232,6 +232,7 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
     private void showAppTutorial() {
 
         boolean isAppRunFirstTime = preferences.getBoolean("isSpeechRunFirstTime", true);
+        boolean isBottomWasOpened = preferences.getBoolean("isBottomWasOpened", true);
 
         if (isAppRunFirstTime) {
 
@@ -273,6 +274,13 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                     .build()
                     .show();
 
+            editor.putBoolean("isSpeechRunFirstTime", false);
+            editor.apply();
+
+        }
+
+
+        if (isBottomWasOpened) {
 
             BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
             isOpened = true;
@@ -308,6 +316,9 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
                                     .show();
                             isOpened = false;
                         }
+
+                        editor.putBoolean("isBottomWasOpened", false);
+                        editor.apply();
                     }
                 }
 
@@ -316,9 +327,6 @@ public class SpeechActivity extends AppCompatActivity implements InputLanguageIt
 
                 }
             });
-
-            editor.putBoolean("isSpeechRunFirstTime", false);
-            editor.apply();
         }
     }
 

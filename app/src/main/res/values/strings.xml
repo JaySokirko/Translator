@@ -23,13 +23,13 @@
     <string name="italian" translatable="false">Italiano</string>
     <string name="polish" translatable="false">Polish</string>
 
-    <string name="enter_some_text_en" translatable="false">Enter some text</string>
-    <string name="enter_some_text_ru" translatable="false">Введите текст</string>
-    <string name="enter_some_text_de" translatable="false">Gib einen Text ein</string>
-    <string name="enter_some_text_es" translatable="false">Introduce algún texto</string>
-    <string name="enter_some_text_fr" translatable="false">Entrez du texte</string>
-    <string name="enter_some_text_it" translatable="false">Inserisci del testo</string>
-    <string name="enter_some_text_pl" translatable="false">Wprowadź trochę tekstu</string>
+    <string name="enter_some_text_en" translatable="false">Enter some text in english</string>
+    <string name="enter_some_text_ru" translatable="false">Введите текст на русском</string>
+    <string name="enter_some_text_de" translatable="false">Geben Sie einen text in deutsch ein</string>
+    <string name="enter_some_text_es" translatable="false">Ingresar texto en español</string>
+    <string name="enter_some_text_fr" translatable="false">Tapez en français</string>
+    <string name="enter_some_text_it" translatable="false">Inserisci il testo in italiano</string>
+    <string name="enter_some_text_pl" translatable="false">Wprowadź tekst w języku polskim</string>
 
     <string name="select_languages">select languages</string>
     <string name="language_is_not_support">Language is not support</string>
@@ -52,6 +52,8 @@
     <string name="no_internet_connection">no internet connection</string>
     <string name="open_settings">open settings</string>
     <string name="choose_your_language">choose_your_language</string>
+    <string name="remember_choice">remember_choice</string>
+    <string name="swipe_to_back">swipe to back</string>
 
 
 </resources>

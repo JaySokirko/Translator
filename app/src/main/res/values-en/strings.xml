@@ -30,5 +30,7 @@
     <string name="select_app">Select the application</string>
     <string name="translating">Translating</string>
     <string name="tap_here_to_delete">Tap here to delete</string>
+    <string name="remember_choice">Remember selection</string>
+    <string name="swipe_to_back">Swipe right to go back to text entry</string>
 
 </resources>

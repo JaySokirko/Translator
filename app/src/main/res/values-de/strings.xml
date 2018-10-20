@@ -30,4 +30,6 @@
     <string name="select_app">Wählen sie die anwendung aus</string>
     <string name="translating">Übersetzung läuft</string>
     <string name="tap_here_to_delete">Tippe hier, um zu löschen</string>
+    <string name="remember_choice">Merken sie sich die auswahl</string>
+    <string name="swipe_to_back">Wischen sie nach rechts, um zur texteingabe zurückzukehren</string>
 </resources>

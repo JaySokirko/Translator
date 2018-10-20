@@ -30,4 +30,6 @@
     <string name="select_app">Seleziona l\'applicazione</string>
     <string name="translating">Traduzione in corso</string>
     <string name="tap_here_to_delete">Tocca qui per eliminare</string>
+    <string name="remember_choice">Ricorda la selezione</string>
+    <string name="swipe_to_back">Scorri verso destra per tornare all\'inserimento di testo</string>
 </resources>
