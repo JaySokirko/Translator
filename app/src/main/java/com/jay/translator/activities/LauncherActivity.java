@@ -17,7 +17,7 @@ public class LauncherActivity extends Activity {
         boolean isAppRunFirstTime = preferences.getBoolean("isAppRunFirstTime", true);
 
         if (isAppRunFirstTime) {
-            startActivity(new Intent(this, ChoiceLanguageActivity.class));
+            startActivity(new Intent(this, SelectLanguageActivity.class));
         } else {
             startActivity(new Intent(this,SelectAppActivity.class));
         }

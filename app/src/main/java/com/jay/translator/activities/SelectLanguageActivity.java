@@ -19,7 +19,7 @@ import com.jay.translator.LanguageSettings;
 import com.jay.translator.R;
 import com.jay.translator.adapters.ChoiceLanguageAdapter;
 
-public class ChoiceLanguageActivity extends AppCompatActivity {
+public class SelectLanguageActivity extends AppCompatActivity {
 
     private String[] languages = {
             "English",
@@ -71,7 +71,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
         appBarTV = findViewById(R.id.app_bar_choice_language_tv);
 
-        ChoiceLanguageAdapter adapter = new ChoiceLanguageAdapter(ChoiceLanguageActivity.this,
+        ChoiceLanguageAdapter adapter = new ChoiceLanguageAdapter(SelectLanguageActivity.this,
                 languages, images, flags);
 
         listView.setAdapter(adapter);
@@ -112,37 +112,37 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
-                        LanguageSettings.setLocale("en", ChoiceLanguageActivity.this);
+                        LanguageSettings.setLocale("en", SelectLanguageActivity.this);
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 1:
-                        LanguageSettings.setLocale("ru", ChoiceLanguageActivity.this);
+                        LanguageSettings.setLocale("ru", SelectLanguageActivity.this);
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 2:
-                        LanguageSettings.setLocale("de", ChoiceLanguageActivity.this);
+                        LanguageSettings.setLocale("de", SelectLanguageActivity.this);
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 3:
-                        LanguageSettings.setLocale("fr", ChoiceLanguageActivity.this);
+                        LanguageSettings.setLocale("fr", SelectLanguageActivity.this);
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 4:
-                        LanguageSettings.setLocale("es", ChoiceLanguageActivity.this);
+                        LanguageSettings.setLocale("es", SelectLanguageActivity.this);
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 5:
-                        LanguageSettings.setLocale("it", ChoiceLanguageActivity.this);
+                        LanguageSettings.setLocale("it", SelectLanguageActivity.this);
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
 
                     case 6:
-                        LanguageSettings.setLocale("pl", ChoiceLanguageActivity.this);
+                        LanguageSettings.setLocale("pl", SelectLanguageActivity.this);
                         appBarTV.setText(getResources().getString(R.string.select_your_language));
                         break;
                 }
@@ -165,7 +165,7 @@ public class ChoiceLanguageActivity extends AppCompatActivity {
             @Override
             public void run() {
                 view.setBackground(getResources().getDrawable(R.drawable.circle_background_primary_dark));
-                startActivity(new Intent(ChoiceLanguageActivity.this, SelectAppActivity.class)
+                startActivity(new Intent(SelectLanguageActivity.this, SelectAppActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             }
         }, 300);

@@ -22,14 +22,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -41,7 +39,6 @@ import android.widget.TextView;
 import com.jay.translator.DialogLanguageNotSupported;
 import com.jay.translator.DialogNoInternet;
 import com.jay.translator.GoogleTranslate;
-import com.jay.translator.LanguageSettings;
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
 import com.jay.translator.ResizeAnimation;
@@ -49,9 +46,7 @@ import com.jay.translator.SavedTextDB;
 import com.jay.translator.ViewSettings;
 
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -507,7 +502,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         setClickable(view);
 
-        startActivity(new Intent(context, ChoiceLanguageActivity.class)
+        startActivity(new Intent(context, SelectLanguageActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
     }
 

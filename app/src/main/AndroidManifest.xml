@@ -18,7 +18,7 @@
 
         <!---->
         <activity
-            android:name=".activities.ChoiceLanguageActivity"
+            android:name=".activities.SelectLanguageActivity"
             android:theme="@style/AppTheme" />
         <!---->
 

@@ -10,6 +10,7 @@
     <dimen name="standard_145">145dp</dimen>
     <dimen name="standard_175">175dp</dimen>
     <dimen name="standard_200">200dp</dimen>
+    <dimen name="standard_250">250dp</dimen>
     <dimen name="standard_220">220dp</dimen>
     <dimen name="standard_105">10dp</dimen>
 

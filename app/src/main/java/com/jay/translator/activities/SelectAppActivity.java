@@ -9,7 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.jay.translator.R;
 import com.jay.translator.ViewSettings;
@@ -20,6 +23,8 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
     private CardView translator;
     private CardView speaker;
     private ImageView accept;
+    private CheckBox rememberChoice;
+    private LinearLayout rememberChoiceLayout;
 
     private boolean isTranslatorSelected;
 
@@ -46,6 +51,9 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
         //set background image
         int image = preferences.getInt("blurImage", R.drawable.london);
         backgroundImage.setImageBitmap(ViewSettings.setImageBlurry(this, getResources().getDrawable(image)));
+
+        rememberChoice = findViewById(R.id.choice);
+        rememberChoiceLayout = findViewById(R.id.remember_choice_layout);
 
         orientation = getResources().getConfiguration().orientation;
     }
@@ -104,7 +112,12 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                     .alpha(0.5f)
                     .start();
 
-        //animation for landscape orientation
+            rememberChoiceLayout.animate()
+                    .alpha(1f)
+                    .translationY(50)
+                    .setDuration(500).start();
+
+            //animation for landscape orientation
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
             translator.animate().setDuration(500)
@@ -120,6 +133,12 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                     .scaleY(0.4f)
                     .alpha(0.5f)
                     .start();
+
+            rememberChoiceLayout.animate()
+                    .alpha(1f)
+                    .translationY(50)
+                    .setDuration(500).start();
+
         }
 
         isTranslatorSelected = true;
@@ -146,7 +165,12 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                     .alpha(1f)
                     .start();
 
-        //animation for landscape orientation
+            rememberChoiceLayout.animate()
+                    .alpha(1f)
+                    .translationY(50)
+                    .setDuration(500).start();
+
+            //animation for landscape orientation
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
             translator.animate().setDuration(500)
@@ -162,6 +186,11 @@ public class SelectAppActivity extends AppCompatActivity implements View.OnClick
                     .scaleX(1.2f)
                     .alpha(1f)
                     .start();
+
+            rememberChoiceLayout.animate()
+                    .alpha(1f)
+                    .translationY(50)
+                    .setDuration(500).start();
         }
 
         isTranslatorSelected = false;
