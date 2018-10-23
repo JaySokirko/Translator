@@ -22,7 +22,6 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.View;
@@ -40,7 +39,6 @@ import android.widget.TextView;
 
 import com.jay.translator.DialogLanguageNotSupported;
 import com.jay.translator.DialogNoInternet;
-import com.jay.translator.EditTextLineCountChangeListener;
 import com.jay.translator.GoogleTranslate;
 import com.jay.translator.OnSwipeTouchListener;
 import com.jay.translator.R;
@@ -59,7 +57,6 @@ import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 
 public class TranslatorActivity extends AppCompatActivity implements AppBarLayout.OnOffsetChangedListener {
 
-    private FloatingActionButton fabStartTranslate;
     private FloatingActionButton fabSpeechSettings;
     private FloatingActionButton fabSpeechFeed;
     private FloatingActionButton fabSpeechSpeed;
@@ -80,7 +77,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private TextView languageToHint;
     private FrameLayout inputTextFrame;
     private FrameLayout outputTextFrame;
-    private ImageView forward;
+    private ImageView translateText;
 
     private AnimationDrawable toolBarAnimation;
     private boolean isSpeechSettingsOpen;
@@ -113,7 +110,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
     private SQLiteDatabase sqLiteDatabase;
     private CollapsingToolbarLayout toolbarLayout;
     private boolean isShowTranslatedHint;
-    private EditTextLineCountChangeListener lineCountChangeListener;
 
     @SuppressLint({"ClickableViewAccessibility", "CommitPrefEdits"})
     @Override
@@ -131,7 +127,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         AppBarLayout barLayout = findViewById(R.id.app_bar);
         barLayout.addOnOffsetChangedListener(this);
 
-        fabStartTranslate = findViewById(R.id.fab_translation);
         fabSpeechSettings = findViewById(R.id.fab_speech_settings);
         fabSpeechFeed = findViewById(R.id.fab_speech_feed);
         fabSpeechSpeed = findViewById(R.id.fab_speech_speed);
@@ -147,7 +142,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         onTouchEventField = findViewById(R.id.container);
         ImageView backgroundImage = findViewById(R.id.image_view_translator_background);
         swipeSettingsMenu = findViewById(R.id.swipe_settings_menu);
-        forward = findViewById(R.id.translate_help_button);
+        translateText = findViewById(R.id.translate_text_button);
 
 
         seekBarSpeechSpeed = findViewById(R.id.seek_bar_speech_speed);
@@ -230,19 +225,7 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
 
         showTutorial();
 
-
-        lineCountChangeListener = new EditTextLineCountChangeListener();
-        lineCountChangeListener.setListener(new EditTextLineCountChangeListener.ChangeListener() {
-
-            @Override
-            public void onChange(int lineCount) {
-
-                lineCount = editedText.getLineCount();
-
-                Log.d("TAG", "onChange: " + lineCount);
-            }
-        });
-
+        editTextClickListener();
     }
 
 
@@ -280,6 +263,16 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         super.onDestroy();
     }
 
+
+    private void editTextClickListener(){
+
+        editedText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                translateText.setVisibility(View.VISIBLE);
+            }
+        });
+    }
 
     /**
      * Animate view click
@@ -846,7 +839,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
             public void onAnimationUpdate(ValueAnimator animation) {
                 inputTextLayout.setAlpha(1f);
                 inputTextLayout.setTranslationX((float) animation.getAnimatedValue());
-                fabStartTranslate.setTranslationX((Float) animation.getAnimatedValue());
             }
         });
         valueAnimator.start();

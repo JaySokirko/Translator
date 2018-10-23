@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="50dp">
@@ -7,7 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
 
         <TextView
             android:id="@+id/saved_text_date"
@@ -37,7 +39,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:textColor="@color/colorText"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:textIsSelectable="true"/>
 
         </FrameLayout>
 
@@ -78,7 +81,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp"
                     android:textColor="@color/colorText"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:textIsSelectable="true"/>
 
             </FrameLayout>
         </FrameLayout>
