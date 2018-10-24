@@ -794,7 +794,6 @@ public class TranslatorActivity extends AppCompatActivity implements AppBarLayou
         isShowTranslatedTextFrame = true;
         isShowInputTextFrame = false;
 
-        //todo
         boolean isAppRunFirstTime = preferences.getBoolean("isTranslatedFrameShowFirstTime",true);
         isShowTranslatedHint = true;
 
